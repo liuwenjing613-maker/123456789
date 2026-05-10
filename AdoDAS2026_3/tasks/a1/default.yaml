@@ -45,7 +45,7 @@ preload: true
 grad_clip: 1.0
 use_pos_weight: true
 patience: 6
-session_loss_weight: 0.2
+session_loss_weight: 0.1
 session_type_loss_weight: 0.15
 submission_level: participant
 decode_method: auto
