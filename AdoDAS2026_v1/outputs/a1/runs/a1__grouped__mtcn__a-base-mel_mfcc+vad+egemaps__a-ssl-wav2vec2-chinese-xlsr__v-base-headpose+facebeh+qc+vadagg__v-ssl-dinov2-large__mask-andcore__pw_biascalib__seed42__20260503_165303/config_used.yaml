@@ -1,0 +1,72 @@
+feature_root: /home/adodas/dataset
+manifest_dir: /home/adodas/dataset/manifests
+output_dir: /home/adodas/AdoDAS2026/outputs/a1
+mask_policy: and_core
+core_audio:
+- mel_mfcc
+- ssl_embed
+core_video:
+- vision_ssl_embed
+- qc_stats
+d_adapter: 64
+d_model: 256
+tcn_layers: 6
+tcn_kernel_size: 3
+asp_alpha: 0.5
+asp_beta: 0.5
+dropout: 0.2
+d_shared: 256
+aggregator: mlp
+batch_size: 32
+lr: 0.0005
+weight_decay: 0.01
+warmup_epochs: 1
+epochs: 30
+seed: 42
+num_workers: 8
+amp: true
+preload: true
+grad_clip: 1.0
+use_pos_weight: true
+patience: 6
+session_loss_weight: 0.2
+session_type_loss_weight: 0.15
+submission_level: participant
+decode_method: auto
+label_smoothing: 0.0
+feature_noise_std: 0.0
+session_drop_prob: 0.0
+early_stop_metric: primary
+pre_tcn_safenorm:
+  enabled: true
+  stats_path: outputs/stats/a1_safenorm_meanstd_train.npz
+  norm_type: mean_std
+  clip_value: 5.0
+  eps: 1.0e-06
+  low_dim_no_layernorm: true
+  low_dim_threshold: 16
+  force_no_layernorm_groups:
+  - vad
+  - headpose_geom
+  - qc_stats
+  - vad_agg
+  - global_motion
+  - face_behavior
+  - body_pose
+  force_layernorm_groups:
+  - ssl_embed
+  - vision_ssl_embed
+audio_features:
+- mel_mfcc
+- vad
+- egemaps
+- ssl_embed
+video_features:
+- headpose_geom
+- face_behavior
+- qc_stats
+- vad_agg
+- vision_ssl_embed
+audio_ssl_model_tag: wav2vec2-chinese-xlsr
+video_ssl_model_tag: dinov2-large
+task: a1

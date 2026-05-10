@@ -1,0 +1,111 @@
+{
+  "run_name": "a1__grouped__mtcn__a-base-mel_mfcc+vad+egemaps__a-ssl-wav2vec2-chinese-xlsr__v-base-headpose+facebeh+qc+vadagg__v-ssl-dinov2-large__mask-andcore__pw_biascalib__seed42__20260424_132425",
+  "task": "a1",
+  "start_time": "2026-04-24T13:24:26.160944",
+  "end_time": null,
+  "git_commit": "b13965f1ecc85529ef39b076ad0538e9d688f89c",
+  "command_line": "train.py --task a1 --config tasks/a1/default.yaml",
+  "full_config": {
+    "feature_root": "/home/adodas/dataset",
+    "manifest_dir": "/home/adodas/dataset/manifests",
+    "output_dir": "/home/adodas/AdoDAS2026/outputs/a1",
+    "mask_policy": "and_core",
+    "core_audio": [
+      "mel_mfcc",
+      "ssl_embed"
+    ],
+    "core_video": [
+      "vision_ssl_embed",
+      "qc_stats"
+    ],
+    "d_adapter": 64,
+    "d_model": 256,
+    "tcn_layers": 6,
+    "tcn_kernel_size": 3,
+    "asp_alpha": 0.5,
+    "asp_beta": 0.5,
+    "dropout": 0.25,
+    "d_shared": 256,
+    "aggregator": "mlp",
+    "batch_size": 64,
+    "lr": 0.0003,
+    "weight_decay": 0.03,
+    "warmup_epochs": 3,
+    "epochs": 30,
+    "seed": 42,
+    "num_workers": 8,
+    "amp": true,
+    "preload": true,
+    "grad_clip": 1.0,
+    "use_pos_weight": true,
+    "patience": 6,
+    "session_loss_weight": 0.2,
+    "session_type_loss_weight": 0.15,
+    "submission_level": "participant",
+    "decode_method": "auto",
+    "label_smoothing": 0.05,
+    "feature_noise_std": 0.02,
+    "session_drop_prob": 0.1,
+    "early_stop_metric": "primary",
+    "audio_features": [
+      "mel_mfcc",
+      "vad",
+      "egemaps",
+      "ssl_embed"
+    ],
+    "video_features": [
+      "headpose_geom",
+      "face_behavior",
+      "qc_stats",
+      "vad_agg",
+      "vision_ssl_embed"
+    ],
+    "audio_ssl_model_tag": "wav2vec2-chinese-xlsr",
+    "video_ssl_model_tag": "dinov2-large",
+    "task": "a1"
+  },
+  "audio_ssl_tag": "wav2vec2-chinese-xlsr",
+  "video_ssl_tag": "dinov2-large",
+  "feature_combination": {
+    "audio_features": [
+      "mel_mfcc",
+      "vad",
+      "egemaps",
+      "ssl_embed"
+    ],
+    "video_features": [
+      "headpose_geom",
+      "face_behavior",
+      "qc_stats",
+      "vad_agg",
+      "vision_ssl_embed"
+    ],
+    "audio_ssl_model_tag": "wav2vec2-chinese-xlsr",
+    "video_ssl_model_tag": "dinov2-large"
+  },
+  "best_epoch": 3,
+  "best_metrics": {
+    "loss": 0.7275561183691025,
+    "mean_f1": 0.0,
+    "auroc": 0.6732993384197008,
+    "pcf1": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "mean_f1_calibrated": 0.42295593974477824,
+    "pcf1_calibrated": [
+      0.43037974683544306,
+      0.5229540918163673,
+      0.3155339805825243
+    ],
+    "calibration_biases": [
+      0.8000000000000034,
+      0.9000000000000035,
+      1.400000000000004
+    ],
+    "primary_metric": 0.42295593974477824,
+    "selection_source": "calibrated"
+  },
+  "status": "running"
+}

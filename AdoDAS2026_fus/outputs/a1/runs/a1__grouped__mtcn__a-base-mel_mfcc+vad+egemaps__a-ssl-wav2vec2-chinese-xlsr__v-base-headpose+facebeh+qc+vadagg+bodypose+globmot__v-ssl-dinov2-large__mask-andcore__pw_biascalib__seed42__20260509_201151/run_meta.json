@@ -1,0 +1,223 @@
+{
+  "run_name": "a1__grouped__mtcn__a-base-mel_mfcc+vad+egemaps__a-ssl-wav2vec2-chinese-xlsr__v-base-headpose+facebeh+qc+vadagg+bodypose+globmot__v-ssl-dinov2-large__mask-andcore__pw_biascalib__seed42__20260509_201151",
+  "task": "a1",
+  "start_time": "2026-05-09T20:11:51.826620",
+  "end_time": "2026-05-09T22:48:59.206843",
+  "git_commit": "89282534c1d1a7283d23692dd3ed6e76fa6c0956",
+  "command_line": "train.py --config tasks/a1/default.yaml --task a1 --config /home/adodas/AdoDAS2026_fus/configs_pretcn/a1_selective_v2_fus.yaml",
+  "full_config": {
+    "feature_root": "/home/adodas/dataset",
+    "manifest_dir": "/home/adodas/dataset/manifests",
+    "output_dir": "/home/adodas/AdoDAS2026_fus/outputs/a1",
+    "mask_policy": "and_core",
+    "core_audio": [
+      "mel_mfcc",
+      "ssl_embed"
+    ],
+    "core_video": [
+      "vision_ssl_embed",
+      "qc_stats"
+    ],
+    "d_adapter": 64,
+    "d_model": 256,
+    "tcn_layers": 6,
+    "tcn_kernel_size": 3,
+    "asp_alpha": 0.5,
+    "asp_beta": 0.5,
+    "dropout": 0.2,
+    "d_shared": 256,
+    "aggregator": "mlp",
+    "post_tcn_cross_attention": false,
+    "batch_size": 16,
+    "lr": 0.00025,
+    "weight_decay": 0.01,
+    "warmup_epochs": 1,
+    "epochs": 30,
+    "seed": 42,
+    "num_workers": 8,
+    "amp": true,
+    "preload": false,
+    "grad_clip": 1.0,
+    "use_pos_weight": true,
+    "patience": 6,
+    "session_loss_weight": 0.2,
+    "session_type_loss_weight": 0.15,
+    "submission_level": "participant",
+    "decode_method": "auto",
+    "label_smoothing": 0.0,
+    "feature_noise_std": 0.0,
+    "session_drop_prob": 0.0,
+    "early_stop_metric": "primary",
+    "pre_tcn_processing": {
+      "enabled": true,
+      "dynamics_aug": {
+        "enabled": true,
+        "mode": "selective_v2",
+        "apply_audio": {
+          "vad": {
+            "windows": [
+              5,
+              15,
+              25
+            ],
+            "use_delta": true,
+            "use_abs_delta": true,
+            "use_rolling_mean": true,
+            "use_rolling_std": true
+          },
+          "mel_mfcc": {
+            "windows": [
+              5,
+              15
+            ],
+            "use_delta": true,
+            "use_abs_delta": false,
+            "use_rolling_mean": false,
+            "use_rolling_std": false
+          }
+        },
+        "apply_video": {
+          "vad_agg": {
+            "windows": [
+              5,
+              15,
+              25
+            ],
+            "use_delta": true,
+            "use_abs_delta": true,
+            "use_rolling_mean": true,
+            "use_rolling_std": true
+          },
+          "headpose_geom": {
+            "windows": [
+              5,
+              15,
+              25
+            ],
+            "use_delta": true,
+            "use_abs_delta": true,
+            "use_rolling_mean": true,
+            "use_rolling_std": true
+          },
+          "face_behavior": {
+            "windows": [
+              5,
+              15,
+              25
+            ],
+            "use_delta": true,
+            "use_abs_delta": true,
+            "use_rolling_mean": true,
+            "use_rolling_std": true
+          },
+          "body_pose": {
+            "windows": [
+              5,
+              15
+            ],
+            "use_delta": true,
+            "use_abs_delta": true,
+            "use_rolling_mean": false,
+            "use_rolling_std": true
+          },
+          "global_motion": {
+            "windows": [
+              5,
+              15
+            ],
+            "use_delta": false,
+            "use_abs_delta": true,
+            "use_rolling_mean": true,
+            "use_rolling_std": true
+          },
+          "qc_stats": {
+            "windows": [
+              15,
+              25
+            ],
+            "use_delta": false,
+            "use_abs_delta": false,
+            "use_rolling_mean": true,
+            "use_rolling_std": true
+          }
+        },
+        "exclude": [
+          "ssl_embed",
+          "vision_ssl_embed",
+          "egemaps"
+        ]
+      }
+    },
+    "audio_features": [
+      "mel_mfcc",
+      "vad",
+      "egemaps",
+      "ssl_embed"
+    ],
+    "video_features": [
+      "headpose_geom",
+      "face_behavior",
+      "qc_stats",
+      "vad_agg",
+      "body_pose",
+      "global_motion",
+      "vision_ssl_embed"
+    ],
+    "audio_ssl_model_tag": "wav2vec2-chinese-xlsr",
+    "video_ssl_model_tag": "dinov2-large",
+    "task": "a1"
+  },
+  "audio_ssl_tag": "wav2vec2-chinese-xlsr",
+  "video_ssl_tag": "dinov2-large",
+  "feature_combination": {
+    "audio_features": [
+      "mel_mfcc",
+      "vad",
+      "egemaps",
+      "ssl_embed"
+    ],
+    "video_features": [
+      "headpose_geom",
+      "face_behavior",
+      "qc_stats",
+      "vad_agg",
+      "body_pose",
+      "global_motion",
+      "vision_ssl_embed"
+    ],
+    "audio_ssl_model_tag": "wav2vec2-chinese-xlsr",
+    "video_ssl_model_tag": "dinov2-large"
+  },
+  "best_epoch": 5,
+  "best_metrics": {
+    "loss": 0.7092301674971455,
+    "mean_f1": 0.2846911213581971,
+    "auroc": 0.6990856119628148,
+    "pcf1": [
+      0.40569395017793597,
+      0.4024024024024024,
+      0.04597701149425287
+    ],
+    "mean_f1_calibrated": 0.4420500309664908,
+    "pcf1_calibrated": [
+      0.4688427299703264,
+      0.5017921146953405,
+      0.3569023569023569
+    ],
+    "calibration_biases": [
+      0.5000000000000031,
+      1.600000000000004,
+      1.1000000000000032
+    ],
+    "primary_metric": 0.4420500309664908,
+    "selection_source": "calibrated"
+  },
+  "status": "completed",
+  "final_selected_strategy": "bias_calibrated",
+  "final_selected_metrics": {
+    "mean_f1": 0.4425124005226746,
+    "mean_f1_raw": 0.2846911213581971,
+    "mean_f1_calibrated": 0.4425124005226746,
+    "auroc": 0.6990856119628148
+  }
+}

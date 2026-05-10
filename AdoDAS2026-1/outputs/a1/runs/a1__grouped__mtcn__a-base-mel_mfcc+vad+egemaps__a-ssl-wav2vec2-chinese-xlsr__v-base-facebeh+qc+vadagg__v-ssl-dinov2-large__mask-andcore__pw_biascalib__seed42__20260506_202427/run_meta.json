@@ -1,0 +1,116 @@
+{
+  "run_name": "a1__grouped__mtcn__a-base-mel_mfcc+vad+egemaps__a-ssl-wav2vec2-chinese-xlsr__v-base-facebeh+qc+vadagg__v-ssl-dinov2-large__mask-andcore__pw_biascalib__seed42__20260506_202427",
+  "task": "a1",
+  "start_time": "2026-05-06T20:24:27.983097",
+  "end_time": "2026-05-06T21:19:03.480025",
+  "git_commit": "89282534c1d1a7283d23692dd3ed6e76fa6c0956",
+  "command_line": "train.py --config tasks/a1/default.yaml --task a1 --config tasks/a1/default.yaml",
+  "full_config": {
+    "feature_root": "/home/adodas/dataset",
+    "manifest_dir": "/home/adodas/dataset/manifests",
+    "output_dir": "/home/adodas/AdoDAS2026-1/outputs/a1",
+    "mask_policy": "and_core",
+    "core_audio": [
+      "mel_mfcc",
+      "ssl_embed"
+    ],
+    "core_video": [
+      "vision_ssl_embed",
+      "qc_stats"
+    ],
+    "d_adapter": 64,
+    "d_model": 256,
+    "tcn_layers": 6,
+    "tcn_kernel_size": 3,
+    "asp_alpha": 0.5,
+    "asp_beta": 0.5,
+    "dropout": 0.2,
+    "d_shared": 256,
+    "label_smoothing": 0.05,
+    "aggregator": "mlp",
+    "batch_size": 16,
+    "lr": 0.00025,
+    "weight_decay": 0.01,
+    "warmup_epochs": 1,
+    "epochs": 30,
+    "seed": 42,
+    "num_workers": 4,
+    "amp": false,
+    "preload": true,
+    "grad_clip": 1.0,
+    "use_pos_weight": true,
+    "patience": 6,
+    "session_loss_weight": 0.2,
+    "session_type_loss_weight": 0.15,
+    "submission_level": "participant",
+    "decode_method": "auto",
+    "feature_noise_std": 0.0,
+    "session_drop_prob": 0.0,
+    "early_stop_metric": "primary",
+    "audio_features": [
+      "mel_mfcc",
+      "vad",
+      "egemaps",
+      "ssl_embed"
+    ],
+    "video_features": [
+      "face_behavior",
+      "qc_stats",
+      "vad_agg",
+      "vision_ssl_embed"
+    ],
+    "audio_ssl_model_tag": "wav2vec2-chinese-xlsr",
+    "video_ssl_model_tag": "dinov2-large",
+    "task": "a1"
+  },
+  "audio_ssl_tag": "wav2vec2-chinese-xlsr",
+  "video_ssl_tag": "dinov2-large",
+  "feature_combination": {
+    "audio_features": [
+      "mel_mfcc",
+      "vad",
+      "egemaps",
+      "ssl_embed"
+    ],
+    "video_features": [
+      "face_behavior",
+      "qc_stats",
+      "vad_agg",
+      "vision_ssl_embed"
+    ],
+    "audio_ssl_model_tag": "wav2vec2-chinese-xlsr",
+    "video_ssl_model_tag": "dinov2-large"
+  },
+  "best_epoch": 6,
+  "best_metrics": {
+    "loss": 0.7028649782663897,
+    "mean_f1": 0.385892693205601,
+    "auroc": 0.685988407615218,
+    "pcf1": [
+      0.4200626959247649,
+      0.44686648501362397,
+      0.2907488986784141
+    ],
+    "mean_f1_calibrated": 0.4378257033211684,
+    "pcf1_calibrated": [
+      0.4489795918367347,
+      0.5104602510460251,
+      0.35403726708074534
+    ],
+    "calibration_biases": [
+      0.8000000000000034,
+      0.9000000000000035,
+      0.8000000000000034
+    ],
+    "primary_metric": 0.4378257033211684,
+    "selection_source": "calibrated"
+  },
+  "status": "completed",
+  "final_selected_strategy": "bias_calibrated",
+  "final_selected_metrics": {
+    "mean_f1": 0.4378257033211684,
+    "mean_f1_raw": 0.385892693205601,
+    "mean_f1_calibrated": 0.4378257033211684,
+    "auroc": 0.685988407615218
+  }
+}

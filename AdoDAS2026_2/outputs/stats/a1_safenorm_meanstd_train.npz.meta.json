@@ -1,0 +1,15 @@
+{
+  "norm_type": "mean_std",
+  "eps": 1e-06,
+  "groups": [
+    "egemaps",
+    "face_behavior",
+    "headpose_geom",
+    "mel_mfcc",
+    "qc_stats",
+    "ssl_embed",
+    "vad",
+    "vad_agg",
+    "vision_ssl_embed"
+  ]
+}

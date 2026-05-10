@@ -5,6 +5,9 @@
 !AdoDAS2026*/
 !AdoDAS2026*/**
 
+# Local backups after converting nested repos to monorepo (do not push)
+**/.git.nested_backup_*/
+
 # Python/cache/build artifacts
 **/__pycache__/
 **/*.py[cod]

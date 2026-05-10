@@ -1,0 +1,152 @@
+2026-05-02 18:15:33 [INFO] Logging to /home/adodas/AdoDAS2026/outputs/a1/runs/a1__grouped__mtcn__a-base-mel_mfcc+vad+egemaps__a-ssl-wav2vec2-chinese-xlsr__v-base-headpose+facebeh+qc+vadagg__v-ssl-dinov2-large__mask-andcore__pw_biascalib__seed42__20260502_181533/logs/train_grouped_a1_20260502_181533.log
+2026-05-02 18:15:33 [INFO] Device: cuda
+2026-05-02 18:15:33 [INFO] Task: a1
+2026-05-02 18:15:34 [INFO] Run name: a1__grouped__mtcn__a-base-mel_mfcc+vad+egemaps__a-ssl-wav2vec2-chinese-xlsr__v-base-headpose+facebeh+qc+vadagg__v-ssl-dinov2-large__mask-andcore__pw_biascalib__seed42__20260502_181533
+2026-05-02 18:15:34 [INFO] Config: {'feature_root': '/home/adodas/dataset', 'manifest_dir': '/home/adodas/dataset/manifests', 'output_dir': '/home/adodas/AdoDAS2026/outputs/a1', 'mask_policy': 'and_core', 'core_audio': ['mel_mfcc', 'ssl_embed'], 'core_video': ['vision_ssl_embed', 'qc_stats'], 'd_adapter': 64, 'd_model': 256, 'tcn_layers': 6, 'tcn_kernel_size': 3, 'asp_alpha': 0.5, 'asp_beta': 0.5, 'dropout': 0.2, 'd_shared': 256, 'aggregator': 'mlp', 'batch_size': 32, 'lr': 0.0001, 'weight_decay': 0.01, 'warmup_epochs': 1, 'epochs': 30, 'seed': 42, 'num_workers': 8, 'amp': True, 'preload': True, 'grad_clip': 1.0, 'use_pos_weight': True, 'patience': 6, 'session_loss_weight': 0.2, 'session_type_loss_weight': 0.15, 'submission_level': 'participant', 'decode_method': 'auto', 'label_smoothing': 0.0, 'feature_noise_std': 0.0, 'session_drop_prob': 0.0, 'early_stop_metric': 'primary', 'audio_features': ['mel_mfcc', 'vad', 'egemaps', 'ssl_embed'], 'video_features': ['headpose_geom', 'face_behavior', 'qc_stats', 'vad_agg', 'vision_ssl_embed'], 'audio_ssl_model_tag': 'wav2vec2-chinese-xlsr', 'video_ssl_model_tag': 'dinov2-large', 'task': 'a1'}
+2026-05-02 18:15:34 [INFO] Mask policy: and_core
+2026-05-02 18:15:34 [INFO] Pre-TCN mask channel: add=False, mask_scope=all
+2026-05-02 18:15:36 [INFO] Train: 4200 participants, Val: 600 participants
+2026-05-02 18:15:36 [INFO] Preloading data into RAM ...
+2026-05-02 18:25:08 [INFO] Preloaded 4200/4200 participants (45.7 GB in RAM)
+2026-05-02 18:27:33 [INFO] Preloaded 600/600 participants (7.9 GB in RAM)
+2026-05-02 18:27:33 [INFO] Preload done: 45.7G + 7.9G = 53.6G, took 11m 56s
+2026-05-02 18:27:33 [INFO] batch_size=32, num_workers=0
+2026-05-02 18:27:33 [INFO] Model params: 5,522,013
+2026-05-02 18:27:33 [INFO] AMP enabled (BF16)
+2026-05-02 18:27:33 [INFO] pos_weight [D/A/S]: 1.91 / 1.59 / 2.60
+2026-05-02 18:27:34 [INFO] Scheduler: warmup=1 -> cosine, total=30
+2026-05-02 18:27:34 [INFO] Grad clip: 1.0
+2026-05-02 18:27:34 [INFO] Session loss weight: 0.2
+2026-05-02 18:27:34 [INFO] Session type loss weight: 0.15
+2026-05-02 18:27:34 [INFO] EarlyStopping: patience=6, metric=primary, mode=max
+2026-05-02 18:27:34 [INFO] Label smoothing: 0.0
+2026-05-02 18:27:34 [INFO] Feature noise std: 0.0
+2026-05-02 18:27:34 [INFO] Session drop prob: 0.0
+2026-05-02 18:27:34 [INFO] ==========================================================================================
+2026-05-02 18:27:35 [INFO]   Epoch  |    LR     | Train Loss | Val Loss | F1 raw | F1 sel |  AUROC | F1[D/A/S]       | Time
+2026-05-02 18:27:35 [INFO] ==========================================================================================
+2026-05-02 18:27:59 [INFO]     heartbeat epoch=1/30 step=20/131 loss=0.7127 avg=1.2014 elapsed=0m 23s
+2026-05-02 18:28:19 [INFO]     heartbeat epoch=1/30 step=40/131 loss=1.2225 avg=1.2002 elapsed=0m 43s
+2026-05-02 18:28:39 [INFO]     heartbeat epoch=1/30 step=60/131 loss=1.4107 avg=1.2017 elapsed=1m 03s
+2026-05-02 18:28:59 [INFO]     heartbeat epoch=1/30 step=80/131 loss=1.0991 avg=1.1731 elapsed=1m 24s
+2026-05-02 18:29:19 [INFO]     heartbeat epoch=1/30 step=100/131 loss=1.0925 avg=1.1653 elapsed=1m 44s
+2026-05-02 18:29:39 [INFO]     heartbeat epoch=1/30 step=120/131 loss=1.3616 avg=1.1689 elapsed=2m 04s
+2026-05-02 18:30:04 [INFO]     D: gt_pos=0.215 pred_pos=0.000 p_mean=0.262 P=0.000 R=0.000 F1=0.000
+2026-05-02 18:30:04 [INFO]     A: gt_pos=0.283 pred_pos=0.000 p_mean=0.284 P=0.000 R=0.000 F1=0.000
+2026-05-02 18:30:05 [INFO]     S: gt_pos=0.130 pred_pos=0.000 p_mean=0.147 P=0.000 R=0.000 F1=0.000
+2026-05-02 18:30:05 [INFO]     Session-level variance (collapse metric): 0.000724
+2026-05-02 18:30:05 [INFO]     calibrated F1=0.3504 via biases D=+1.10 A=+1.00 S=+1.80 (selected=calibrated)
+2026-05-02 18:30:05 [INFO]     1/ 30 | 1.00e-04 |   1.1690   |  0.7915  | 0.0000 | 0.3504 | 0.5345 | 0.000/0.000/0.000 | 2m 29s ETA 1h 12m 35s VRAM 13.4G *
+2026-05-02 18:30:05 [INFO]   >>> New best F1=0.3504 saved at epoch 1.
+2026-05-02 18:30:25 [INFO]     heartbeat epoch=2/30 step=20/131 loss=1.0634 avg=1.0897 elapsed=0m 19s
+2026-05-02 18:30:45 [INFO]     heartbeat epoch=2/30 step=40/131 loss=1.0593 avg=1.0744 elapsed=0m 39s
+2026-05-02 18:31:04 [INFO]     heartbeat epoch=2/30 step=60/131 loss=1.0857 avg=1.0823 elapsed=0m 59s
+2026-05-02 18:31:24 [INFO]     heartbeat epoch=2/30 step=80/131 loss=1.1936 avg=1.0630 elapsed=1m 19s
+2026-05-02 18:31:44 [INFO]     heartbeat epoch=2/30 step=100/131 loss=0.7960 avg=1.0487 elapsed=1m 38s
+2026-05-02 18:32:03 [INFO]     heartbeat epoch=2/30 step=120/131 loss=0.6855 avg=1.0364 elapsed=1m 58s
+2026-05-02 18:32:28 [INFO]     D: gt_pos=0.215 pred_pos=0.128 p_mean=0.299 P=0.390 R=0.233 F1=0.291
+2026-05-02 18:32:28 [INFO]     A: gt_pos=0.283 pred_pos=0.220 p_mean=0.369 P=0.439 R=0.341 F1=0.384
+2026-05-02 18:32:28 [INFO]     S: gt_pos=0.130 pred_pos=0.000 p_mean=0.220 P=0.000 R=0.000 F1=0.000
+2026-05-02 18:32:28 [INFO]     Session-level variance (collapse metric): 0.003145
+2026-05-02 18:32:28 [INFO]     calibrated F1=0.4126 via biases D=+1.30 A=+1.00 S=+0.80 (selected=calibrated)
+2026-05-02 18:32:28 [INFO]     2/ 30 | 9.97e-05 |   1.0329   |  0.7160  | 0.2251 | 0.4126 | 0.6718 | 0.291/0.384/0.000 | 2m 22s ETA 1h 08m 27s VRAM 13.4G *
+2026-05-02 18:32:28 [INFO]   >>> New best F1=0.4126 saved at epoch 2.
+2026-05-02 18:32:48 [INFO]     heartbeat epoch=3/30 step=20/131 loss=0.8342 avg=0.9038 elapsed=0m 19s
+2026-05-02 18:33:07 [INFO]     heartbeat epoch=3/30 step=40/131 loss=0.9893 avg=0.9638 elapsed=0m 38s
+2026-05-02 18:33:27 [INFO]     heartbeat epoch=3/30 step=60/131 loss=0.7385 avg=0.9476 elapsed=0m 58s
+2026-05-02 18:33:47 [INFO]     heartbeat epoch=3/30 step=80/131 loss=0.8666 avg=0.9520 elapsed=1m 18s
+2026-05-02 18:34:06 [INFO]     heartbeat epoch=3/30 step=100/131 loss=0.8412 avg=0.9575 elapsed=1m 37s
+2026-05-02 18:34:26 [INFO]     heartbeat epoch=3/30 step=120/131 loss=0.9668 avg=0.9672 elapsed=1m 57s
+2026-05-02 18:34:50 [INFO]     D: gt_pos=0.215 pred_pos=0.008 p_mean=0.278 P=0.600 R=0.023 F1=0.045
+2026-05-02 18:34:50 [INFO]     A: gt_pos=0.283 pred_pos=0.050 p_mean=0.321 P=0.567 R=0.100 F1=0.170
+2026-05-02 18:34:50 [INFO]     S: gt_pos=0.130 pred_pos=0.000 p_mean=0.227 P=0.000 R=0.000 F1=0.000
+2026-05-02 18:34:50 [INFO]     Session-level variance (collapse metric): 0.001862
+2026-05-02 18:34:50 [INFO]     calibrated F1=0.4387 via biases D=+0.50 A=+1.30 S=+0.80 (selected=calibrated)
+2026-05-02 18:34:50 [INFO]     3/ 30 | 9.88e-05 |   0.9618   |  0.6962  | 0.0716 | 0.4387 | 0.6990 | 0.045/0.170/0.000 | 2m 21s ETA 1h 05m 17s VRAM 13.4G *
+2026-05-02 18:34:50 [INFO]   >>> New best F1=0.4387 saved at epoch 3.
+2026-05-02 18:35:10 [INFO]     heartbeat epoch=4/30 step=20/131 loss=0.9090 avg=0.9829 elapsed=0m 19s
+2026-05-02 18:35:30 [INFO]     heartbeat epoch=4/30 step=40/131 loss=0.9845 avg=0.9389 elapsed=0m 39s
+2026-05-02 18:35:49 [INFO]     heartbeat epoch=4/30 step=60/131 loss=1.0943 avg=0.9394 elapsed=0m 58s
+2026-05-02 18:36:09 [INFO]     heartbeat epoch=4/30 step=80/131 loss=1.3121 avg=0.9367 elapsed=1m 18s
+2026-05-02 18:36:29 [INFO]     heartbeat epoch=4/30 step=100/131 loss=0.9088 avg=0.9385 elapsed=1m 38s
+2026-05-02 18:36:48 [INFO]     heartbeat epoch=4/30 step=120/131 loss=0.7456 avg=0.9428 elapsed=1m 57s
+2026-05-02 18:37:12 [INFO]     D: gt_pos=0.215 pred_pos=0.347 p_mean=0.349 P=0.327 R=0.527 F1=0.404
+2026-05-02 18:37:12 [INFO]     A: gt_pos=0.283 pred_pos=0.418 p_mean=0.395 P=0.398 R=0.588 F1=0.475
+2026-05-02 18:37:12 [INFO]     S: gt_pos=0.130 pred_pos=0.092 p_mean=0.279 P=0.200 R=0.141 F1=0.165
+2026-05-02 18:37:13 [INFO]     Session-level variance (collapse metric): 0.003164
+2026-05-02 18:37:13 [INFO]     calibrated F1=0.4286 via biases D=+1.10 A=+1.00 S=+0.60 (selected=calibrated)
+2026-05-02 18:37:13 [INFO]     4/ 30 | 9.74e-05 |   0.9400   |  0.7033  | 0.3480 | 0.4286 | 0.6880 | 0.404/0.475/0.165 | 2m 22s ETA 1h 02m 38s VRAM 13.4G
+2026-05-02 18:37:32 [INFO]     heartbeat epoch=5/30 step=20/131 loss=1.0990 avg=0.8674 elapsed=0m 19s
+2026-05-02 18:37:52 [INFO]     heartbeat epoch=5/30 step=40/131 loss=0.7557 avg=0.8794 elapsed=0m 39s
+2026-05-02 18:38:12 [INFO]     heartbeat epoch=5/30 step=60/131 loss=0.8422 avg=0.8807 elapsed=0m 58s
+2026-05-02 18:38:31 [INFO]     heartbeat epoch=5/30 step=80/131 loss=0.8146 avg=0.8913 elapsed=1m 18s
+2026-05-02 18:38:50 [INFO]     heartbeat epoch=5/30 step=100/131 loss=1.1680 avg=0.9119 elapsed=1m 37s
+2026-05-02 18:39:10 [INFO]     heartbeat epoch=5/30 step=120/131 loss=1.1925 avg=0.9216 elapsed=1m 57s
+2026-05-02 18:39:34 [INFO]     D: gt_pos=0.215 pred_pos=0.372 p_mean=0.374 P=0.332 R=0.574 F1=0.420
+2026-05-02 18:39:34 [INFO]     A: gt_pos=0.283 pred_pos=0.418 p_mean=0.422 P=0.386 R=0.571 F1=0.461
+2026-05-02 18:39:34 [INFO]     S: gt_pos=0.130 pred_pos=0.078 p_mean=0.264 P=0.255 R=0.154 F1=0.192
+2026-05-02 18:39:34 [INFO]     Session-level variance (collapse metric): 0.003878
+2026-05-02 18:39:34 [INFO]     calibrated F1=0.4220 via biases D=+0.70 A=+0.90 S=+0.90 (selected=calibrated)
+2026-05-02 18:39:34 [INFO]     5/ 30 | 9.54e-05 |   0.9222   |  0.7113  | 0.3578 | 0.4220 | 0.6835 | 0.420/0.461/0.192 | 2m 21s ETA 59m 57s VRAM 13.4G
+2026-05-02 18:39:53 [INFO]     heartbeat epoch=6/30 step=20/131 loss=0.9137 avg=0.9919 elapsed=0m 19s
+2026-05-02 18:40:13 [INFO]     heartbeat epoch=6/30 step=40/131 loss=1.1407 avg=0.9497 elapsed=0m 38s
+2026-05-02 18:40:32 [INFO]     heartbeat epoch=6/30 step=60/131 loss=1.0024 avg=0.9365 elapsed=0m 58s
+2026-05-02 18:40:52 [INFO]     heartbeat epoch=6/30 step=80/131 loss=0.7499 avg=0.9332 elapsed=1m 17s
+2026-05-02 18:41:11 [INFO]     heartbeat epoch=6/30 step=100/131 loss=0.8426 avg=0.9151 elapsed=1m 37s
+2026-05-02 18:41:31 [INFO]     heartbeat epoch=6/30 step=120/131 loss=0.8908 avg=0.9115 elapsed=1m 56s
+2026-05-02 18:41:55 [INFO]     D: gt_pos=0.215 pred_pos=0.293 p_mean=0.358 P=0.369 R=0.504 F1=0.426
+2026-05-02 18:41:55 [INFO]     A: gt_pos=0.283 pred_pos=0.265 p_mean=0.365 P=0.421 R=0.394 F1=0.407
+2026-05-02 18:41:55 [INFO]     S: gt_pos=0.130 pred_pos=0.013 p_mean=0.236 P=0.000 R=0.000 F1=0.000
+2026-05-02 18:41:55 [INFO]     Session-level variance (collapse metric): 0.002485
+2026-05-02 18:41:55 [INFO]     calibrated F1=0.4332 via biases D=+0.40 A=+0.80 S=+1.20 (selected=calibrated)
+2026-05-02 18:41:55 [INFO]     6/ 30 | 9.29e-05 |   0.9107   |  0.6935  | 0.2778 | 0.4332 | 0.6897 | 0.426/0.407/0.000 | 2m 21s ETA 57m 22s VRAM 13.4G
+2026-05-02 18:42:15 [INFO]     heartbeat epoch=7/30 step=20/131 loss=0.7017 avg=0.8770 elapsed=0m 19s
+2026-05-02 18:42:34 [INFO]     heartbeat epoch=7/30 step=40/131 loss=0.9439 avg=0.8641 elapsed=0m 39s
+2026-05-02 18:42:54 [INFO]     heartbeat epoch=7/30 step=60/131 loss=0.7289 avg=0.8625 elapsed=0m 58s
+2026-05-02 18:43:13 [INFO]     heartbeat epoch=7/30 step=80/131 loss=1.1114 avg=0.8789 elapsed=1m 17s
+2026-05-02 18:43:33 [INFO]     heartbeat epoch=7/30 step=100/131 loss=0.6732 avg=0.8751 elapsed=1m 37s
+2026-05-02 18:43:52 [INFO]     heartbeat epoch=7/30 step=120/131 loss=1.0732 avg=0.8881 elapsed=1m 57s
+2026-05-02 18:44:17 [INFO]     D: gt_pos=0.215 pred_pos=0.482 p_mean=0.438 P=0.311 R=0.698 F1=0.431
+2026-05-02 18:44:17 [INFO]     A: gt_pos=0.283 pred_pos=0.557 p_mean=0.494 P=0.386 R=0.759 F1=0.512
+2026-05-02 18:44:17 [INFO]     S: gt_pos=0.130 pred_pos=0.165 p_mean=0.324 P=0.212 R=0.269 F1=0.237
+2026-05-02 18:44:17 [INFO]     Session-level variance (collapse metric): 0.004591
+2026-05-02 18:44:17 [INFO]     calibrated F1=0.4347 via biases D=+0.10 A=+0.20 S=+0.60 (selected=calibrated)
+2026-05-02 18:44:17 [INFO]     7/ 30 | 8.99e-05 |   0.8907   |  0.7194  | 0.3933 | 0.4347 | 0.6888 | 0.431/0.512/0.237 | 2m 21s ETA 54m 53s VRAM 13.4G
+2026-05-02 18:44:36 [INFO]     heartbeat epoch=8/30 step=20/131 loss=0.6994 avg=0.8483 elapsed=0m 19s
+2026-05-02 18:44:56 [INFO]     heartbeat epoch=8/30 step=40/131 loss=0.7372 avg=0.8550 elapsed=0m 39s
+2026-05-02 18:45:15 [INFO]     heartbeat epoch=8/30 step=60/131 loss=0.7022 avg=0.8704 elapsed=0m 58s
+2026-05-02 18:45:35 [INFO]     heartbeat epoch=8/30 step=80/131 loss=0.5433 avg=0.8600 elapsed=1m 17s
+2026-05-02 18:45:54 [INFO]     heartbeat epoch=8/30 step=100/131 loss=1.0646 avg=0.8698 elapsed=1m 37s
+2026-05-02 18:46:13 [INFO]     heartbeat epoch=8/30 step=120/131 loss=0.8539 avg=0.8713 elapsed=1m 56s
+2026-05-02 18:46:37 [INFO]     D: gt_pos=0.215 pred_pos=0.380 p_mean=0.383 P=0.342 R=0.605 F1=0.437
+2026-05-02 18:46:37 [INFO]     A: gt_pos=0.283 pred_pos=0.440 p_mean=0.413 P=0.386 R=0.600 F1=0.470
+2026-05-02 18:46:37 [INFO]     S: gt_pos=0.130 pred_pos=0.267 p_mean=0.306 P=0.225 R=0.462 F1=0.303
+2026-05-02 18:46:37 [INFO]     Session-level variance (collapse metric): 0.005867
+2026-05-02 18:46:37 [INFO]     calibrated F1=0.4245 via biases D=-0.20 A=+0.70 S=+0.50 (selected=calibrated)
+2026-05-02 18:46:37 [INFO]     8/ 30 | 8.64e-05 |   0.8716   |  0.7278  | 0.4032 | 0.4245 | 0.6861 | 0.437/0.470/0.303 | 2m 20s ETA 52m 22s VRAM 13.4G
+2026-05-02 18:46:57 [INFO]     heartbeat epoch=9/30 step=20/131 loss=0.9665 avg=0.8684 elapsed=0m 19s
+2026-05-02 18:47:16 [INFO]     heartbeat epoch=9/30 step=40/131 loss=0.8441 avg=0.8609 elapsed=0m 38s
+2026-05-02 18:47:36 [INFO]     heartbeat epoch=9/30 step=60/131 loss=1.0792 avg=0.8677 elapsed=0m 58s
+2026-05-02 18:47:55 [INFO]     heartbeat epoch=9/30 step=80/131 loss=0.8160 avg=0.8593 elapsed=1m 17s
+2026-05-02 18:48:15 [INFO]     heartbeat epoch=9/30 step=100/131 loss=0.8040 avg=0.8479 elapsed=1m 37s
+2026-05-02 18:48:34 [INFO]     heartbeat epoch=9/30 step=120/131 loss=0.9633 avg=0.8458 elapsed=1m 56s
+2026-05-02 18:48:58 [INFO]     D: gt_pos=0.215 pred_pos=0.242 p_mean=0.274 P=0.359 R=0.403 F1=0.380
+2026-05-02 18:48:58 [INFO]     A: gt_pos=0.283 pred_pos=0.288 p_mean=0.328 P=0.428 R=0.435 F1=0.431
+2026-05-02 18:48:58 [INFO]     S: gt_pos=0.130 pred_pos=0.122 p_mean=0.195 P=0.192 R=0.179 F1=0.185
+2026-05-02 18:48:58 [INFO]     Session-level variance (collapse metric): 0.006267
+2026-05-02 18:48:58 [INFO]     calibrated F1=0.4249 via biases D=+1.10 A=+1.80 S=+0.90 (selected=calibrated)
+2026-05-02 18:48:58 [INFO]     9/ 30 | 8.25e-05 |   0.8447   |  0.7712  | 0.3322 | 0.4249 | 0.6866 | 0.380/0.431/0.185 | 2m 20s ETA 49m 55s VRAM 13.4G
+2026-05-02 18:48:58 [INFO]   EarlyStopping triggered at epoch 9 (patience=6, metric=primary)
+2026-05-02 18:48:58 [INFO] ==========================================================================================
+2026-05-02 18:48:58 [INFO] Training complete. Best F1=0.4387, time=21m 23s
+2026-05-02 18:48:59 [INFO] Loading best checkpoint for submission generation ...
+2026-05-02 18:48:59 [INFO] Submission level: participant
+2026-05-02 18:48:59 [INFO] Decode method: auto
+2026-05-02 18:48:59 [INFO] Calibrating per-task bias offsets on val ...
+2026-05-02 18:49:12 [INFO]   D: bias=+0.50  F1_cal=0.4556
+2026-05-02 18:49:12 [INFO]   A: bias=+1.30  F1_cal=0.5192
+2026-05-02 18:49:12 [INFO]   S: bias=+0.80  F1_cal=0.3381
+2026-05-02 18:49:12 [INFO]   Mean calibrated F1: 0.4376 (vs selected best: 0.4387, raw best: 0.0716)
+2026-05-02 18:49:12 [INFO] Skipping submission generation after training; use infer.py for release inference.
+2026-05-02 18:49:12 [INFO] Run complete: a1__grouped__mtcn__a-base-mel_mfcc+vad+egemaps__a-ssl-wav2vec2-chinese-xlsr__v-base-headpose+facebeh+qc+vadagg__v-ssl-dinov2-large__mask-andcore__pw_biascalib__seed42__20260502_181533
+2026-05-02 18:49:12 [INFO] Output dir: /home/adodas/AdoDAS2026/outputs/a1/runs/a1__grouped__mtcn__a-base-mel_mfcc+vad+egemaps__a-ssl-wav2vec2-chinese-xlsr__v-base-headpose+facebeh+qc+vadagg__v-ssl-dinov2-large__mask-andcore__pw_biascalib__seed42__20260502_181533
