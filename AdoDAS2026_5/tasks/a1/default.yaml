@@ -1,6 +1,6 @@
 feature_root: /home/adodas/dataset
 manifest_dir: /home/adodas/dataset/manifests
-output_dir: /home/adodas/AdoDAS2026_3/outputs/a1
+output_dir: /home/adodas/AdoDAS2026_5/outputs/a1
 
 feature_selection:
   audio_features:

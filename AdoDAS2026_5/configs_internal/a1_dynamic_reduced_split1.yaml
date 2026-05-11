@@ -1,0 +1,112 @@
+# dynamic_reduced (plan §13): selective_v2 dynamics on vad / vad_agg / headpose / face only.
+# rolling_std only on vad-like streams; headpose/face use windows [5,15] without rolling_std.
+# exclude lists ssl, vision_ssl, mel_mfcc, egemaps, qc_stats, body_pose, global_motion
+# (same names as apply_* / feature keys so blocks are not silently dropped).
+
+feature_root: /home/adodas/dataset
+manifest_dir: /home/adodas/dataset/manifests_internal/split_1_school_class
+output_dir: /home/adodas/AdoDAS2026_5/outputs_internal/split1/a1_reduced
+
+feature_selection:
+  audio_features:
+    - mel_mfcc
+    - vad
+    - egemaps
+    - ssl_embed
+  video_features:
+    - headpose_geom
+    - face_behavior
+    - qc_stats
+    - vad_agg
+    - body_pose
+    - global_motion
+    - vision_ssl_embed
+  audio_ssl_model_tag: wav2vec2-chinese-xlsr
+  video_ssl_model_tag: dinov2-large
+
+mask_policy: and_core
+core_audio:
+  - mel_mfcc
+  - ssl_embed
+core_video:
+  - vision_ssl_embed
+
+d_adapter: 64
+d_model: 256
+tcn_layers: 6
+tcn_kernel_size: 3
+asp_alpha: 0.5
+asp_beta: 0.5
+dropout: 0.2
+d_shared: 256
+aggregator: mlp
+batch_size: 32
+lr: 0.0005
+weight_decay: 0.01
+warmup_epochs: 1
+epochs: 30
+seed: 42
+num_workers: 8
+amp: true
+preload: false
+grad_clip: 1.0
+use_pos_weight: true
+patience: 6
+session_loss_weight: 0.2
+session_type_loss_weight: 0.15
+submission_level: participant
+decode_method: auto
+label_smoothing: 0.0
+feature_noise_std: 0.0
+session_drop_prob: 0.0
+early_stop_metric: primary
+
+pre_tcn_processing:
+  enabled: true
+  dynamics_aug:
+    enabled: true
+    mode: selective_v2
+    apply_audio:
+      vad:
+        windows:
+          - 5
+          - 15
+          - 25
+        use_delta: true
+        use_abs_delta: true
+        use_rolling_mean: true
+        use_rolling_std: true
+    apply_video:
+      vad_agg:
+        windows:
+          - 5
+          - 15
+          - 25
+        use_delta: true
+        use_abs_delta: true
+        use_rolling_mean: true
+        use_rolling_std: true
+      headpose_geom:
+        windows:
+          - 5
+          - 15
+        use_delta: true
+        use_abs_delta: true
+        use_rolling_mean: true
+        use_rolling_std: false
+      face_behavior:
+        windows:
+          - 5
+          - 15
+        use_delta: true
+        use_abs_delta: true
+        use_rolling_mean: true
+        use_rolling_std: false
+    exclude:
+      - ssl_embed
+      - vision_ssl_embed
+      - mel_mfcc
+      - egemaps
+      - qc_stats
+      - body_pose
+      - global_motion

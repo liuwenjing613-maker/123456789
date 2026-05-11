@@ -1,0 +1,17 @@
+{
+  "reason": "prefer baseline-heavy w among {0.5\u20130.8} using macro_F1 - 0.35*mean|pred_pos-val_rate|; picked w=0.5",
+  "global_best_weight": 0.0,
+  "global_best_macro_F1_0.5": 0.42580103837428934,
+  "chosen_macro_F1_0.5": 0.287284337201449,
+  "preferred_candidates": [
+    0.7,
+    0.6,
+    0.8,
+    0.5
+  ],
+  "note": "Global best F1 was at w=0.0 (macro F1=0.4258); chosen w=0.5 per stability / pred_pos rules (md \u00a710.5).",
+  "baseline_weight": 0.5,
+  "dynamic_weight": 0.5,
+  "pred_calib": "raw",
+  "submission_csv": "/home/adodas/AdoDAS2026_4/analysis/outputs/ensemble_analysis/test_submission_ensemble_w050.csv"
+}

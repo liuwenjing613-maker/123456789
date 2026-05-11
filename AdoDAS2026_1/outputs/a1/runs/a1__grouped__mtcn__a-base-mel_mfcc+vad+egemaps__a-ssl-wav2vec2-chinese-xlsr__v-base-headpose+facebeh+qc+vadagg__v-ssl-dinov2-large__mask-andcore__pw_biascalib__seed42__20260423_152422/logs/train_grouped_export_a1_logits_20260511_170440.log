@@ -1,0 +1,2 @@
+2026-05-11 17:04:40 [INFO] Logging to /home/adodas/AdoDAS2026_1/outputs/a1/runs/a1__grouped__mtcn__a-base-mel_mfcc+vad+egemaps__a-ssl-wav2vec2-chinese-xlsr__v-base-headpose+facebeh+qc+vadagg__v-ssl-dinov2-large__mask-andcore__pw_biascalib__seed42__20260423_152422/logs/train_grouped_export_a1_logits_20260511_170440.log
+2026-05-11 17:04:40 [INFO] [PreTCN] pre_tcn_processing.enabled=False

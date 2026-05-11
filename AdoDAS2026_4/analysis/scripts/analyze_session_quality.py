@@ -4,6 +4,7 @@ from __future__ import annotations
 import argparse
 import logging
 import sys
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -36,18 +37,17 @@ def iter_manifest_rows(manifest_path: Path, max_persons: int | None) -> list[dic
     if max_persons is not None and max_persons > 0:
         keys = keys[:max_persons]
     keyset = set(keys)
-    rows = []
-    for _, r in df.iterrows():
-        if r["person_key"] not in keyset:
-            continue
+    sub = df[df["person_key"].isin(keyset)]
+    rows: list[dict] = []
+    for r in sub.itertuples(index=False):
         rows.append(
             {
                 "split": None,
-                "person_key": r["person_key"],
-                "school": str(r["anon_school"]),
-                "cls": str(r["anon_class"]),
-                "pid": str(r["anon_pid"]),
-                "session": str(r["session"]),
+                "person_key": r.person_key,
+                "school": str(r.anon_school),
+                "cls": str(r.anon_class),
+                "pid": str(r.anon_pid),
+                "session": str(r.session),
             }
         )
     return rows
@@ -78,6 +78,20 @@ def session_stats_for_row(
     return out
 
 
+def _session_task(
+    args: tuple[Path, str, dict, str, str],
+) -> dict | None:
+    feat_root, split, br, ssl_a, ssl_v = args
+    st = session_stats_for_row(
+        feat_root, split, br["school"], br["cls"], br["pid"], br["session"], ssl_a, ssl_v
+    )
+    if st is None:
+        return None
+    out = dict(br)
+    out["split"] = split
+    return {**out, **st}
+
+
 def main() -> None:
     p = argparse.ArgumentParser()
     p.add_argument("--config", required=True)
@@ -90,27 +104,54 @@ def main() -> None:
     out_dir.mkdir(parents=True, exist_ok=True)
     dpi = int(cfg.get("plot", {}).get("dpi", 200))
     fcfg = cfg.get("features", {})
-    sessions = fcfg.get("session_ids", ["A01", "B01", "B02", "B03"])
-    max_p = fcfg.get("max_participants_per_split")
+    max_p = int(fcfg.get("max_participants_per_split", 400))
+    sq_raw = fcfg.get("session_quality_max_participants")
+    if sq_raw is None:
+        sq_max = min(max_p, 200)
+    else:
+        sq_max = max(1, int(sq_raw))
+    io_workers = int(fcfg.get("feature_io_workers", 8))
     ssl_a = fcfg.get("audio_ssl_model_tag", "wav2vec2-chinese-xlsr")
     ssl_v = fcfg.get("video_ssl_model_tag", "dinov2-large")
 
-    summaries = []
+    tasks: list[tuple[Path, str, dict, str, str]] = []
     for split in fcfg.get("splits", ["train", "val", "test_hidden"]):
         mp = man_dir / f"{split}.csv"
         if not mp.is_file():
             log.warning("Manifest missing: %s", mp)
             continue
-        base_rows = iter_manifest_rows(mp, max_p)
+        base_rows = iter_manifest_rows(mp, sq_max)
+        log.info(
+            "Session quality split=%s: %d manifest rows (unique persons cap=%d) workers=%d",
+            split,
+            len(base_rows),
+            sq_max,
+            io_workers,
+        )
         for br in base_rows:
-            br = dict(br)
-            br["split"] = split
-            st = session_stats_for_row(
-                feat_root, split, br["school"], br["cls"], br["pid"], br["session"], ssl_a, ssl_v
-            )
-            if st is None:
-                continue
-            summaries.append({**br, **st})
+            tasks.append((feat_root, split, dict(br), ssl_a, ssl_v))
+
+    summaries: list[dict] = []
+    if not tasks:
+        pass
+    elif io_workers <= 1:
+        for t in tasks:
+            row = _session_task(t)
+            if row is not None:
+                summaries.append(row)
+    else:
+        n = len(tasks)
+        done = 0
+        step = max(1, n // 20)
+        with ThreadPoolExecutor(max_workers=min(io_workers, max(1, n))) as ex:
+            futs = {ex.submit(_session_task, t): t for t in tasks}
+            for fut in as_completed(futs):
+                row = fut.result()
+                if row is not None:
+                    summaries.append(row)
+                done += 1
+                if done % step == 0 or done == n:
+                    log.info("Session quality progress %d/%d", done, n)
 
     if not summaries:
         log.error("No session quality rows computed")

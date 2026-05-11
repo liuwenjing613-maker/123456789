@@ -1,3 +1,0 @@
-2026-05-04 19:56:21 [INFO] Logging to /home/adodas/AdoDAS2026_3/outputs/a1/runs/a1__grouped__mtcn__a-base-mel_mfcc+vad+egemaps__a-ssl-wav2vec2-chinese-xlsr__v-base-headpose+facebeh+qc+vadagg__v-ssl-dinov2-large__mask-andcore__pw_biascalib__seed42__20260504_162327/logs/train_grouped_export_a1_logits_20260504_195621.log
-2026-05-04 19:56:21 [INFO] [PreTCN] pre_tcn_processing.enabled=False
-2026-05-04 19:57:49 [INFO] Preloaded 600/600 participants (7.9 GB in RAM)

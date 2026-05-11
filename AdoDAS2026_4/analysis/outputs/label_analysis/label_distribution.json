@@ -1,0 +1,40 @@
+[
+  {
+    "split": "train",
+    "num_samples": 4200,
+    "D_pos_count": 905,
+    "D_pos_rate": 0.2154761904761905,
+    "A_pos_count": 1186,
+    "A_pos_rate": 0.2823809523809524,
+    "S_pos_count": 540,
+    "S_pos_rate": 0.12857142857142856,
+    "all_zero_rate": 0.6826190476190476,
+    "DA_pos_rate": 0.18428571428571427,
+    "DS_pos_rate": 0.10833333333333334,
+    "AS_pos_rate": 0.11952380952380952,
+    "DAS_all_pos_rate": 0.1030952380952381,
+    "num_positive_0_rate": 0.6826190476190476,
+    "num_positive_1_rate": 0.11142857142857143,
+    "num_positive_2_rate": 0.10285714285714286,
+    "num_positive_3_rate": 0.1030952380952381
+  },
+  {
+    "split": "val",
+    "num_samples": 600,
+    "D_pos_count": 129,
+    "D_pos_rate": 0.215,
+    "A_pos_count": 170,
+    "A_pos_rate": 0.2833333333333333,
+    "S_pos_count": 78,
+    "S_pos_rate": 0.13,
+    "all_zero_rate": 0.6833333333333333,
+    "DA_pos_rate": 0.185,
+    "DS_pos_rate": 0.11,
+    "AS_pos_rate": 0.12166666666666667,
+    "DAS_all_pos_rate": 0.105,
+    "num_positive_0_rate": 0.6833333333333333,
+    "num_positive_1_rate": 0.11,
+    "num_positive_2_rate": 0.10166666666666667,
+    "num_positive_3_rate": 0.105
+  }
+]

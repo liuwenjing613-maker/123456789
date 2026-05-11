@@ -78,7 +78,12 @@ def main() -> None:
             log.warning("No biases for %s", model_name)
             bias_full = np.zeros(3)
 
-        pred = read_prediction_file(pred_by_name[raw_name], id_col)
+        raw_path = pred_by_name[raw_name]
+        if not raw_path.is_file():
+            log.warning("Prediction file missing, skip calibration bias for %s: %s", model_name, raw_path)
+            continue
+
+        pred = read_prediction_file(raw_path, id_col)
         val_lab = val_df.set_index(id_col)
         merged = pred.set_index(id_col).join(val_lab, how="inner")
         P0 = merged[["p_D", "p_A", "p_S"]].values.astype(np.float64)
@@ -151,7 +156,25 @@ def main() -> None:
             fig.savefig(out_dir / f"shrink_pred_pos_curve_{model_name}_{c}.png", dpi=dpi)
             plt.close(fig)
 
-    pd.DataFrame(summary_rows).to_csv(out_dir / "shrink_calibration_summary.csv", index=False)
+    summ_path = out_dir / "shrink_calibration_summary.csv"
+    if summary_rows:
+        pd.DataFrame(summary_rows).to_csv(summ_path, index=False)
+    else:
+        log.warning("No shrink summary rows; writing empty CSV with headers only")
+        pd.DataFrame(
+            columns=[
+                "model",
+                "shrink",
+                "class",
+                "F1_0.5",
+                "pred_pos_0.5",
+                "target_pos_rate",
+                "pos_rate_gap",
+                "AUROC_dim",
+                "prob_mean",
+                "score",
+            ]
+        ).to_csv(summ_path, index=False)
     save_json(out_dir / "recommended_bias.json", recommendations)
     log.info("Calibration bias analysis -> %s", out_dir)
 

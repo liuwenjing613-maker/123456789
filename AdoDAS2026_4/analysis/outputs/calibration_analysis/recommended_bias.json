@@ -1,0 +1,20 @@
+{
+  "baseline": {
+    "recommended_shrink": 0.6,
+    "recommended_bias": [
+      0.540000000000002,
+      0.6600000000000019,
+      0.8400000000000023
+    ],
+    "score": 0.36224172857666864
+  },
+  "dynamic": {
+    "recommended_shrink": 0.0,
+    "recommended_bias": [
+      -0.0,
+      0.0,
+      0.0
+    ],
+    "score": 0.33993437170762264
+  }
+}

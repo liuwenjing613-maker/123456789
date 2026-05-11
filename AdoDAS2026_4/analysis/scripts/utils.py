@@ -73,6 +73,15 @@ def read_prediction_file(
 
     if "file_id" in df.columns and id_col not in df.columns:
         df = df.rename(columns={"file_id": id_col})
+    elif {"anon_school", "anon_class", "anon_pid"}.issubset(df.columns) and id_col not in df.columns:
+        df = df.copy()
+        df[id_col] = (
+            df["anon_school"].astype(str)
+            + "_"
+            + df["anon_class"].astype(str)
+            + "_"
+            + df["anon_pid"].astype(str)
+        )
 
     cols = list(prob_cols)
     alt = {f"p_{x}": f"p_{x}" for x in ["D", "A", "S"]}

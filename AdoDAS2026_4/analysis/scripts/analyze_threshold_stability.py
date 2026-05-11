@@ -14,7 +14,6 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from sklearn.metrics import f1_score, precision_score, recall_score
 
 from analysis.scripts.utils import load_yaml, read_label_file, read_prediction_file
 
@@ -22,20 +21,48 @@ logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
 log = logging.getLogger(__name__)
 
 
+def binary_metrics_vs_thresholds(probs: np.ndarray, y: np.ndarray, thresholds: np.ndarray) -> dict[str, np.ndarray]:
+    """Vectorized binary metrics for each threshold (probs, y same length)."""
+    y = y.astype(np.int64)
+    pred = probs[:, None] >= thresholds[None, :]
+    tp = (pred & (y[:, None] == 1)).sum(axis=0).astype(np.float64)
+    fp = (pred & (y[:, None] == 0)).sum(axis=0).astype(np.float64)
+    fn = ((~pred) & (y[:, None] == 1)).sum(axis=0).astype(np.float64)
+    prec = np.divide(tp, tp + fp, out=np.zeros_like(tp), where=(tp + fp) > 0)
+    rec = np.divide(tp, tp + fn, out=np.zeros_like(tp), where=(tp + fn) > 0)
+    f1 = np.divide(2 * prec * rec, prec + rec, out=np.zeros_like(tp), where=(prec + rec) > 0)
+    pred_pos = pred.mean(axis=0).astype(np.float64)
+    return {"f1": f1, "precision": prec, "recall": rec, "pred_pos_rate": pred_pos}
+
+
 def scan_threshold_1d(probs: np.ndarray, y: np.ndarray, thresholds: np.ndarray) -> pd.DataFrame:
-    rows = []
-    for thr in thresholds:
-        pred = (probs >= thr).astype(int)
-        rows.append(
-            {
-                "threshold": float(thr),
-                "f1": float(f1_score(y, pred, zero_division=0.0)),
-                "precision": float(precision_score(y, pred, zero_division=0.0)),
-                "recall": float(recall_score(y, pred, zero_division=0.0)),
-                "pred_pos_rate": float(pred.mean()),
-            }
-        )
-    return pd.DataFrame(rows)
+    m = binary_metrics_vs_thresholds(probs, y, thresholds)
+    return pd.DataFrame(
+        {
+            "threshold": thresholds.astype(np.float64),
+            "f1": m["f1"],
+            "precision": m["precision"],
+            "recall": m["recall"],
+            "pred_pos_rate": m["pred_pos_rate"],
+        }
+    )
+
+
+def bootstrap_best_threshold(
+    probs: np.ndarray, y: np.ndarray, thresholds: np.ndarray, rng: np.random.Generator, B: int
+) -> tuple[np.ndarray, np.ndarray]:
+    """Per bootstrap sample: best threshold by F1 (same rule as before, fully vectorized)."""
+    n = len(probs)
+    best_thrs = np.empty(B, dtype=np.float64)
+    best_f1s = np.empty(B, dtype=np.float64)
+    for b in range(B):
+        idx = rng.integers(0, n, size=n)
+        pv, yv = probs[idx], y[idx]
+        f1s = binary_metrics_vs_thresholds(pv, yv, thresholds)["f1"]
+        j = int(np.argmax(f1s))
+        best_thrs[b] = float(thresholds[j])
+        best_f1s[b] = float(f1s[j])
+    return best_thrs, best_f1s
 
 
 def main() -> None:
@@ -70,6 +97,12 @@ def main() -> None:
         for s in (cfg.get("predictions") or [])
         if s.get("split") == "val" and Path(s["path"]).is_file()
     ]
+    log.info(
+        "Threshold stability: %d val prediction file(s), bootstrap_n=%d, num_thr=%d",
+        len(val_specs),
+        B,
+        nt,
+    )
 
     rng = np.random.default_rng(seed)
 
@@ -108,25 +141,8 @@ def main() -> None:
             fig.savefig(out_dir / f"pred_pos_threshold_curve_{model}_{calib}_{c}.png", dpi=dpi)
             plt.close(fig)
 
-            # bootstrap best threshold
-            n = len(probs)
-            best_thrs = []
-            best_f1s = []
-            for _ in range(B):
-                idx = rng.integers(0, n, size=n)
-                pv, yv = probs[idx], y[idx]
-                best_f = -1.0
-                best_t = 0.5
-                for thr in thresholds:
-                    pred = (pv >= thr).astype(int)
-                    f = f1_score(yv, pred, zero_division=0.0)
-                    if f > best_f:
-                        best_f = f
-                        best_t = float(thr)
-                best_thrs.append(best_t)
-                best_f1s.append(float(best_f))
-            best_thrs = np.asarray(best_thrs)
-            best_f1s = np.asarray(best_f1s)
+            # bootstrap best threshold (vectorized inner threshold loop)
+            best_thrs, best_f1s = bootstrap_best_threshold(probs, y, thresholds, rng, B)
             boot_parts.append(
                 {
                     "name": spec["name"],
@@ -152,10 +168,45 @@ def main() -> None:
             fig.savefig(out_dir / f"bootstrap_threshold_hist_{model}_{calib}_{c}.png", dpi=dpi)
             plt.close(fig)
 
+    scan_path = out_dir / "threshold_scan.csv"
     if scan_parts:
-        pd.concat(scan_parts, ignore_index=True).to_csv(out_dir / "threshold_scan.csv", index=False)
+        pd.concat(scan_parts, ignore_index=True).to_csv(scan_path, index=False)
+    else:
+        pd.DataFrame(
+            columns=[
+                "name",
+                "model",
+                "calib",
+                "class",
+                "threshold",
+                "f1",
+                "precision",
+                "recall",
+                "pred_pos_rate",
+            ]
+        ).to_csv(scan_path, index=False)
+
+    boot_path = out_dir / "threshold_bootstrap.csv"
     if boot_parts:
-        pd.DataFrame(boot_parts).to_csv(out_dir / "threshold_bootstrap.csv", index=False)
+        pd.DataFrame(boot_parts).to_csv(boot_path, index=False)
+    else:
+        pd.DataFrame(
+            columns=[
+                "name",
+                "model",
+                "calib",
+                "class",
+                "best_thr_mean",
+                "best_thr_std",
+                "best_thr_p05",
+                "best_thr_p25",
+                "best_thr_p50",
+                "best_thr_p75",
+                "best_thr_p95",
+                "best_f1_mean",
+                "best_f1_std",
+            ]
+        ).to_csv(boot_path, index=False)
 
     log.info("Threshold analysis -> %s", out_dir)
 

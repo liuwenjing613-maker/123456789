@@ -18,6 +18,7 @@ from common.models.heads import A1Head, A2OrdinalHead
 from common.models.mtcn_backbone import BackboneConfig, MTCNBackbone
 from common.runner import (
     _normalize_decode_method,
+    a1_build_participant_submission_rows,
     generate_submission_grouped,
     setup_logging,
 )
@@ -184,22 +185,11 @@ def main() -> None:
     )
 
     manifest_df = pd.read_csv(manifest_path)
-    file_ids = []
-    filtered_preds = []
+    file_ids: list[str] = []
+    filtered_preds: list = []
     if submission_level == "participant":
-        pid_to_info = {}
-        for _, row in manifest_df.iterrows():
-            pid = str(row["anon_pid"])
-            pid_to_info.setdefault(pid, (str(row["anon_school"]), str(row["anon_class"])))
-
-        for pid, pred in zip(pids, preds):
-            pid_str = str(pid)
-            info = pid_to_info.get(pid_str)
-            if info is None:
-                continue
-            school, cls = info
-            file_ids.append(f"{school}_{cls}_{pid_str}")
-            filtered_preds.append(pred)
+        file_ids, preds_arr = a1_build_participant_submission_rows(pids, preds, manifest_df)
+        filtered_preds = [preds_arr[i] for i in range(len(preds_arr))]
     else:
         pid_to_info = {
             (str(row["anon_pid"]), str(row["session"])): (

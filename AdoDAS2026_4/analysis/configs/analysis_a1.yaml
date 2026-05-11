@@ -15,16 +15,17 @@ labels:
 
 # Checkpoints for optional export (baseline = 无 bodypose/globmot 的 run；dynamic = 含 dynamics 的 run)
 exports:
-  enabled: false
+  enabled: true
   baseline:
-    checkpoint: /home/adodas/AdoDAS2026_3/outputs/a1/runs/a1__grouped__mtcn__a-base-mel_mfcc+vad+egemaps__a-ssl-wav2vec2-chinese-xlsr__v-base-headpose+facebeh+qc+vadagg__v-ssl-dinov2-large__mask-andcore__pw_biascalib__seed42__20260504_162327/checkpoints/best.pt
-    calibration_json: /home/adodas/AdoDAS2026_3/outputs/a1/runs/a1__grouped__mtcn__a-base-mel_mfcc+vad+egemaps__a-ssl-wav2vec2-chinese-xlsr__v-base-headpose+facebeh+qc+vadagg__v-ssl-dinov2-large__mask-andcore__pw_biascalib__seed42__20260504_162327/calibration/a1_bias_grouped.json
+    checkpoint: /home/adodas/AdoDAS2026_1/outputs/a1/runs/a1__grouped__mtcn__a-base-mel_mfcc+vad+egemaps__a-ssl-wav2vec2-chinese-xlsr__v-base-headpose+facebeh+qc+vadagg__v-ssl-dinov2-large__mask-andcore__pw_biascalib__seed42__20260423_152422/checkpoints/best.pt
+    calibration_json: /home/adodas/AdoDAS2026_1/outputs/a1/runs/a1__grouped__mtcn__a-base-mel_mfcc+vad+egemaps__a-ssl-wav2vec2-chinese-xlsr__v-base-headpose+facebeh+qc+vadagg__v-ssl-dinov2-large__mask-andcore__pw_biascalib__seed42__20260423_152422/calibration/a1_bias_grouped.json
   dynamic:
     checkpoint: /home/adodas/AdoDAS2026_3/outputs/a1/runs/a1__grouped__mtcn__a-base-mel_mfcc+vad+egemaps__a-ssl-wav2vec2-chinese-xlsr__v-base-headpose+facebeh+qc+vadagg+bodypose+globmot__v-ssl-dinov2-large__mask-andcore__pw_biascalib__seed42__20260505_172010/checkpoints/best.pt
     calibration_json: /home/adodas/AdoDAS2026_3/outputs/a1/runs/a1__grouped__mtcn__a-base-mel_mfcc+vad+egemaps__a-ssl-wav2vec2-chinese-xlsr__v-base-headpose+facebeh+qc+vadagg+bodypose+globmot__v-ssl-dinov2-large__mask-andcore__pw_biascalib__seed42__20260505_172010/calibration/a1_bias_grouped.json
   intermediate_dir: /home/adodas/AdoDAS2026_4/analysis/outputs/intermediate_logits
 
 predictions:
+  # 由 prepare_prediction_csvs.py 生成（exports.enabled=true 时会先导出 logits 再写概率 CSV）
   - name: baseline_val_raw
     model: baseline
     split: val
@@ -84,6 +85,7 @@ threshold:
 ensemble:
   baseline_model_name: baseline
   dynamic_model_name: dynamic
+  pred_calib: raw
   weights: [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
 
 features:
@@ -104,6 +106,10 @@ features:
   audio_ssl_model_tag: wav2vec2-chinese-xlsr
   video_ssl_model_tag: dinov2-large
   max_participants_per_split: 400
+  # 特征漂移 / session 质量会大量读盘；以下上限与并行度控制耗时（需要更细统计可调大）
+  feature_drift_max_participants: 150
+  session_quality_max_participants: 200
+  feature_io_workers: 8
 
 plot:
   dpi: 200

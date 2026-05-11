@@ -634,9 +634,9 @@ def generate_submission_grouped(
             preds = _decode_a2_logits(task_head, logits_f, decode_method=decode_method).cpu().numpy()
 
         if submission_level == "participant":
-            participant_ids = [str(pid) for pid in batch["anon_pids"]]
-            all_pids.extend(participant_ids)
-            all_sessions.extend(["participant"] * len(participant_ids))
+            for s, c, p in zip(batch["anon_schools"], batch["anon_classes"], batch["anon_pids"]):
+                all_pids.append((str(s), str(c), str(p)))
+            all_sessions.extend(["participant"] * batch["n_participants"])
         else:
             all_pids.extend(batch["flat_pids"])
             all_sessions.extend(batch["flat_sessions"])
@@ -757,6 +757,71 @@ def calibrate_a1_bias(logits, labels, grid_min=-3.0, grid_max=3.0, grid_step=0.1
         best_f1s.append(best_f1)
     return biases, best_f1s
 
+
+def compute_a1_robust_metric(val_metrics: dict) -> float:
+    """Val-only composite for checkpoint selection (A1_val_test_consistency plan)."""
+    raw = float(val_metrics.get("mean_f1", 0.0))
+    cal = float(val_metrics.get("mean_f1_calibrated", raw))
+    auc = float(val_metrics.get("auroc", 0.0))
+    biases = val_metrics.get("calibration_biases", [0.0, 0.0, 0.0])
+    bias_abs = float(np.mean(np.abs(np.asarray(biases, dtype=np.float64))))
+    cal_gap = cal - raw
+    cal_capped = min(cal, raw + 0.025)
+    robust = (
+        0.50 * raw
+        + 0.35 * auc
+        + 0.15 * cal_capped
+        - 0.30 * max(0.0, cal_gap - 0.025)
+        - 0.01 * bias_abs
+    )
+    return float(robust)
+
+
+def participant_build_submission_rows(
+    pids: list,
+    preds: np.ndarray,
+    manifest_df: pd.DataFrame,
+) -> tuple[list[str], np.ndarray]:
+    """Build ``file_id`` list aligned with ``preds`` for participant-level submission.
+
+    When ``pids`` are (anon_school, anon_class, anon_pid) tuples from the dataloader,
+    ``file_id`` is deterministic and safe if ``anon_pid`` repeats across schools/classes.
+    Otherwise fall back to manifest lookup by pid (legacy).
+    """
+    preds = np.asarray(preds)
+    if pids and isinstance(pids[0], tuple) and len(pids[0]) == 3:
+        file_ids = [f"{str(s)}_{str(c)}_{str(p)}" for s, c, p in pids]
+        return file_ids, preds
+
+    file_ids: list[str] = []
+    filtered: list[np.ndarray] = []
+    pid_to_info: dict[str, tuple[str, str]] = {}
+    for _, row in manifest_df.iterrows():
+        k = str(row["anon_pid"])
+        if k not in pid_to_info:
+            pid_to_info[k] = (str(row["anon_school"]), str(row["anon_class"]))
+
+    for pid, pred in zip(pids, preds):
+        pid_str = str(pid)
+        info = pid_to_info.get(pid_str)
+        if info is None:
+            continue
+        school, cls = info
+        file_ids.append(f"{school}_{cls}_{pid_str}")
+        filtered.append(np.asarray(pred))
+    if not filtered:
+        return file_ids, preds[:0]
+    stacked = np.stack(filtered, axis=0)
+    return file_ids, stacked
+
+
+def a1_build_participant_submission_rows(
+    pids: list,
+    preds: np.ndarray,
+    manifest_df: pd.DataFrame,
+) -> tuple[list[str], np.ndarray]:
+    """Backward-compatible alias for A1 participant CSV rows."""
+    return participant_build_submission_rows(pids, preds, manifest_df)
 
 
 def main() -> None:
@@ -918,6 +983,10 @@ def main() -> None:
     log.info(f"Session drop prob: {session_drop_prob}")
 
     best_metric = -1.0
+    best_ckpt_raw_f1 = -1.0
+    best_ckpt_auroc = -1.0
+    best_ckpt_cal_f1 = -1.0
+    best_ckpt_robust = -1.0
     metric_name = "F1" if task == "a1" else "QWK"
     t_start = time.time()
 
@@ -985,6 +1054,41 @@ def main() -> None:
             log.info(f"  >>> New best {metric_name}={best_metric:.4f} saved at epoch {epoch}.")
             meta.update_best(epoch, val_metrics)
 
+        ckpt_root = run_dirs["checkpoints"]
+        extra_sd = {"head_state_dict": task_head.state_dict()}
+        if task == "a1":
+            raw_f1 = float(val_metrics["mean_f1"])
+            auroc = float(val_metrics["auroc"])
+            cal_f1 = float(val_metrics["mean_f1_calibrated"])
+            robust = compute_a1_robust_metric(val_metrics)
+            if raw_f1 > best_ckpt_raw_f1:
+                best_ckpt_raw_f1 = raw_f1
+                save_checkpoint(
+                    ckpt_root / "best_raw_f1.pt", grouped_model, optimizer, epoch, raw_f1, extra=extra_sd,
+                )
+                log.info(f"  >>> New best_raw_f1={raw_f1:.4f} -> best_raw_f1.pt")
+            if auroc > best_ckpt_auroc:
+                best_ckpt_auroc = auroc
+                save_checkpoint(
+                    ckpt_root / "best_auroc.pt", grouped_model, optimizer, epoch, auroc, extra=extra_sd,
+                )
+                log.info(f"  >>> New best_auroc={auroc:.4f} -> best_auroc.pt")
+            if cal_f1 > best_ckpt_cal_f1:
+                best_ckpt_cal_f1 = cal_f1
+                save_checkpoint(
+                    ckpt_root / "best_calibrated_f1.pt", grouped_model, optimizer, epoch, cal_f1, extra=extra_sd,
+                )
+                log.info(f"  >>> New best_calibrated_f1={cal_f1:.4f} -> best_calibrated_f1.pt")
+            if robust > best_ckpt_robust:
+                best_ckpt_robust = robust
+                save_checkpoint(
+                    ckpt_root / "best_robust.pt", grouped_model, optimizer, epoch, robust, extra=extra_sd,
+                )
+                log.info(f"  >>> New best_robust={robust:.4f} -> best_robust.pt")
+            save_checkpoint(
+                ckpt_root / "last.pt", grouped_model, optimizer, epoch, primary, extra=extra_sd,
+            )
+
         es_value = val_metrics["loss"] if early_stop_metric == "val_loss" else primary
         if early_stop.step(es_value):
             log.info(f"  EarlyStopping triggered at epoch {epoch} (patience={patience}, metric={early_stop_metric})")
@@ -994,8 +1098,14 @@ def main() -> None:
     total_time = time.time() - t_start
     log.info(f"Training complete. Best {metric_name}={best_metric:.4f}, time={_fmt_duration(total_time)}")
 
-    log.info("Loading best checkpoint for submission generation ...")
-    state = load_checkpoint(run_dirs["checkpoints"] / "best.pt", grouped_model, optimizer=None)
+    ckpt_dir = run_dirs["checkpoints"]
+    robust_ckpt = ckpt_dir / "best_robust.pt"
+    if task == "a1" and robust_ckpt.exists():
+        log.info("Loading best_robust.pt for calibration / submission generation ...")
+        state = load_checkpoint(robust_ckpt, grouped_model, optimizer=None)
+    else:
+        log.info("Loading best.pt for calibration / submission generation ...")
+        state = load_checkpoint(ckpt_dir / "best.pt", grouped_model, optimizer=None)
     task_head.load_state_dict(state["head_state_dict"])
     grouped_model.to(device)
     task_head.to(device)
@@ -1145,20 +1255,12 @@ def main() -> None:
             file_ids = []
             filtered_preds = []
             if submission_level == "participant":
-                pid_to_info = {}
-                for _, row in manifest_df.iterrows():
-                    pid = str(row["anon_pid"])
-                    pid_to_info.setdefault(pid, (str(row["anon_school"]), str(row["anon_class"])))
-
-                for pid, pred in zip(pids, preds):
-                    pid_str = str(pid)
-                    info = pid_to_info.get(pid_str)
-                    if info is None:
-                        continue
-                    school, cls = info
-                    file_ids.append(f"{school}_{cls}_{pid_str}")
-                    filtered_preds.append(pred)
-                expected_rows = int(manifest_df["anon_pid"].astype(str).nunique())
+                file_ids, preds = participant_build_submission_rows(pids, preds, manifest_df)
+                gcols = ["anon_school", "anon_class", "anon_pid"]
+                if all(c in manifest_df.columns for c in gcols):
+                    expected_rows = int(manifest_df[gcols].astype(str).drop_duplicates().shape[0])
+                else:
+                    expected_rows = int(manifest_df["anon_pid"].astype(str).nunique())
             else:
                 pid_to_info = {}
                 for _, row in manifest_df.iterrows():
@@ -1176,12 +1278,15 @@ def main() -> None:
                     filtered_preds.append(pred)
                 expected_rows = len(manifest_df)
 
-            if filtered_preds:
-                preds = np.asarray(filtered_preds)
-            elif task == "a1":
-                preds = np.zeros((0, 3), dtype=np.float32)
-            else:
-                preds = np.zeros((0, 21), dtype=np.int64)
+            if submission_level != "participant":
+                if filtered_preds:
+                    preds = np.asarray(filtered_preds)
+                elif task == "a1":
+                    preds = np.zeros((0, 3), dtype=np.float32)
+                else:
+                    preds = np.zeros((0, 21), dtype=np.int64)
+            elif len(file_ids) == 0:
+                preds = np.zeros((0, 3), dtype=np.float32) if task == "a1" else np.zeros((0, 21), dtype=np.int64)
             if len(file_ids) != expected_rows:
                 log.warning(
                     f"Submission row count mismatch for {split_name}: expected={expected_rows} generated={len(file_ids)}"
