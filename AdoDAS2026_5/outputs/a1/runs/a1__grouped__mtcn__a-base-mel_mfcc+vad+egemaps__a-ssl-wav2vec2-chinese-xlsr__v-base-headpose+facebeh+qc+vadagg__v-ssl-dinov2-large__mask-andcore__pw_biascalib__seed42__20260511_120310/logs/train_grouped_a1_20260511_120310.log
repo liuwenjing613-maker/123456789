@@ -1,0 +1,18 @@
+2026-05-11 12:03:10 [INFO] Logging to /home/adodas/AdoDAS2026_3/outputs/a1/runs/a1__grouped__mtcn__a-base-mel_mfcc+vad+egemaps__a-ssl-wav2vec2-chinese-xlsr__v-base-headpose+facebeh+qc+vadagg__v-ssl-dinov2-large__mask-andcore__pw_biascalib__seed42__20260511_120310/logs/train_grouped_a1_20260511_120310.log
+2026-05-11 12:03:10 [INFO] Device: cpu
+2026-05-11 12:03:10 [INFO] Task: a1
+2026-05-11 12:03:10 [INFO] Run name: a1__grouped__mtcn__a-base-mel_mfcc+vad+egemaps__a-ssl-wav2vec2-chinese-xlsr__v-base-headpose+facebeh+qc+vadagg__v-ssl-dinov2-large__mask-andcore__pw_biascalib__seed42__20260511_120310
+2026-05-11 12:03:10 [INFO] Config: {'feature_root': '/home/adodas/dataset', 'manifest_dir': '/home/adodas/dataset/manifests', 'output_dir': '/home/adodas/AdoDAS2026_3/outputs/a1', 'mask_policy': 'and_core', 'core_audio': ['mel_mfcc', 'ssl_embed'], 'core_video': ['vision_ssl_embed', 'qc_stats'], 'd_adapter': 64, 'd_model': 256, 'tcn_layers': 6, 'tcn_kernel_size': 3, 'asp_alpha': 0.5, 'asp_beta': 0.5, 'dropout': 0.2, 'd_shared': 256, 'aggregator': 'mlp', 'batch_size': 4, 'lr': 0.0005, 'weight_decay': 0.01, 'warmup_epochs': 1, 'epochs': 1, 'seed': 42, 'num_workers': 0, 'amp': True, 'preload': True, 'grad_clip': 1.0, 'use_pos_weight': True, 'patience': 6, 'session_loss_weight': 0.2, 'session_type_loss_weight': 0.15, 'submission_level': 'participant', 'decode_method': 'auto', 'label_smoothing': 0.0, 'feature_noise_std': 0.0, 'session_drop_prob': 0.0, 'early_stop_metric': 'primary', 'pre_tcn_processing': {'enabled': True, 'dynamics_aug': {'enabled': True, 'window': 5, 'use_delta': True, 'use_abs_delta': True, 'use_rolling_mean': True, 'use_rolling_std': True, 'apply_audio': ['vad'], 'apply_video': ['vad_agg', 'headpose_geom', 'face_behavior'], 'exclude': ['qc_stats', 'ssl_embed', 'vision_ssl_embed', 'mel_mfcc', 'egemaps', 'body_pose', 'global_motion']}}, 'audio_features': ['mel_mfcc', 'vad', 'egemaps', 'ssl_embed'], 'video_features': ['headpose_geom', 'face_behavior', 'qc_stats', 'vad_agg', 'vision_ssl_embed'], 'audio_ssl_model_tag': 'wav2vec2-chinese-xlsr', 'video_ssl_model_tag': 'dinov2-large', 'task': 'a1'}
+2026-05-11 12:03:10 [INFO] Mask policy: and_core
+2026-05-11 12:03:13 [INFO] [PreTCN] DynamicsAug enabled: True
+2026-05-11 12:03:13 [INFO] [PreTCN] mode: legacy
+2026-05-11 12:03:13 [INFO] [PreTCN] window: 5
+2026-05-11 12:03:13 [INFO] [PreTCN] apply_audio: ['vad']
+2026-05-11 12:03:13 [INFO] [PreTCN] apply_video: ['face_behavior', 'headpose_geom', 'vad_agg']
+2026-05-11 12:03:13 [INFO] [PreTCN] use_delta=True use_abs_delta=True use_rolling_mean=True use_rolling_std=True
+2026-05-11 12:03:13 [INFO] [PreTCN] face_behavior: 5 -> 25
+2026-05-11 12:03:13 [INFO] [PreTCN] headpose_geom: 5 -> 25
+2026-05-11 12:03:13 [INFO] [PreTCN] vad: 1 -> 5
+2026-05-11 12:03:13 [INFO] [PreTCN] vad_agg: 4 -> 20
+2026-05-11 12:03:13 [INFO] Train: 4200 participants, Val: 600 participants
+2026-05-11 12:03:13 [INFO] Preloading data into RAM ...

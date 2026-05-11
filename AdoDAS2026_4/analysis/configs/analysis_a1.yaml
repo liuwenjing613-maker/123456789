@@ -1,0 +1,111 @@
+task: a1
+
+paths:
+  repo_root: /home/adodas/AdoDAS2026_4
+  feature_root: /home/adodas/dataset
+  manifest_dir: /home/adodas/dataset/manifests
+  output_dir: /home/adodas/AdoDAS2026_4/analysis/outputs
+  report_dir: /home/adodas/AdoDAS2026_4/analysis/reports
+
+labels:
+  train_label_path: /home/adodas/dataset/manifests/train.csv
+  val_label_path: /home/adodas/dataset/manifests/val.csv
+  id_col: person_id
+  class_cols: [D, A, S]
+
+# Checkpoints for optional export (baseline = 无 bodypose/globmot 的 run；dynamic = 含 dynamics 的 run)
+exports:
+  enabled: false
+  baseline:
+    checkpoint: /home/adodas/AdoDAS2026_3/outputs/a1/runs/a1__grouped__mtcn__a-base-mel_mfcc+vad+egemaps__a-ssl-wav2vec2-chinese-xlsr__v-base-headpose+facebeh+qc+vadagg__v-ssl-dinov2-large__mask-andcore__pw_biascalib__seed42__20260504_162327/checkpoints/best.pt
+    calibration_json: /home/adodas/AdoDAS2026_3/outputs/a1/runs/a1__grouped__mtcn__a-base-mel_mfcc+vad+egemaps__a-ssl-wav2vec2-chinese-xlsr__v-base-headpose+facebeh+qc+vadagg__v-ssl-dinov2-large__mask-andcore__pw_biascalib__seed42__20260504_162327/calibration/a1_bias_grouped.json
+  dynamic:
+    checkpoint: /home/adodas/AdoDAS2026_3/outputs/a1/runs/a1__grouped__mtcn__a-base-mel_mfcc+vad+egemaps__a-ssl-wav2vec2-chinese-xlsr__v-base-headpose+facebeh+qc+vadagg+bodypose+globmot__v-ssl-dinov2-large__mask-andcore__pw_biascalib__seed42__20260505_172010/checkpoints/best.pt
+    calibration_json: /home/adodas/AdoDAS2026_3/outputs/a1/runs/a1__grouped__mtcn__a-base-mel_mfcc+vad+egemaps__a-ssl-wav2vec2-chinese-xlsr__v-base-headpose+facebeh+qc+vadagg+bodypose+globmot__v-ssl-dinov2-large__mask-andcore__pw_biascalib__seed42__20260505_172010/calibration/a1_bias_grouped.json
+  intermediate_dir: /home/adodas/AdoDAS2026_4/analysis/outputs/intermediate_logits
+
+predictions:
+  - name: baseline_val_raw
+    model: baseline
+    split: val
+    calib: raw
+    path: /home/adodas/AdoDAS2026_4/analysis/outputs/intermediate_logits/baseline_val_raw.csv
+  - name: baseline_val_calibrated
+    model: baseline
+    split: val
+    calib: calibrated
+    path: /home/adodas/AdoDAS2026_4/analysis/outputs/intermediate_logits/baseline_val_calibrated.csv
+  - name: dynamic_val_raw
+    model: dynamic
+    split: val
+    calib: raw
+    path: /home/adodas/AdoDAS2026_4/analysis/outputs/intermediate_logits/dynamic_val_raw.csv
+  - name: dynamic_val_calibrated
+    model: dynamic
+    split: val
+    calib: calibrated
+    path: /home/adodas/AdoDAS2026_4/analysis/outputs/intermediate_logits/dynamic_val_calibrated.csv
+  - name: baseline_test_raw
+    model: baseline
+    split: test
+    calib: raw
+    path: /home/adodas/AdoDAS2026_4/analysis/outputs/intermediate_logits/baseline_test_hidden_raw.csv
+  - name: baseline_test_calibrated
+    model: baseline
+    split: test
+    calib: calibrated
+    path: /home/adodas/AdoDAS2026_4/analysis/outputs/intermediate_logits/baseline_test_hidden_calibrated.csv
+  - name: dynamic_test_raw
+    model: dynamic
+    split: test
+    calib: raw
+    path: /home/adodas/AdoDAS2026_4/analysis/outputs/intermediate_logits/dynamic_test_hidden_raw.csv
+  - name: dynamic_test_calibrated
+    model: dynamic
+    split: test
+    calib: calibrated
+    path: /home/adodas/AdoDAS2026_4/analysis/outputs/intermediate_logits/dynamic_test_hidden_calibrated.csv
+
+calibration:
+  use_logit_bias: true
+  shrink_values: [0.0, 0.25, 0.4, 0.6, 0.8, 1.0]
+  alpha_pos_rate_penalty: 0.7
+  target_pos_rate_train_weight: 0.7
+  target_pos_rate_val_weight: 0.3
+  eps: 1.0e-6
+
+threshold:
+  min_thr: 0.05
+  max_thr: 0.95
+  num_thr: 181
+  bootstrap_n: 1000
+  bootstrap_seed: 42
+
+ensemble:
+  baseline_model_name: baseline
+  dynamic_model_name: dynamic
+  weights: [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
+
+features:
+  splits: [train, val, test_hidden]
+  session_ids: [A01, B01, B02, B03]
+  analyze_groups:
+    - vad
+    - vad_agg
+    - headpose_geom
+    - face_behavior
+    - qc_stats
+    - body_pose
+    - global_motion
+    - mel_mfcc
+    - egemaps
+    - ssl_embed
+    - vision_ssl_embed
+  audio_ssl_model_tag: wav2vec2-chinese-xlsr
+  video_ssl_model_tag: dinov2-large
+  max_participants_per_split: 400
+
+plot:
+  dpi: 200
+  save_png: true
+  save_pdf: false
