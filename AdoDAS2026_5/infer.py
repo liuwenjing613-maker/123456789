@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import logging
 from pathlib import Path
 
 import pandas as pd
@@ -12,7 +13,12 @@ from torch.utils.data import DataLoader
 import yaml
 
 from common.data.dataset import FeatureConfig
-from common.data.grouped_dataset import GroupedParticipantDataset, grouped_collate_fn
+from common.data.grouped_dataset import (
+    GroupedParticipantDataset,
+    grouped_collate_fn,
+    maybe_default_internal_val_sequence_path_split,
+    path_split_for_yaml,
+)
 from common.models.grouped_model import CORALHead, GroupedModel
 from common.models.heads import A1Head, A2OrdinalHead
 from common.models.mtcn_backbone import BackboneConfig, MTCNBackbone
@@ -86,6 +92,9 @@ def main() -> None:
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     run_dir = checkpoint_path.parent.parent
     setup_logging(run_dir / "logs", f"infer_{args.task}")
+    note_internal = maybe_default_internal_val_sequence_path_split(cfg)
+    if note_internal:
+        logging.getLogger().info(note_internal)
 
     manifest_dir = Path(cfg.get("manifest_dir", "/media/k3nwong/Data1/test/outputs/data"))
     manifest_path = Path(args.manifest) if args.manifest else manifest_dir / f"{args.split}.csv"
@@ -114,7 +123,12 @@ def main() -> None:
         pre_tcn_processing=cfg.get("pre_tcn_processing", defaults.pre_tcn_processing),
     )
 
-    ds = GroupedParticipantDataset(manifest_path, feat_cfg, split=args.split)
+    ds = GroupedParticipantDataset(
+        manifest_path,
+        feat_cfg,
+        split=args.split,
+        path_split=path_split_for_yaml(cfg, args.split),
+    )
     ds.log_pre_tcn_diagnostics()
     preload = bool(cfg.get("preload", True))
     num_workers = int(cfg.get("num_workers", 8))
@@ -209,9 +223,26 @@ def main() -> None:
             filtered_preds.append(pred)
 
     if args.task == "a1":
+        # Parse file_ids to extract anon_school, anon_class, anon_pid
+        anon_schools = []
+        anon_classes = []
+        anon_pids = []
+        for fid in file_ids:
+            parts = fid.split('_')
+            if len(parts) >= 5:  # SCH_001_CLS_0015_P000224
+                anon_schools.append(parts[1])  # 001
+                anon_classes.append(parts[3])  # 0015
+                anon_pids.append(parts[4][1:])  # 000224 (remove P)
+            else:
+                # Fallback
+                anon_schools.append("")
+                anon_classes.append("")
+                anon_pids.append("")
         sub = pd.DataFrame(
             {
-                "file_id": file_ids,
+                "anon_school": anon_schools,
+                "anon_class": anon_classes,
+                "anon_pid": anon_pids,
                 "p_D": [float(pred[0]) for pred in filtered_preds],
                 "p_A": [float(pred[1]) for pred in filtered_preds],
                 "p_S": [float(pred[2]) for pred in filtered_preds],

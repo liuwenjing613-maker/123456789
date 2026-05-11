@@ -7,6 +7,9 @@ feature_root: /home/adodas/dataset
 manifest_dir: /home/adodas/dataset/manifests_internal/split_2_school_class
 output_dir: /home/adodas/AdoDAS2026_5/outputs_internal/split2/a1_reduced
 
+# 折内 val 的 manifest 在 val.csv，但序列文件在全局 train/ 下时必须指定（否则整批 session 为 None）：
+val_sequence_path_split: train
+
 feature_selection:
   audio_features:
     - mel_mfcc

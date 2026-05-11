@@ -21,7 +21,12 @@ from tqdm import tqdm
 import yaml
 
 from .data.dataset import FeatureConfig, ITEM_COLS, A1_COLS
-from .data.grouped_dataset import GroupedParticipantDataset, grouped_collate_fn
+from .data.grouped_dataset import (
+    GroupedParticipantDataset,
+    grouped_collate_fn,
+    maybe_default_internal_val_sequence_path_split,
+    path_split_for_yaml,
+)
 from .models.mtcn_backbone import BackboneConfig, MTCNBackbone
 from .models.heads import A1Head, A2OrdinalHead, a1_loss, a2_ordinal_loss
 from .models.grouped_model import GroupedModel, CORALHead
@@ -827,6 +832,7 @@ def a1_build_participant_submission_rows(
 def main() -> None:
     args = parse_args()
     cfg = load_config(args)
+    note_internal_val_path = maybe_default_internal_val_sequence_path_split(cfg)
     task = cfg["task"]
 
     seed_everything(cfg.get("seed", 42))
@@ -840,6 +846,8 @@ def main() -> None:
     run_dirs = setup_run_dirs(output_root, run_name)
 
     setup_logging(run_dirs["logs"], task)
+    if note_internal_val_path:
+        log.info(note_internal_val_path)
     log.info(f"Device: {device}")
     log.info(f"Task: {task}")
     log.info(f"Run name: {run_name}")
@@ -862,10 +870,18 @@ def main() -> None:
     log.info(f"Mask policy: {feat_cfg.mask_policy}")
 
     train_ds = GroupedParticipantDataset(
-        manifest_dir / "train.csv", feat_cfg, split="train",
+        manifest_dir / "train.csv",
+        feat_cfg,
+        split="train",
         session_drop_prob=cfg.get("session_drop_prob", 0.1),
+        path_split=path_split_for_yaml(cfg, "train"),
     )
-    val_ds = GroupedParticipantDataset(manifest_dir / "val.csv", feat_cfg, split="val")
+    val_ds = GroupedParticipantDataset(
+        manifest_dir / "val.csv",
+        feat_cfg,
+        split="val",
+        path_split=path_split_for_yaml(cfg, "val"),
+    )
     train_ds.log_pre_tcn_diagnostics()
 
     batch_size = cfg.get("batch_size", 64)
@@ -1236,7 +1252,12 @@ def main() -> None:
             manifest_path = manifest_dir / f"{split_name}.csv"
             if not manifest_path.exists():
                 continue
-            ds = GroupedParticipantDataset(manifest_path, feat_cfg, split=split_name)
+            ds = GroupedParticipantDataset(
+                manifest_path,
+                feat_cfg,
+                split=split_name,
+                path_split=path_split_for_yaml(cfg, split_name),
+            )
             loader = DataLoader(
                 ds, batch_size=batch_size, shuffle=False,
                 num_workers=num_workers, collate_fn=grouped_collate_fn,

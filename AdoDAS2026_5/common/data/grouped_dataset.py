@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import logging
+import re
 from pathlib import Path
 from typing import Any, Mapping
 
@@ -23,6 +24,63 @@ from .pre_tcn_processing import (
 )
 
 log = logging.getLogger(__name__)
+
+
+def path_split_for_yaml(cfg: Mapping[str, Any] | None, logical_split: str) -> str | None:
+    """Which subfolder under ``feature_root`` holds ``sequence.npz`` for this logical split.
+
+    Internal CV manifests often use ``val.csv`` for a fold's validation *labels*, while extracted
+    features for those participants still live under the global ``train/`` tree. In that case set
+    ``val_sequence_path_split: train`` (or ``sequence_path_split: {val: train}``).
+    """
+    if not cfg:
+        return None
+    flat_keys = {
+        "train": "train_sequence_path_split",
+        "val": "val_sequence_path_split",
+        "test_hidden": "test_hidden_sequence_path_split",
+    }
+    fk = flat_keys.get(logical_split)
+    if fk:
+        v = cfg.get(fk)
+        if v is not None and str(v).strip():
+            return str(v).strip()
+    nested = cfg.get("sequence_path_split")
+    if isinstance(nested, dict):
+        v = nested.get(logical_split)
+        if v is not None and str(v).strip():
+            return str(v).strip()
+    return None
+
+
+def maybe_default_internal_val_sequence_path_split(cfg: dict[str, Any]) -> str | None:
+    """If ``manifest_dir`` is an internal CV layout, default val loader to ``train/`` on disk.
+
+    GroupKFold ``val.csv`` rows are still official-train participants; extracted
+    ``sequence.npz`` almost always lives under ``{feature_root}/train/...``, not
+    ``val/``. Call after loading YAML; mutates ``cfg`` only when unset.
+    """
+    vs = cfg.get("val_sequence_path_split")
+    if vs is not None and str(vs).strip():
+        return None
+    nested = cfg.get("sequence_path_split")
+    if isinstance(nested, dict):
+        v = nested.get("val")
+        if v is not None and str(v).strip():
+            return None
+    md = Path(str(cfg.get("manifest_dir", ""))).expanduser()
+    md_str = str(md)
+    last = md.name
+    looks_internal = "manifests_internal" in md_str or (
+        last.startswith("split_") and re.match(r"split_\d+_", last) is not None
+    )
+    if not looks_internal:
+        return None
+    cfg["val_sequence_path_split"] = "train"
+    return (
+        "manifest_dir looks like internal CV; set val_sequence_path_split=train "
+        "(load val.csv participants from feature_root/train/, not val/)."
+    )
 
 
 def _filter_selective_map(
@@ -172,11 +230,22 @@ class GroupedParticipantDataset(Dataset):
         cfg: FeatureConfig,
         split: str,
         session_drop_prob: float = 0.0,
+        path_split: str | None = None,
     ) -> None:
         self.cfg = cfg
         self.split = split
+        self.path_split = path_split.strip() if isinstance(path_split, str) and path_split.strip() else split
         self.root = Path(cfg.feature_root)
         self.session_drop_prob = float(session_drop_prob)
+
+        if self.path_split != self.split:
+            log.info(
+                "GroupedParticipantDataset logical split=%r -> loading sequences from %r/ "
+                "(manifest %s)",
+                self.split,
+                self.path_split,
+                Path(manifest_path).name,
+            )
 
         manifest = pd.read_csv(manifest_path)
 
@@ -243,7 +312,7 @@ class GroupedParticipantDataset(Dataset):
             dims[name] = int(seq.features.shape[1])
         if "egemaps" in self.cfg.audio_pooled_features:
             eg = load_egemaps_pooled(
-                self.root, self.split,
+                self.root, self.path_split,
                 str(row["anon_school"]), str(row["anon_class"]),
                 str(row["anon_pid"]), str(row["session"]),
             )
@@ -283,7 +352,7 @@ class GroupedParticipantDataset(Dataset):
             raw[name] = int(seq.features.shape[1])
         if "egemaps" in self.cfg.audio_pooled_features:
             eg = load_egemaps_pooled(
-                self.root, self.split,
+                self.root, self.path_split,
                 str(row["anon_school"]), str(row["anon_class"]),
                 str(row["anon_pid"]), str(row["session"]),
             )
@@ -357,7 +426,7 @@ class GroupedParticipantDataset(Dataset):
                 tag = cfg.video_ssl_model_tag
             try:
                 seq = load_sequence(
-                    self.root, self.split,
+                    self.root, self.path_split,
                     str(row["anon_school"]), str(row["anon_class"]),
                     str(row["anon_pid"]),
                     modality, feat_name, str(row["session"]),
@@ -485,7 +554,7 @@ class GroupedParticipantDataset(Dataset):
             pooled_presence: dict[str, bool] = {}
             if "egemaps" in cfg.audio_pooled_features:
                 egemaps = load_egemaps_pooled(
-                    self.root, self.split,
+                    self.root, self.path_split,
                     str(row["anon_school"]), str(row["anon_class"]),
                     str(row["anon_pid"]), str(row["session"]),
                 )
@@ -672,6 +741,7 @@ def grouped_collate_fn(batch: list[dict[str, Any]]) -> dict[str, Any]:
             keys = list(sample.get("session_names", SESSIONS))
             missing = [keys[i] for i, s in enumerate(sample["sessions"]) if s is None]
             hints.append(
+                f"school={sample.get('anon_school')!r} class={sample.get('anon_class')!r} "
                 f"pid={sample.get('anon_pid')!r} loaded={n_ok}/{len(sample['sessions'])} "
                 f"session_valid={sample['session_valid'].tolist()} missing_sessions={missing[:6]}"
             )
@@ -681,7 +751,10 @@ def grouped_collate_fn(batch: list[dict[str, Any]]) -> dict[str, Any]:
             "Common causes: (1) manifest `session` values do not match "
             f"{SESSIONS}; (2) `feature_root`/`split` path wrong for this manifest "
             f"(expect sequence.npz under {{root}}/{{split}}/...); (3) core features missing on disk so "
-            "`_load_single_session` returns None. First samples: "
+            "`_load_single_session` returns None; (4) internal-CV manifests: val.csv labels may refer to a "
+            "fold's validation set while sequences still live under the global `train/` tree — set "
+            "`val_sequence_path_split: train` (or `sequence_path_split: {{val: train}}`) in the YAML. "
+            "First samples: "
             + " | ".join(hints)
         )
 

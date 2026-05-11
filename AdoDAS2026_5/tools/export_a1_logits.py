@@ -18,7 +18,7 @@ from torch.utils.data import DataLoader
 from tqdm import tqdm
 
 from common.data.dataset import FeatureConfig
-from common.data.grouped_dataset import GroupedParticipantDataset, grouped_collate_fn
+from common.data.grouped_dataset import GroupedParticipantDataset, grouped_collate_fn, path_split_for_yaml
 from common.models.grouped_model import GroupedModel
 from common.models.heads import A1Head
 from common.models.mtcn_backbone import BackboneConfig, MTCNBackbone
@@ -125,7 +125,12 @@ def main() -> None:
         pre_tcn_processing=cfg.get("pre_tcn_processing", defaults.pre_tcn_processing),
     )
 
-    ds = GroupedParticipantDataset(manifest_path, feat_cfg, split=args.split)
+    ds = GroupedParticipantDataset(
+        manifest_path,
+        feat_cfg,
+        split=args.split,
+        path_split=path_split_for_yaml(cfg, args.split),
+    )
     ds.log_pre_tcn_diagnostics()
     preload = bool(cfg.get("preload", True))
     num_workers = int(cfg.get("num_workers", 8))
