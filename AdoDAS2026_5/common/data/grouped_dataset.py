@@ -666,7 +666,24 @@ def grouped_collate_fn(batch: list[dict[str, Any]]) -> dict[str, Any]:
                     flat_sess_names.append(SESSIONS[s_idx])
 
     if not all_sessions:
-        raise RuntimeError("No valid sessions in batch")
+        hints: list[str] = []
+        for sample in batch[: min(4, B)]:
+            n_ok = sum(1 for s in sample["sessions"] if s is not None)
+            keys = list(sample.get("session_names", SESSIONS))
+            missing = [keys[i] for i, s in enumerate(sample["sessions"]) if s is None]
+            hints.append(
+                f"pid={sample.get('anon_pid')!r} loaded={n_ok}/{len(sample['sessions'])} "
+                f"session_valid={sample['session_valid'].tolist()} missing_sessions={missing[:6]}"
+            )
+        raise RuntimeError(
+            "No valid sessions in batch: every participant had no loadable session "
+            "(all entries in sample['sessions'] are None). "
+            "Common causes: (1) manifest `session` values do not match "
+            f"{SESSIONS}; (2) `feature_root`/`split` path wrong for this manifest "
+            f"(expect sequence.npz under {{root}}/{{split}}/...); (3) core features missing on disk so "
+            "`_load_single_session` returns None. First samples: "
+            + " | ".join(hints)
+        )
 
     n_flat = len(all_sessions)
     T_max = max(s["seq_len"] for s in all_sessions)
