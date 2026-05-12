@@ -1,0 +1,54 @@
+2026-05-12 13:43:49 [INFO] Logging to /home/adodas/AdoDAS2026-2/outputs/runs/a1__grouped__mtcn__a-base-mel_mfcc+vad+egemaps__a-ssl-wav2vec2-chinese-xlsr__v-base-headpose+facebeh+qc+vadagg+bodypose+globmot__v-ssl-dinov2-large__mask-andcore__pw_biascalib__seed42__20260512_134349/logs/train_grouped_a1_20260512_134349.log
+2026-05-12 13:43:49 [INFO] Device: cuda
+2026-05-12 13:43:49 [INFO] Task: a1
+2026-05-12 13:43:50 [INFO] Run name: a1__grouped__mtcn__a-base-mel_mfcc+vad+egemaps__a-ssl-wav2vec2-chinese-xlsr__v-base-headpose+facebeh+qc+vadagg+bodypose+globmot__v-ssl-dinov2-large__mask-andcore__pw_biascalib__seed42__20260512_134349
+2026-05-12 13:43:50 [INFO] Config: {'feature_root': '/home/adodas/dataset', 'manifest_dir': '/home/adodas/dataset/manifests', 'output_dir': '/home/adodas/AdoDAS2026-2/outputs', 'mask_policy': 'and_core', 'core_audio': ['mel_mfcc', 'ssl_embed'], 'core_video': ['vision_ssl_embed', 'qc_stats'], 'd_adapter': 64, 'd_model': 256, 'tcn_layers': 6, 'tcn_kernel_size': 3, 'asp_alpha': 0.5, 'asp_beta': 0.5, 'dropout': 0.2, 'd_shared': 256, 'aggregator': 'attention', 'batch_size': 16, 'pos_weight_override': [2.0, 1.5, 4.0], 'lr': 0.0005, 'weight_decay': 0.01, 'warmup_epochs': 1, 'epochs': 30, 'seed': 42, 'num_workers': 8, 'amp': True, 'preload': False, 'grad_clip': 1.0, 'use_pos_weight': True, 'patience': 6, 'session_loss_weight': 0.1, 'session_type_loss_weight': 0.2, 'submission_level': 'participant', 'decode_method': 'auto', 'label_smoothing': 0.01, 'feature_noise_std': 0.003, 'session_drop_prob': 0.03, 'early_stop_metric': 'primary', 'pre_tcn_processing': {'enabled': True, 'dynamics_aug': {'enabled': True, 'mode': 'selective_v2', 'apply_audio': {'vad': {'windows': [5, 15, 25], 'use_delta': True, 'use_abs_delta': True, 'use_rolling_mean': True, 'use_rolling_std': True}, 'mel_mfcc': {'windows': [5, 15], 'use_delta': True, 'use_abs_delta': False, 'use_rolling_mean': False, 'use_rolling_std': False}}, 'apply_video': {'vad_agg': {'windows': [5, 15, 25], 'use_delta': True, 'use_abs_delta': True, 'use_rolling_mean': True, 'use_rolling_std': True}, 'headpose_geom': {'windows': [5, 15, 25], 'use_delta': True, 'use_abs_delta': True, 'use_rolling_mean': True, 'use_rolling_std': True}, 'face_behavior': {'windows': [5, 15, 25], 'use_delta': True, 'use_abs_delta': True, 'use_rolling_mean': True, 'use_rolling_std': True}, 'body_pose': {'windows': [5, 15], 'use_delta': True, 'use_abs_delta': True, 'use_rolling_mean': False, 'use_rolling_std': True}, 'global_motion': {'windows': [5, 15], 'use_delta': False, 'use_abs_delta': True, 'use_rolling_mean': True, 'use_rolling_std': True}, 'qc_stats': {'windows': [15, 25], 'use_delta': False, 'use_abs_delta': False, 'use_rolling_mean': True, 'use_rolling_std': True}}, 'exclude': ['ssl_embed', 'vision_ssl_embed', 'egemaps']}}, 'audio_features': ['mel_mfcc', 'vad', 'egemaps', 'ssl_embed'], 'video_features': ['headpose_geom', 'face_behavior', 'qc_stats', 'vad_agg', 'body_pose', 'global_motion', 'vision_ssl_embed'], 'audio_ssl_model_tag': 'wav2vec2-chinese-xlsr', 'video_ssl_model_tag': 'dinov2-large', 'task': 'a1'}
+2026-05-12 13:43:50 [INFO] Mask policy: and_core
+2026-05-12 13:43:52 [INFO] [PreTCN] DynamicsAug enabled: True
+2026-05-12 13:43:53 [INFO] [PreTCN] mode: selective_v2
+2026-05-12 13:43:53 [INFO] [PreTCN]   audio[mel_mfcc]: {'windows': [5, 15], 'use_delta': True, 'use_abs_delta': False, 'use_rolling_mean': False, 'use_rolling_std': False}
+2026-05-12 13:43:53 [INFO] [PreTCN]   audio[vad]: {'windows': [5, 15, 25], 'use_delta': True, 'use_abs_delta': True, 'use_rolling_mean': True, 'use_rolling_std': True}
+2026-05-12 13:43:53 [INFO] [PreTCN]   video[body_pose]: {'windows': [5, 15], 'use_delta': True, 'use_abs_delta': True, 'use_rolling_mean': False, 'use_rolling_std': True}
+2026-05-12 13:43:53 [INFO] [PreTCN]   video[face_behavior]: {'windows': [5, 15, 25], 'use_delta': True, 'use_abs_delta': True, 'use_rolling_mean': True, 'use_rolling_std': True}
+2026-05-12 13:43:53 [INFO] [PreTCN]   video[global_motion]: {'windows': [5, 15], 'use_delta': False, 'use_abs_delta': True, 'use_rolling_mean': True, 'use_rolling_std': True}
+2026-05-12 13:43:53 [INFO] [PreTCN]   video[headpose_geom]: {'windows': [5, 15, 25], 'use_delta': True, 'use_abs_delta': True, 'use_rolling_mean': True, 'use_rolling_std': True}
+2026-05-12 13:43:53 [INFO] [PreTCN]   video[qc_stats]: {'windows': [15, 25], 'use_delta': False, 'use_abs_delta': False, 'use_rolling_mean': True, 'use_rolling_std': True}
+2026-05-12 13:43:53 [INFO] [PreTCN]   video[vad_agg]: {'windows': [5, 15, 25], 'use_delta': True, 'use_abs_delta': True, 'use_rolling_mean': True, 'use_rolling_std': True}
+2026-05-12 13:43:54 [INFO] [PreTCN] body_pose: 27 -> 135
+2026-05-12 13:43:54 [INFO] [PreTCN] face_behavior: 5 -> 45
+2026-05-12 13:43:54 [INFO] [PreTCN] global_motion: 4 -> 24
+2026-05-12 13:43:54 [INFO] [PreTCN] headpose_geom: 5 -> 45
+2026-05-12 13:43:54 [INFO] [PreTCN] mel_mfcc: 93 -> 186
+2026-05-12 13:43:54 [INFO] [PreTCN] qc_stats: 4 -> 20
+2026-05-12 13:43:54 [INFO] [PreTCN] vad: 1 -> 9
+2026-05-12 13:43:54 [INFO] [PreTCN] vad_agg: 4 -> 36
+2026-05-12 13:43:54 [INFO] Train: 4200 participants, Val: 600 participants
+2026-05-12 13:43:54 [INFO] batch_size=16, num_workers=8
+2026-05-12 13:43:55 [INFO] Model params: 5,514,982
+2026-05-12 13:43:55 [INFO] AMP enabled (BF16)
+2026-05-12 13:43:56 [INFO] pos_weight [D/A/S]: 1.91 / 1.59 / 2.60
+2026-05-12 13:43:57 [INFO] Scheduler: warmup=1 -> cosine, total=30
+2026-05-12 13:43:57 [INFO] Grad clip: 1.0
+2026-05-12 13:43:57 [INFO] Session loss weight: 0.1
+2026-05-12 13:43:57 [INFO] Session type loss weight: 0.2
+2026-05-12 13:43:57 [INFO] EarlyStopping: patience=6, metric=primary, mode=max
+2026-05-12 13:43:57 [INFO] Label smoothing: 0.01
+2026-05-12 13:43:57 [INFO] Feature noise std: 0.003
+2026-05-12 13:43:57 [INFO] Session drop prob: 0.03
+2026-05-12 13:43:58 [INFO] ==========================================================================================
+2026-05-12 13:43:58 [INFO]   Epoch  |    LR     | Train Loss | Val Loss | F1 raw | F1 sel |  AUROC | F1[D/A/S]       | Time
+2026-05-12 13:43:58 [INFO] ==========================================================================================
+2026-05-12 13:56:32 [INFO]     D: gt_pos=0.215 pred_pos=0.000 p_mean=0.263 P=0.000 R=0.000 F1=0.000
+2026-05-12 13:56:33 [INFO]     A: gt_pos=0.283 pred_pos=0.000 p_mean=0.321 P=0.000 R=0.000 F1=0.000
+2026-05-12 13:56:33 [INFO]     S: gt_pos=0.130 pred_pos=0.000 p_mean=0.195 P=0.000 R=0.000 F1=0.000
+2026-05-12 13:56:33 [INFO]     Session-level variance (collapse metric): 0.000891
+2026-05-12 13:56:33 [INFO]     calibrated F1=0.3866 via biases D=+1.10 A=+0.80 S=+1.40 (selected=calibrated)
+2026-05-12 13:56:33 [INFO]     1/ 30 | 5.00e-04 |   1.1197   |  0.7496  | 0.0000 | 0.3866 | 0.6256 | 0.000/0.000/0.000 | 12m 35s ETA 6h 05m 16s VRAM 7.0G *
+2026-05-12 13:56:34 [INFO]   >>> New best F1=0.3866 saved at epoch 1.
+2026-05-12 14:09:20 [INFO]     D: gt_pos=0.215 pred_pos=0.000 p_mean=0.350 P=0.000 R=0.000 F1=0.000
+2026-05-12 14:09:20 [INFO]     A: gt_pos=0.283 pred_pos=0.202 p_mean=0.405 P=0.421 R=0.300 F1=0.351
+2026-05-12 14:09:20 [INFO]     S: gt_pos=0.130 pred_pos=0.000 p_mean=0.269 P=0.000 R=0.000 F1=0.000
+2026-05-12 14:09:20 [INFO]     Session-level variance (collapse metric): 0.007029
+2026-05-12 14:09:20 [INFO]     calibrated F1=0.4119 via biases D=+0.70 A=+0.50 S=+0.90 (selected=calibrated)
+2026-05-12 14:09:20 [INFO]     2/ 30 | 4.99e-04 |   1.0686   |  0.7169  | 0.1168 | 0.4119 | 0.6723 | 0.000/0.351/0.000 | 12m 46s ETA 5h 55m 17s VRAM 7.0G *
+2026-05-12 14:09:22 [INFO]   >>> New best F1=0.4119 saved at epoch 2.

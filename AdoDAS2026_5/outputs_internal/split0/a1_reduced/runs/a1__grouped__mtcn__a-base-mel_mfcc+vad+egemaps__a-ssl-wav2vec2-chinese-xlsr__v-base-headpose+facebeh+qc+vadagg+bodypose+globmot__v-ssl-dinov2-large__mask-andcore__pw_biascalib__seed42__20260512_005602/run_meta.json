@@ -2,7 +2,7 @@
   "run_name": "a1__grouped__mtcn__a-base-mel_mfcc+vad+egemaps__a-ssl-wav2vec2-chinese-xlsr__v-base-headpose+facebeh+qc+vadagg+bodypose+globmot__v-ssl-dinov2-large__mask-andcore__pw_biascalib__seed42__20260512_005602",
   "task": "a1",
   "start_time": "2026-05-12T00:56:03.547860",
-  "end_time": null,
+  "end_time": "2026-05-12T02:07:37.372364",
   "git_commit": "2f0289871cb11ffb5041618a4756fbca8995d5f8",
   "command_line": "train.py --task a1 --config configs_internal/a1_dynamic_reduced_split0.yaml",
   "full_config": {
@@ -149,29 +149,36 @@
     "audio_ssl_model_tag": "wav2vec2-chinese-xlsr",
     "video_ssl_model_tag": "dinov2-large"
   },
-  "best_epoch": 2,
+  "best_epoch": 4,
   "best_metrics": {
-    "loss": 0.9319547340273857,
-    "mean_f1": 0.4054495126903987,
-    "auroc": 0.6496425606664425,
+    "loss": 0.8163626885248555,
+    "mean_f1": 0.2517058918110534,
+    "auroc": 0.6653521428295174,
     "pcf1": [
-      0.4321475625823452,
-      0.49017341040462425,
-      0.29402756508422667
+      0.22740524781341107,
+      0.4685408299866131,
+      0.05917159763313609
     ],
-    "mean_f1_calibrated": 0.4159141425051827,
+    "mean_f1_calibrated": 0.4252814076637757,
     "pcf1_calibrated": [
-      0.44144144144144143,
-      0.5099394987035436,
-      0.2960969044414536
+      0.44831880448318806,
+      0.5223033252230332,
+      0.3037542662116041
     ],
     "calibration_biases": [
-      1.400000000000004,
-      1.5000000000000036,
-      1.1000000000000032
+      1.3000000000000043,
+      2.0000000000000044,
+      1.2000000000000037
     ],
-    "primary_metric": 0.4159141425051827,
+    "primary_metric": 0.4252814076637757,
     "selection_source": "calibrated"
   },
-  "status": "running"
+  "status": "completed",
+  "final_selected_strategy": "bias_calibrated",
+  "final_selected_metrics": {
+    "mean_f1": 0.4179235530719747,
+    "mean_f1_raw": 0.2517058918110534,
+    "mean_f1_calibrated": 0.4179235530719747,
+    "auroc": 0.6653521428295174
+  }
 }

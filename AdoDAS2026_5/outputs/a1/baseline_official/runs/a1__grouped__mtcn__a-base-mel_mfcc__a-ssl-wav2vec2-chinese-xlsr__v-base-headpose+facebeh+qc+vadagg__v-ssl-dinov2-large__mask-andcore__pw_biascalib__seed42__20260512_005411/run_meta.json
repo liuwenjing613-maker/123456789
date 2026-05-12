@@ -2,7 +2,7 @@
   "run_name": "a1__grouped__mtcn__a-base-mel_mfcc__a-ssl-wav2vec2-chinese-xlsr__v-base-headpose+facebeh+qc+vadagg__v-ssl-dinov2-large__mask-andcore__pw_biascalib__seed42__20260512_005411",
   "task": "a1",
   "start_time": "2026-05-12T00:54:12.239175",
-  "end_time": null,
+  "end_time": "2026-05-12T01:54:00.559433",
   "git_commit": "2f0289871cb11ffb5041618a4756fbca8995d5f8",
   "command_line": "train.py --task a1 --config /home/adodas/AdoDAS2026_5/configs_pretcn/a1_baseline_official.yaml",
   "full_config": {
@@ -82,29 +82,36 @@
     "audio_ssl_model_tag": "wav2vec2-chinese-xlsr",
     "video_ssl_model_tag": "dinov2-large"
   },
-  "best_epoch": 5,
+  "best_epoch": 13,
   "best_metrics": {
-    "loss": 0.6783186197280884,
-    "mean_f1": 0.4228665257296489,
-    "auroc": 0.7175058886656583,
+    "loss": 0.685511199267287,
+    "mean_f1": 0.38692087146139403,
+    "auroc": 0.7200974521910357,
     "pcf1": [
-      0.46645367412140576,
-      0.46017699115044247,
-      0.34196891191709844
+      0.4122137404580153,
+      0.4745762711864407,
+      0.273972602739726
     ],
-    "mean_f1_calibrated": 0.4517593898122578,
+    "mean_f1_calibrated": 0.4575678553654847,
     "pcf1_calibrated": [
-      0.46645367412140576,
-      0.5221052631578947,
-      0.367816091954023
+      0.4753623188405797,
+      0.5387755102040817,
+      0.35856573705179284
     ],
     "calibration_biases": [
-      2.6645352591003757e-15,
-      0.5000000000000031,
-      0.30000000000000293
+      0.6000000000000032,
+      0.8000000000000034,
+      0.8000000000000034
     ],
-    "primary_metric": 0.4517593898122578,
+    "primary_metric": 0.4575678553654847,
     "selection_source": "calibrated"
   },
-  "status": "running"
+  "status": "completed",
+  "final_selected_strategy": "bias_calibrated",
+  "final_selected_metrics": {
+    "mean_f1": 0.44466349915435205,
+    "mean_f1_raw": 0.38692087146139403,
+    "mean_f1_calibrated": 0.44466349915435205,
+    "auroc": 0.7200974521910357
+  }
 }
