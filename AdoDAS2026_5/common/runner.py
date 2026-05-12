@@ -2,6 +2,8 @@
 from __future__ import annotations
 
 import argparse
+import csv
+import hashlib
 import json
 import logging
 import math
@@ -191,6 +193,141 @@ def _to_device(obj, device):
     elif isinstance(obj, list):
         return [_to_device(v, device) for v in obj]
     return obj
+
+
+def sha256_file(path: Path, chunk_size: int = 1024 * 1024) -> str:
+    h = hashlib.sha256()
+    with open(path, "rb") as f:
+        while True:
+            b = f.read(chunk_size)
+            if not b:
+                break
+            h.update(b)
+    return h.hexdigest()
+
+
+def checkpoint_bias_path(checkpoint_path: Path) -> Path:
+    return checkpoint_path.with_suffix(".bias.json")
+
+
+def save_a1_bias_sidecar(
+    checkpoint_path: Path,
+    *,
+    run_name: str,
+    epoch: int,
+    biases,
+    selection_reason: str,
+    val_metrics_raw: dict | None = None,
+    val_metrics_calibrated: dict | None = None,
+    pred_pos_raw: dict | None = None,
+    pred_pos_calibrated: dict | None = None,
+    source: str = "saved_during_training",
+) -> Path:
+    checkpoint_path = Path(checkpoint_path)
+    bias_path = checkpoint_bias_path(checkpoint_path)
+
+    if isinstance(biases, dict):
+        bias_vector = [float(biases["D"]), float(biases["A"]), float(biases["S"])]
+    else:
+        bias_vector = [float(biases[0]), float(biases[1]), float(biases[2])]
+
+    payload = {
+        "version": 1,
+        "task": "a1",
+        "bias_type": "logit_additive",
+        "bias_order": ["D", "A", "S"],
+        "bias_vector": bias_vector,
+        "biases": {
+            "D": bias_vector[0],
+            "A": bias_vector[1],
+            "S": bias_vector[2],
+        },
+        "threshold": 0.5,
+        "checkpoint_name": checkpoint_path.name,
+        "checkpoint_stem": checkpoint_path.stem,
+        "checkpoint_relpath": str(Path("checkpoints") / checkpoint_path.name),
+        "checkpoint_sha256": sha256_file(checkpoint_path) if checkpoint_path.exists() else None,
+        "run_name": run_name,
+        "epoch": int(epoch),
+        "source": source,
+        "selection_reason": selection_reason,
+        "val_metrics_raw": val_metrics_raw or {},
+        "val_metrics_calibrated": val_metrics_calibrated or {},
+        "pred_pos_raw": pred_pos_raw or {},
+        "pred_pos_calibrated": pred_pos_calibrated or {},
+        "created_at": datetime.now().isoformat(timespec="seconds"),
+    }
+
+    bias_path.parent.mkdir(parents=True, exist_ok=True)
+    with open(bias_path, "w", encoding="utf-8") as f:
+        json.dump(payload, f, indent=2, ensure_ascii=False)
+
+    return bias_path
+
+
+def write_a1_checkpoint_bias_artifacts(ckpt_dir: Path, calibration_dir: Path) -> None:
+    """Write calibration/checkpoint_bias_table.csv and checkpoint_bias_index.json from sidecars."""
+    calibration_dir.mkdir(parents=True, exist_ok=True)
+    rows: list[dict] = []
+    index_entries: list[dict] = []
+    for pt_path in sorted(ckpt_dir.glob("*.pt")):
+        bias_path = checkpoint_bias_path(pt_path)
+        if not bias_path.exists():
+            continue
+        with open(bias_path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        vec = data.get("bias_vector", [0.0, 0.0, 0.0])
+        vmr = data.get("val_metrics_raw") or {}
+        vmc = data.get("val_metrics_calibrated") or {}
+        row = {
+            "checkpoint": pt_path.name,
+            "epoch": data.get("epoch", ""),
+            "selection_reason": data.get("selection_reason", ""),
+            "bias_file": str(Path("checkpoints") / bias_path.name),
+            "bias_D": vec[0] if len(vec) > 0 else "",
+            "bias_A": vec[1] if len(vec) > 1 else "",
+            "bias_S": vec[2] if len(vec) > 2 else "",
+            "raw_f1": vmr.get("mean_f1", ""),
+            "calibrated_f1": vmc.get("mean_f1", ""),
+            "auroc": vmr.get("macro_auroc", ""),
+            "checkpoint_sha256": data.get("checkpoint_sha256") or "",
+        }
+        rows.append(row)
+        index_entries.append(data)
+
+    csv_path = calibration_dir / "checkpoint_bias_table.csv"
+    if rows:
+        fieldnames = list(rows[0].keys())
+        with open(csv_path, "w", encoding="utf-8", newline="") as f:
+            w = csv.DictWriter(f, fieldnames=fieldnames)
+            w.writeheader()
+            w.writerows(rows)
+    else:
+        with open(csv_path, "w", encoding="utf-8", newline="") as f:
+            f.write("checkpoint,epoch,selection_reason,bias_file,bias_D,bias_A,bias_S,raw_f1,calibrated_f1,auroc,checkpoint_sha256\n")
+
+    index_path = calibration_dir / "checkpoint_bias_index.json"
+    with open(index_path, "w", encoding="utf-8") as f:
+        json.dump({"checkpoints": index_entries}, f, indent=2, ensure_ascii=False)
+
+
+def log_a1_checkpoint_bias_pair_summary(ckpt_dir: Path) -> None:
+    """Print checkpoint -> sidecar bias summary from disk."""
+    log.info("================ Checkpoint-Bias Pairs ================")
+    for pt_path in sorted(ckpt_dir.glob("*.pt")):
+        bias_path = checkpoint_bias_path(pt_path)
+        if not bias_path.exists():
+            continue
+        with open(bias_path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        vec = data.get("bias_vector", [0.0, 0.0, 0.0])
+        ep = data.get("epoch", "?")
+        line = (
+            f"{pt_path.name:24s} -> {bias_path.name:30s} epoch={ep} "
+            f"bias=[{vec[0]:+.2f},{vec[1]:+.2f},{vec[2]:+.2f}]"
+        )
+        log.info(line)
+    log.info("=======================================================")
 
 
 def _fmt_duration(seconds: float) -> str:
@@ -535,6 +672,32 @@ def validate_grouped(
             f"(selected={selection_source})"
         )
 
+        cal_pcf1_thr = per_class_f1(cal_probs_np, labels_np, threshold=0.5)
+        val_metrics_raw = {
+            "mean_f1": float(mf1),
+            "macro_auroc": float(auroc),
+            "D_f1": float(pcf1[0]),
+            "A_f1": float(pcf1[1]),
+            "S_f1": float(pcf1[2]),
+        }
+        val_metrics_calibrated = {
+            "mean_f1": float(cal_mf1),
+            "macro_auroc": float(auroc),
+            "D_f1": float(cal_pcf1_thr[0]),
+            "A_f1": float(cal_pcf1_thr[1]),
+            "S_f1": float(cal_pcf1_thr[2]),
+        }
+        pred_pos_raw = {
+            "D": float((probs_np[:, 0] > 0.5).mean()),
+            "A": float((probs_np[:, 1] > 0.5).mean()),
+            "S": float((probs_np[:, 2] > 0.5).mean()),
+        }
+        pred_pos_calibrated = {
+            "D": float((cal_probs_np[:, 0] > 0.5).mean()),
+            "A": float((cal_probs_np[:, 1] > 0.5).mean()),
+            "S": float((cal_probs_np[:, 2] > 0.5).mean()),
+        }
+
         return {
             "loss": avg_loss, "mean_f1": mf1, "auroc": auroc,
             "pcf1": pcf1,
@@ -543,6 +706,10 @@ def validate_grouped(
             "calibration_biases": cal_biases.tolist(),
             "primary_metric": max(mf1, cal_mf1),
             "selection_source": selection_source,
+            "val_metrics_raw": val_metrics_raw,
+            "val_metrics_calibrated": val_metrics_calibrated,
+            "pred_pos_raw": pred_pos_raw,
+            "pred_pos_calibrated": pred_pos_calibrated,
         }
     else:
         labels_np = np.concatenate(all_labels)
@@ -1077,33 +1244,52 @@ def main() -> None:
             auroc = float(val_metrics["auroc"])
             cal_f1 = float(val_metrics["mean_f1_calibrated"])
             robust = compute_a1_robust_metric(val_metrics)
+            sidecar_common = dict(
+                run_name=run_name,
+                epoch=epoch,
+                biases=val_metrics["calibration_biases"],
+                val_metrics_raw=val_metrics.get("val_metrics_raw"),
+                val_metrics_calibrated=val_metrics.get("val_metrics_calibrated"),
+                pred_pos_raw=val_metrics.get("pred_pos_raw"),
+                pred_pos_calibrated=val_metrics.get("pred_pos_calibrated"),
+            )
             if raw_f1 > best_ckpt_raw_f1:
                 best_ckpt_raw_f1 = raw_f1
+                ckpt_p = ckpt_root / "best_raw_f1.pt"
                 save_checkpoint(
-                    ckpt_root / "best_raw_f1.pt", grouped_model, optimizer, epoch, raw_f1, extra=extra_sd,
+                    ckpt_p, grouped_model, optimizer, epoch, raw_f1, extra=extra_sd,
                 )
+                save_a1_bias_sidecar(ckpt_p, selection_reason="best_raw_f1", **sidecar_common)
                 log.info(f"  >>> New best_raw_f1={raw_f1:.4f} -> best_raw_f1.pt")
             if auroc > best_ckpt_auroc:
                 best_ckpt_auroc = auroc
+                ckpt_p = ckpt_root / "best_auroc.pt"
                 save_checkpoint(
-                    ckpt_root / "best_auroc.pt", grouped_model, optimizer, epoch, auroc, extra=extra_sd,
+                    ckpt_p, grouped_model, optimizer, epoch, auroc, extra=extra_sd,
                 )
+                save_a1_bias_sidecar(ckpt_p, selection_reason="best_auroc", **sidecar_common)
                 log.info(f"  >>> New best_auroc={auroc:.4f} -> best_auroc.pt")
             if cal_f1 > best_ckpt_cal_f1:
                 best_ckpt_cal_f1 = cal_f1
+                ckpt_p = ckpt_root / "best_calibrated_f1.pt"
                 save_checkpoint(
-                    ckpt_root / "best_calibrated_f1.pt", grouped_model, optimizer, epoch, cal_f1, extra=extra_sd,
+                    ckpt_p, grouped_model, optimizer, epoch, cal_f1, extra=extra_sd,
                 )
+                save_a1_bias_sidecar(ckpt_p, selection_reason="best_calibrated_f1", **sidecar_common)
                 log.info(f"  >>> New best_calibrated_f1={cal_f1:.4f} -> best_calibrated_f1.pt")
             if robust > best_ckpt_robust:
                 best_ckpt_robust = robust
+                ckpt_p = ckpt_root / "best_robust.pt"
                 save_checkpoint(
-                    ckpt_root / "best_robust.pt", grouped_model, optimizer, epoch, robust, extra=extra_sd,
+                    ckpt_p, grouped_model, optimizer, epoch, robust, extra=extra_sd,
                 )
+                save_a1_bias_sidecar(ckpt_p, selection_reason="best_robust", **sidecar_common)
                 log.info(f"  >>> New best_robust={robust:.4f} -> best_robust.pt")
+            last_p = ckpt_root / "last.pt"
             save_checkpoint(
-                ckpt_root / "last.pt", grouped_model, optimizer, epoch, primary, extra=extra_sd,
+                last_p, grouped_model, optimizer, epoch, primary, extra=extra_sd,
             )
+            save_a1_bias_sidecar(last_p, selection_reason="last", **sidecar_common)
 
         es_value = val_metrics["loss"] if early_stop_metric == "val_loss" else primary
         if early_stop.step(es_value):
@@ -1115,6 +1301,9 @@ def main() -> None:
     log.info(f"Training complete. Best {metric_name}={best_metric:.4f}, time={_fmt_duration(total_time)}")
 
     ckpt_dir = run_dirs["checkpoints"]
+    if task == "a1":
+        write_a1_checkpoint_bias_artifacts(ckpt_dir, run_dirs["calibration"])
+        log_a1_checkpoint_bias_pair_summary(ckpt_dir)
     robust_ckpt = ckpt_dir / "best_robust.pt"
     if task == "a1" and robust_ckpt.exists():
         log.info("Loading best_robust.pt for calibration / submission generation ...")
@@ -1165,6 +1354,10 @@ def main() -> None:
         cal_data = {"biases": biases.tolist(), "cal_f1": cal_f1s, "mean_cal_f1": cal_mean_f1}
         with open(run_dirs["calibration"] / "a1_bias_grouped.json", "w") as f:
             json.dump(cal_data, f, indent=2)
+        log.info(
+            "[LEGACY] calibration/a1_bias_grouped.json is run-level only. "
+            "It is not checkpoint-matched."
+        )
     else:
         log.info("Calibrating and selecting A2 decode strategy on val ...")
         val_logits, val_labels = collect_val_logits_grouped_a2(

@@ -7,6 +7,7 @@ import json
 import logging
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
 import torch
 from torch.utils.data import DataLoader
@@ -27,6 +28,7 @@ from common.runner import (
     a1_build_participant_submission_rows,
     generate_submission_grouped,
     setup_logging,
+    sha256_file,
 )
 from common.utils.ckpt import load_checkpoint
 
@@ -39,6 +41,29 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--split", default="test_hidden")
     parser.add_argument("--manifest", default=None)
     parser.add_argument("--output", default=None)
+    parser.add_argument(
+        "--a1_bias_mode",
+        choices=["none", "auto", "path"],
+        default="auto",
+        help="A1 bias mode. none: no bias. auto: load checkpoint sidecar .bias.json. path: use --a1_bias_path.",
+    )
+    parser.add_argument(
+        "--a1_bias_path",
+        type=str,
+        default=None,
+        help="Explicit A1 bias json path. Used when --a1_bias_mode path.",
+    )
+    parser.add_argument(
+        "--a1_bias_shrink",
+        type=float,
+        default=1.0,
+        help="Multiply loaded logit bias by this factor. Use 1.0 for exact matched bias, 0.3/0.5 for shrink.",
+    )
+    parser.add_argument(
+        "--allow_legacy_run_bias",
+        action="store_true",
+        help="Allow fallback to calibration/a1_bias_grouped.json. Default False to avoid checkpoint-bias mismatch.",
+    )
     return parser.parse_args()
 
 
@@ -58,18 +83,94 @@ def load_config(config_path: str | None, checkpoint_path: Path) -> dict:
     return cfg
 
 
+def resolve_a1_bias(
+    checkpoint_path: Path,
+    *,
+    mode: str,
+    bias_path: str | None = None,
+    shrink: float = 1.0,
+    allow_legacy_run_bias: bool = False,
+) -> tuple[list[float] | None, dict | None, Path | None]:
+    checkpoint_path = Path(checkpoint_path)
+
+    if mode == "none":
+        print("[A1-BIAS] mode=none, no bias will be applied.")
+        return None, None, None
+
+    if mode == "path":
+        if not bias_path:
+            raise ValueError("--a1_bias_mode path requires --a1_bias_path")
+        candidate = Path(bias_path).expanduser().resolve()
+        if not candidate.exists():
+            raise FileNotFoundError(f"[A1-BIAS] Bias path not found: {candidate}")
+    elif mode == "auto":
+        candidate = checkpoint_path.with_suffix(".bias.json")
+
+        if not candidate.exists() and allow_legacy_run_bias:
+            run_dir = checkpoint_path.parent.parent
+            legacy = run_dir / "calibration" / "a1_bias_grouped.json"
+            if legacy.exists():
+                candidate = legacy
+
+        if not candidate.exists():
+            raise FileNotFoundError(
+                f"[A1-BIAS] Cannot find matched bias for checkpoint: {checkpoint_path}\n"
+                f"Expected sidecar: {checkpoint_path.with_suffix('.bias.json')}\n"
+                f"Use --a1_bias_mode none for raw inference, or create sidecar bias first."
+            )
+    else:
+        raise ValueError(f"Unknown a1_bias_mode: {mode}")
+
+    with open(candidate, "r", encoding="utf-8") as f:
+        payload = json.load(f)
+
+    if "bias_vector" in payload:
+        vec = payload["bias_vector"]
+    elif "biases" in payload:
+        b = payload["biases"]
+        if isinstance(b, dict):
+            vec = [b["D"], b["A"], b["S"]]
+        else:
+            vec = b
+    else:
+        raise ValueError(f"Invalid bias file: {candidate}. Missing bias_vector/biases.")
+
+    vec = [float(x) * float(shrink) for x in vec]
+
+    if candidate.name.endswith(".bias.json") and candidate.name != "a1_bias_grouped.json":
+        expected_name = payload.get("checkpoint_name")
+        if expected_name and expected_name != checkpoint_path.name:
+            raise ValueError(
+                f"[A1-BIAS] Bias checkpoint_name mismatch: "
+                f"bias says {expected_name}, current checkpoint is {checkpoint_path.name}"
+            )
+
+        expected_sha = payload.get("checkpoint_sha256")
+        if expected_sha:
+            actual_sha = sha256_file(checkpoint_path)
+            if actual_sha != expected_sha:
+                raise ValueError(
+                    f"[A1-BIAS] checkpoint_sha256 mismatch for {checkpoint_path}\n"
+                    f"bias file: {expected_sha}\n"
+                    f"actual:    {actual_sha}"
+                )
+
+    print("[A1-BIAS] mode=", mode)
+    print("[A1-BIAS] checkpoint=", checkpoint_path)
+    print("[A1-BIAS] bias_file=", candidate)
+    print("[A1-BIAS] shrink=", shrink)
+    print("[A1-BIAS] applied_bias_vector=", vec)
+    print("[A1-BIAS] bias_epoch=", payload.get("epoch"))
+    print("[A1-BIAS] selection_reason=", payload.get("selection_reason"))
+
+    return vec, payload, candidate
+
+
 def load_calibration(run_dir: Path, task: str) -> tuple[torch.Tensor | None, torch.Tensor | None, str]:
     calibration_dir = run_dir / "calibration"
     if task == "a1":
-        path = calibration_dir / "a1_bias_grouped.json"
-        # Third slot is decode_method for generate_submission_grouped; a1 uses sigmoid, not ordinal decode.
         a1_decode_placeholder = _normalize_decode_method("argmax")
-        if not path.exists():
-            return None, None, a1_decode_placeholder
-        with open(path) as f:
-            data = json.load(f)
-        biases = torch.tensor(data.get("biases", []), dtype=torch.float32) if data.get("biases") else None
-        return biases, None, a1_decode_placeholder
+        return None, None, a1_decode_placeholder
 
     path = calibration_dir / "a2_threshold_offsets_grouped.json"
     if not path.exists():
@@ -180,7 +281,22 @@ def main() -> None:
     grouped_model.eval()
     task_head.eval()
 
-    a1_biases, a2_offsets, selected_decode_method = load_calibration(run_dir, args.task)
+    a1_bias_payload: dict | None = None
+    a1_resolved_bias_path: Path | None = None
+    if args.task == "a1":
+        a1_vec, a1_bias_payload, a1_resolved_bias_path = resolve_a1_bias(
+            checkpoint_path,
+            mode=args.a1_bias_mode,
+            bias_path=args.a1_bias_path,
+            shrink=args.a1_bias_shrink,
+            allow_legacy_run_bias=args.allow_legacy_run_bias,
+        )
+        a1_biases_np = None if a1_vec is None else np.asarray(a1_vec, dtype=np.float32)
+        a2_offsets, selected_decode_method = None, _normalize_decode_method("argmax")
+    else:
+        a1_biases_np = None
+        a1_resolved_bias_path = None
+        _, a2_offsets, selected_decode_method = load_calibration(run_dir, args.task)
     use_amp = bool(cfg.get("amp", True))
     submission_level = cfg.get("submission_level", "participant")
 
@@ -193,7 +309,7 @@ def main() -> None:
         use_amp=use_amp,
         desc=f"Infer {args.split}",
         submission_level=submission_level,
-        a1_biases=None if a1_biases is None else a1_biases.to(device),
+        a1_biases=a1_biases_np,
         decode_method=selected_decode_method,
         a2_threshold_offsets=None if a2_offsets is None else a2_offsets.to(device),
     )
@@ -254,8 +370,30 @@ def main() -> None:
             sub[col] = [int(pred[idx]) for pred in filtered_preds]
 
     output_path = Path(args.output) if args.output else run_dir / "submissions" / f"submission_{args.task}_{args.split}.csv"
+    output_path = output_path.expanduser().resolve()
     output_path.parent.mkdir(parents=True, exist_ok=True)
     sub.to_csv(output_path, index=False)
+
+    meta_path = output_path.parent / "submission_meta.json"
+    submission_meta: dict = {
+        "task": args.task,
+        "checkpoint": str(checkpoint_path.resolve()),
+        "output_csv": output_path.name,
+    }
+    if args.task == "a1":
+        submission_meta.update(
+            {
+                "a1_bias_mode": args.a1_bias_mode,
+                "a1_bias_file": str(a1_resolved_bias_path.resolve()) if a1_resolved_bias_path else None,
+                "a1_bias_shrink": float(args.a1_bias_shrink),
+                "a1_bias_vector": None if a1_biases_np is None else [float(x) for x in a1_biases_np.tolist()],
+                "bias_epoch": (a1_bias_payload or {}).get("epoch"),
+                "selection_reason": (a1_bias_payload or {}).get("selection_reason"),
+            }
+        )
+    with open(meta_path, "w", encoding="utf-8") as f:
+        json.dump(submission_meta, f, indent=2, ensure_ascii=False)
+
     print(output_path)
 
 

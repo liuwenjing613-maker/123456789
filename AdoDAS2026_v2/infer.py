@@ -56,11 +56,11 @@ def load_calibration(run_dir: Path, task: str) -> tuple[torch.Tensor | None, tor
     if task == "a1":
         path = calibration_dir / "a1_bias_grouped.json"
         if not path.exists():
-            return None, None, "participant"
+            return None, None, "auto"
         with open(path) as f:
             data = json.load(f)
         biases = torch.tensor(data.get("biases", []), dtype=torch.float32) if data.get("biases") else None
-        return biases, None, "participant"
+        return biases, None, "auto"
 
     path = calibration_dir / "a2_threshold_offsets_grouped.json"
     if not path.exists():
