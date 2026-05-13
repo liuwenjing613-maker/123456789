@@ -1,0 +1,274 @@
+{
+  "checkpoints": [
+    {
+      "version": 1,
+      "task": "a1",
+      "bias_type": "logit_additive",
+      "bias_order": [
+        "D",
+        "A",
+        "S"
+      ],
+      "bias_vector": [
+        0.9000000000000035,
+        0.20000000000000284,
+        0.9000000000000035
+      ],
+      "biases": {
+        "D": 0.9000000000000035,
+        "A": 0.20000000000000284,
+        "S": 0.9000000000000035
+      },
+      "threshold": 0.5,
+      "checkpoint_name": "best_auroc.pt",
+      "checkpoint_stem": "best_auroc",
+      "checkpoint_relpath": "checkpoints/best_auroc.pt",
+      "checkpoint_sha256": "f455ef16575eb2830230bc5f7864022479493ad710582bd4f5d42bafc11b12a6",
+      "run_name": "a1__grouped__mtcn__a-base-mel_mfcc__a-ssl-wav2vec2-chinese-xlsr__v-base-headpose+facebeh+qc+vadagg__v-ssl-dinov2-large__mask-andcore__pw_biascalib__seed42__20260513_141621",
+      "epoch": 4,
+      "source": "saved_during_training",
+      "selection_reason": "best_auroc",
+      "val_metrics_raw": {
+        "mean_f1": 0.17312965139052094,
+        "macro_auroc": 0.6664188347038486,
+        "D_f1": 0.0,
+        "A_f1": 0.5193889541715628,
+        "S_f1": 0.0
+      },
+      "val_metrics_calibrated": {
+        "mean_f1": 0.42597626455740256,
+        "macro_auroc": 0.6664188347038486,
+        "D_f1": 0.45229681978798586,
+        "A_f1": 0.5314222712238148,
+        "S_f1": 0.2942097026604069
+      },
+      "pred_pos_raw": {
+        "D": 0.0,
+        "A": 0.42756804214223004,
+        "S": 0.0
+      },
+      "pred_pos_calibrated": {
+        "D": 0.5153643546971027,
+        "A": 0.47673397717295873,
+        "S": 0.4354697102721686
+      },
+      "created_at": "2026-05-13T14:27:22"
+    },
+    {
+      "version": 1,
+      "task": "a1",
+      "bias_type": "logit_additive",
+      "bias_order": [
+        "D",
+        "A",
+        "S"
+      ],
+      "bias_vector": [
+        0.9000000000000035,
+        0.20000000000000284,
+        0.9000000000000035
+      ],
+      "biases": {
+        "D": 0.9000000000000035,
+        "A": 0.20000000000000284,
+        "S": 0.9000000000000035
+      },
+      "threshold": 0.5,
+      "checkpoint_name": "best_calibrated_f1.pt",
+      "checkpoint_stem": "best_calibrated_f1",
+      "checkpoint_relpath": "checkpoints/best_calibrated_f1.pt",
+      "checkpoint_sha256": "8b45407e4bf6992ef9110f855e924e69fb027eaac7ed384b7f1f95cfe1e5c6fc",
+      "run_name": "a1__grouped__mtcn__a-base-mel_mfcc__a-ssl-wav2vec2-chinese-xlsr__v-base-headpose+facebeh+qc+vadagg__v-ssl-dinov2-large__mask-andcore__pw_biascalib__seed42__20260513_141621",
+      "epoch": 4,
+      "source": "saved_during_training",
+      "selection_reason": "best_calibrated_f1",
+      "val_metrics_raw": {
+        "mean_f1": 0.17312965139052094,
+        "macro_auroc": 0.6664188347038486,
+        "D_f1": 0.0,
+        "A_f1": 0.5193889541715628,
+        "S_f1": 0.0
+      },
+      "val_metrics_calibrated": {
+        "mean_f1": 0.42597626455740256,
+        "macro_auroc": 0.6664188347038486,
+        "D_f1": 0.45229681978798586,
+        "A_f1": 0.5314222712238148,
+        "S_f1": 0.2942097026604069
+      },
+      "pred_pos_raw": {
+        "D": 0.0,
+        "A": 0.42756804214223004,
+        "S": 0.0
+      },
+      "pred_pos_calibrated": {
+        "D": 0.5153643546971027,
+        "A": 0.47673397717295873,
+        "S": 0.4354697102721686
+      },
+      "created_at": "2026-05-13T14:27:23"
+    },
+    {
+      "version": 1,
+      "task": "a1",
+      "bias_type": "logit_additive",
+      "bias_order": [
+        "D",
+        "A",
+        "S"
+      ],
+      "bias_vector": [
+        -0.3999999999999977,
+        -0.3999999999999977,
+        -0.2999999999999976
+      ],
+      "biases": {
+        "D": -0.3999999999999977,
+        "A": -0.3999999999999977,
+        "S": -0.2999999999999976
+      },
+      "threshold": 0.5,
+      "checkpoint_name": "best_raw_f1.pt",
+      "checkpoint_stem": "best_raw_f1",
+      "checkpoint_relpath": "checkpoints/best_raw_f1.pt",
+      "checkpoint_sha256": "5ad3edc35d45d13048f3828618401160f29dccf9508c2b71309f363f4f912f8e",
+      "run_name": "a1__grouped__mtcn__a-base-mel_mfcc__a-ssl-wav2vec2-chinese-xlsr__v-base-headpose+facebeh+qc+vadagg__v-ssl-dinov2-large__mask-andcore__pw_biascalib__seed42__20260513_141621",
+      "epoch": 9,
+      "source": "saved_during_training",
+      "selection_reason": "best_raw_f1",
+      "val_metrics_raw": {
+        "mean_f1": 0.40102693784320714,
+        "macro_auroc": 0.6595067595818221,
+        "D_f1": 0.43255295429208473,
+        "A_f1": 0.5043988269794721,
+        "S_f1": 0.2661290322580645
+      },
+      "val_metrics_calibrated": {
+        "mean_f1": 0.42539449797514317,
+        "macro_auroc": 0.6595067595818221,
+        "D_f1": 0.46774193548387094,
+        "A_f1": 0.5227272727272727,
+        "S_f1": 0.2857142857142857
+      },
+      "pred_pos_raw": {
+        "D": 0.5575065847234416,
+        "A": 0.5785776997366111,
+        "S": 0.5276558384547849
+      },
+      "pred_pos_calibrated": {
+        "D": 0.4231782265144864,
+        "A": 0.45302897278314314,
+        "S": 0.42756804214223004
+      },
+      "created_at": "2026-05-13T14:40:12"
+    },
+    {
+      "version": 1,
+      "task": "a1",
+      "bias_type": "logit_additive",
+      "bias_order": [
+        "D",
+        "A",
+        "S"
+      ],
+      "bias_vector": [
+        -0.3999999999999977,
+        -0.3999999999999977,
+        -0.2999999999999976
+      ],
+      "biases": {
+        "D": -0.3999999999999977,
+        "A": -0.3999999999999977,
+        "S": -0.2999999999999976
+      },
+      "threshold": 0.5,
+      "checkpoint_name": "best_robust.pt",
+      "checkpoint_stem": "best_robust",
+      "checkpoint_relpath": "checkpoints/best_robust.pt",
+      "checkpoint_sha256": "1272886e18fe5646c03d05b78c537384d8905d68aa8486bb7ce3cdacd910ac47",
+      "run_name": "a1__grouped__mtcn__a-base-mel_mfcc__a-ssl-wav2vec2-chinese-xlsr__v-base-headpose+facebeh+qc+vadagg__v-ssl-dinov2-large__mask-andcore__pw_biascalib__seed42__20260513_141621",
+      "epoch": 9,
+      "source": "saved_during_training",
+      "selection_reason": "best_robust",
+      "val_metrics_raw": {
+        "mean_f1": 0.40102693784320714,
+        "macro_auroc": 0.6595067595818221,
+        "D_f1": 0.43255295429208473,
+        "A_f1": 0.5043988269794721,
+        "S_f1": 0.2661290322580645
+      },
+      "val_metrics_calibrated": {
+        "mean_f1": 0.42539449797514317,
+        "macro_auroc": 0.6595067595818221,
+        "D_f1": 0.46774193548387094,
+        "A_f1": 0.5227272727272727,
+        "S_f1": 0.2857142857142857
+      },
+      "pred_pos_raw": {
+        "D": 0.5575065847234416,
+        "A": 0.5785776997366111,
+        "S": 0.5276558384547849
+      },
+      "pred_pos_calibrated": {
+        "D": 0.4231782265144864,
+        "A": 0.45302897278314314,
+        "S": 0.42756804214223004
+      },
+      "created_at": "2026-05-13T14:40:13"
+    },
+    {
+      "version": 1,
+      "task": "a1",
+      "bias_type": "logit_additive",
+      "bias_order": [
+        "D",
+        "A",
+        "S"
+      ],
+      "bias_vector": [
+        0.30000000000000293,
+        1.600000000000004,
+        0.6000000000000032
+      ],
+      "biases": {
+        "D": 0.30000000000000293,
+        "A": 1.600000000000004,
+        "S": 0.6000000000000032
+      },
+      "threshold": 0.5,
+      "checkpoint_name": "last.pt",
+      "checkpoint_stem": "last",
+      "checkpoint_relpath": "checkpoints/last.pt",
+      "checkpoint_sha256": "278b8f505fb3857dfccc505b410ab7a9087bdcb47e4182fdd33184607e1d5ca0",
+      "run_name": "a1__grouped__mtcn__a-base-mel_mfcc__a-ssl-wav2vec2-chinese-xlsr__v-base-headpose+facebeh+qc+vadagg__v-ssl-dinov2-large__mask-andcore__pw_biascalib__seed42__20260513_141621",
+      "epoch": 12,
+      "source": "saved_during_training",
+      "selection_reason": "last",
+      "val_metrics_raw": {
+        "mean_f1": 0.29701218600668716,
+        "macro_auroc": 0.6548235117997715,
+        "D_f1": 0.423841059602649,
+        "A_f1": 0.44171779141104295,
+        "S_f1": 0.025477707006369428
+      },
+      "val_metrics_calibrated": {
+        "mean_f1": 0.4173702904515825,
+        "macro_auroc": 0.6548235117997715,
+        "D_f1": 0.4432284541723666,
+        "A_f1": 0.5203252032520326,
+        "S_f1": 0.2885572139303483
+      },
+      "pred_pos_raw": {
+        "D": 0.30026338893766463,
+        "A": 0.2528533801580334,
+        "S": 0.012291483757682178
+      },
+      "pred_pos_calibrated": {
+        "D": 0.4117647058823529,
+        "A": 0.7603160667251976,
+        "S": 0.2273924495171203
+      },
+      "created_at": "2026-05-13T14:47:33"
+    }
+  ]
+}

@@ -1,0 +1,84 @@
+2026-05-12 22:45:07 [INFO] Logging to /home/adodas/AdoDAS2026-split/outputs_internal/split0/a1_baseline_official/runs/a1__grouped__mtcn__a-base-mel_mfcc__a-ssl-wav2vec2-chinese-xlsr__v-base-headpose+facebeh+qc+vadagg__v-ssl-dinov2-large__mask-andcore__pw_biascalib__seed42__20260512_224507/logs/train_grouped_a1_20260512_224507.log
+2026-05-12 22:45:07 [INFO] Device: cuda
+2026-05-12 22:45:07 [INFO] Task: a1
+2026-05-12 22:45:07 [INFO] Run name: a1__grouped__mtcn__a-base-mel_mfcc__a-ssl-wav2vec2-chinese-xlsr__v-base-headpose+facebeh+qc+vadagg__v-ssl-dinov2-large__mask-andcore__pw_biascalib__seed42__20260512_224507
+2026-05-12 22:45:07 [INFO] Config: {'feature_root': '/home/adodas/dataset', 'manifest_dir': '/home/adodas/dataset/manifests_internal/split_0_school_class', 'output_dir': '/home/adodas/AdoDAS2026-split/outputs_internal/split0/a1_baseline_official', 'mask_policy': 'and_core', 'core_audio': ['mel_mfcc', 'ssl_embed'], 'core_video': ['vision_ssl_embed', 'qc_stats'], 'd_adapter': 64, 'd_model': 256, 'tcn_layers': 6, 'tcn_kernel_size': 3, 'asp_alpha': 0.5, 'asp_beta': 0.5, 'dropout': 0.2, 'd_shared': 256, 'aggregator': 'mlp', 'batch_size': 32, 'lr': 0.0005, 'weight_decay': 0.01, 'warmup_epochs': 1, 'epochs': 30, 'seed': 42, 'num_workers': 8, 'amp': True, 'preload': False, 'grad_clip': 1.0, 'use_pos_weight': True, 'patience': 8, 'session_loss_weight': 0.2, 'session_type_loss_weight': 0.15, 'submission_level': 'participant', 'decode_method': 'auto', 'label_smoothing': 0.0, 'feature_noise_std': 0.0, 'session_drop_prob': 0.0, 'early_stop_metric': 'primary', 'pre_tcn_processing': {'enabled': False}, 'val_sequence_path_split': 'train', 'audio_features': ['mel_mfcc', 'ssl_embed'], 'video_features': ['headpose_geom', 'face_behavior', 'qc_stats', 'vad_agg', 'vision_ssl_embed'], 'audio_ssl_model_tag': 'wav2vec2-chinese-xlsr', 'video_ssl_model_tag': 'dinov2-large', 'task': 'a1'}
+2026-05-12 22:45:07 [INFO] Mask policy: and_core
+2026-05-12 22:45:08 [INFO] GroupedParticipantDataset logical split='val' -> loading sequences from 'train'/ (manifest val.csv)
+2026-05-12 22:45:09 [INFO] [PreTCN] pre_tcn_processing.enabled=False
+2026-05-12 22:45:09 [INFO] Train: 2800 participants, Val: 1400 participants
+2026-05-12 22:45:09 [INFO] batch_size=32, num_workers=8
+2026-05-12 22:45:10 [INFO] Model params: 5,483,243
+2026-05-12 22:45:10 [INFO] AMP enabled (BF16)
+2026-05-12 22:45:10 [INFO] pos_weight [D/A/S]: 1.93 / 1.60 / 2.67
+2026-05-12 22:45:14 [INFO] Scheduler: warmup=1 -> cosine, total=30
+2026-05-12 22:45:14 [INFO] Grad clip: 1.0
+2026-05-12 22:45:14 [INFO] Session loss weight: 0.2
+2026-05-12 22:45:14 [INFO] Session type loss weight: 0.15
+2026-05-12 22:45:14 [INFO] EarlyStopping: patience=8, metric=primary, mode=max
+2026-05-12 22:45:14 [INFO] Label smoothing: 0.0
+2026-05-12 22:45:14 [INFO] Feature noise std: 0.0
+2026-05-12 22:45:14 [INFO] Session drop prob: 0.0
+2026-05-12 22:45:14 [INFO] ==========================================================================================
+2026-05-12 22:45:14 [INFO]   Epoch  |    LR     | Train Loss | Val Loss | F1 raw | F1 sel |  AUROC | F1[D/A/S]       | Time
+2026-05-12 22:45:14 [INFO] ==========================================================================================
+Train 1/30:   0%|          | 0/87 [00:00<?, ?it/s]                                                  Traceback (most recent call last):
+  File "/home/adodas/AdoDAS2026-split/train.py", line 7, in <module>
+    main()
+    ~~~~^^
+  File "/home/adodas/AdoDAS2026-split/common/runner.py", line 1186, in main
+    train_loss = train_one_epoch_grouped(
+        grouped_model, task_head, train_loader, optimizer, device,
+    ...<6 lines>...
+        feature_noise_std=feature_noise_std,
+    )
+  File "/home/adodas/AdoDAS2026-split/common/runner.py", line 509, in train_one_epoch_grouped
+    out = grouped_model(flat_batch, B, session_valid)
+  File "/home/adodas/anaconda3/lib/python3.13/site-packages/torch/nn/modules/module.py", line 1751, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/adodas/anaconda3/lib/python3.13/site-packages/torch/nn/modules/module.py", line 1762, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/home/adodas/AdoDAS2026-split/common/models/grouped_model.py", line 93, in forward
+    session_reprs = self.backbone(flat_batch)
+  File "/home/adodas/anaconda3/lib/python3.13/site-packages/torch/nn/modules/module.py", line 1751, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/adodas/anaconda3/lib/python3.13/site-packages/torch/nn/modules/module.py", line 1762, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/home/adodas/AdoDAS2026-split/common/models/mtcn_backbone.py", line 224, in forward
+    v = self.video_tcn(v, mask_v)
+  File "/home/adodas/anaconda3/lib/python3.13/site-packages/torch/nn/modules/module.py", line 1751, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/adodas/anaconda3/lib/python3.13/site-packages/torch/nn/modules/module.py", line 1762, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/home/adodas/AdoDAS2026-split/common/models/mtcn_backbone.py", line 98, in forward
+    x = block(x, mask)
+  File "/home/adodas/anaconda3/lib/python3.13/site-packages/torch/nn/modules/module.py", line 1751, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/adodas/anaconda3/lib/python3.13/site-packages/torch/nn/modules/module.py", line 1762, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/home/adodas/AdoDAS2026-split/common/models/mtcn_backbone.py", line 67, in forward
+    h = self.norm1(x)
+  File "/home/adodas/anaconda3/lib/python3.13/site-packages/torch/nn/modules/module.py", line 1751, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/adodas/anaconda3/lib/python3.13/site-packages/torch/nn/modules/module.py", line 1762, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/home/adodas/anaconda3/lib/python3.13/site-packages/torch/nn/modules/normalization.py", line 217, in forward
+    return F.layer_norm(
+           ~~~~~~~~~~~~^
+        input, self.normalized_shape, self.weight, self.bias, self.eps
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/adodas/anaconda3/lib/python3.13/site-packages/torch/nn/functional.py", line 2910, in layer_norm
+    return torch.layer_norm(
+           ~~~~~~~~~~~~~~~~^
+        input, normalized_shape, weight, bias, eps, torch.backends.cudnn.enabled
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 186.00 MiB. GPU 0 has a total capacity of 23.59 GiB of which 186.88 MiB is free. Process 1087972 has 11.82 GiB memory in use. Process 1600092 has 1.54 GiB memory in use. Including non-PyTorch memory, this process has 9.96 GiB memory in use. Of the allocated memory 9.23 GiB is allocated by PyTorch, and 429.18 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)

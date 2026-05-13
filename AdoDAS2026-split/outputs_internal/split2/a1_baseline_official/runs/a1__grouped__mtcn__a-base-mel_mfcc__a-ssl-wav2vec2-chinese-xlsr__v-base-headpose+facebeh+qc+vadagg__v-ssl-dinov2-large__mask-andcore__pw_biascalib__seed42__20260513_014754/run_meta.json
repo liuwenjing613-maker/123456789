@@ -1,0 +1,142 @@
+{
+  "run_name": "a1__grouped__mtcn__a-base-mel_mfcc__a-ssl-wav2vec2-chinese-xlsr__v-base-headpose+facebeh+qc+vadagg__v-ssl-dinov2-large__mask-andcore__pw_biascalib__seed42__20260513_014754",
+  "task": "a1",
+  "start_time": "2026-05-13T01:47:54.579619",
+  "end_time": "2026-05-13T02:16:59.992265",
+  "git_commit": "7757c8697419d3e5b037b06c7ed6226ba639f8c4",
+  "command_line": "train.py --task a1 --config configs_internal/a1_baseline_official_split2.yaml",
+  "full_config": {
+    "feature_root": "/home/adodas/dataset",
+    "manifest_dir": "/home/adodas/dataset/manifests_internal/split_2_school_class",
+    "output_dir": "/home/adodas/AdoDAS2026-split/outputs_internal/split2/a1_baseline_official",
+    "mask_policy": "and_core",
+    "core_audio": [
+      "mel_mfcc",
+      "ssl_embed"
+    ],
+    "core_video": [
+      "vision_ssl_embed",
+      "qc_stats"
+    ],
+    "d_adapter": 64,
+    "d_model": 256,
+    "tcn_layers": 6,
+    "tcn_kernel_size": 3,
+    "asp_alpha": 0.5,
+    "asp_beta": 0.5,
+    "dropout": 0.2,
+    "d_shared": 256,
+    "aggregator": "mlp",
+    "batch_size": 32,
+    "lr": 0.0005,
+    "weight_decay": 0.01,
+    "warmup_epochs": 1,
+    "epochs": 30,
+    "seed": 42,
+    "num_workers": 8,
+    "amp": true,
+    "preload": false,
+    "grad_clip": 1.0,
+    "use_pos_weight": true,
+    "patience": 8,
+    "session_loss_weight": 0.2,
+    "session_type_loss_weight": 0.15,
+    "submission_level": "participant",
+    "decode_method": "auto",
+    "label_smoothing": 0.0,
+    "feature_noise_std": 0.0,
+    "session_drop_prob": 0.0,
+    "early_stop_metric": "primary",
+    "pre_tcn_processing": {
+      "enabled": false
+    },
+    "val_sequence_path_split": "train",
+    "audio_features": [
+      "mel_mfcc",
+      "ssl_embed"
+    ],
+    "video_features": [
+      "headpose_geom",
+      "face_behavior",
+      "qc_stats",
+      "vad_agg",
+      "vision_ssl_embed"
+    ],
+    "audio_ssl_model_tag": "wav2vec2-chinese-xlsr",
+    "video_ssl_model_tag": "dinov2-large",
+    "task": "a1"
+  },
+  "audio_ssl_tag": "wav2vec2-chinese-xlsr",
+  "video_ssl_tag": "dinov2-large",
+  "feature_combination": {
+    "audio_features": [
+      "mel_mfcc",
+      "ssl_embed"
+    ],
+    "video_features": [
+      "headpose_geom",
+      "face_behavior",
+      "qc_stats",
+      "vad_agg",
+      "vision_ssl_embed"
+    ],
+    "audio_ssl_model_tag": "wav2vec2-chinese-xlsr",
+    "video_ssl_model_tag": "dinov2-large"
+  },
+  "best_epoch": 6,
+  "best_metrics": {
+    "loss": 0.6550411263273822,
+    "mean_f1": 0.32551534715143277,
+    "auroc": 0.7231223331560809,
+    "pcf1": [
+      0.4185185185185185,
+      0.43302752293577984,
+      0.125
+    ],
+    "mean_f1_calibrated": 0.42246173167270284,
+    "pcf1_calibrated": [
+      0.4416796267496112,
+      0.48947368421052634,
+      0.336231884057971
+    ],
+    "calibration_biases": [
+      0.8000000000000034,
+      1.1000000000000032,
+      0.400000000000003
+    ],
+    "primary_metric": 0.42246173167270284,
+    "selection_source": "calibrated",
+    "val_metrics_raw": {
+      "mean_f1": 0.32551534715143277,
+      "macro_auroc": 0.7231223331560809,
+      "D_f1": 0.4185185185185185,
+      "A_f1": 0.43302752293577984,
+      "S_f1": 0.125
+    },
+    "val_metrics_calibrated": {
+      "mean_f1": 0.42246173167270284,
+      "macro_auroc": 0.7231223331560809,
+      "D_f1": 0.4416796267496112,
+      "A_f1": 0.48947368421052634,
+      "S_f1": 0.336231884057971
+    },
+    "pred_pos_raw": {
+      "D": 0.29086115992970124,
+      "A": 0.23374340949033393,
+      "S": 0.03866432337434095
+    },
+    "pred_pos_calibrated": {
+      "D": 0.38137082601054484,
+      "A": 0.4226713532513181,
+      "S": 0.18717047451669597
+    }
+  },
+  "status": "completed",
+  "final_selected_strategy": "bias_calibrated",
+  "final_selected_metrics": {
+    "mean_f1": 0.4028267348815187,
+    "mean_f1_raw": 0.32551534715143277,
+    "mean_f1_calibrated": 0.4028267348815187,
+    "auroc": 0.7231223331560809
+  }
+}

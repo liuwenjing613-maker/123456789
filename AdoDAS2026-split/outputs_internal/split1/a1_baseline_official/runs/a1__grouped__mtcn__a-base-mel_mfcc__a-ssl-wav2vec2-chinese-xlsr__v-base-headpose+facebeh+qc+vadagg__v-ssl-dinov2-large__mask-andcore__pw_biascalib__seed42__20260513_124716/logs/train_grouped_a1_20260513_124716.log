@@ -1,0 +1,67 @@
+2026-05-13 12:47:16 [INFO] Logging to /home/adodas/AdoDAS2026-split/outputs_internal/split1/a1_baseline_official/runs/a1__grouped__mtcn__a-base-mel_mfcc__a-ssl-wav2vec2-chinese-xlsr__v-base-headpose+facebeh+qc+vadagg__v-ssl-dinov2-large__mask-andcore__pw_biascalib__seed42__20260513_124716/logs/train_grouped_a1_20260513_124716.log
+2026-05-13 12:47:16 [INFO] Device: cuda
+2026-05-13 12:47:16 [INFO] Task: a1
+2026-05-13 12:47:16 [INFO] Run name: a1__grouped__mtcn__a-base-mel_mfcc__a-ssl-wav2vec2-chinese-xlsr__v-base-headpose+facebeh+qc+vadagg__v-ssl-dinov2-large__mask-andcore__pw_biascalib__seed42__20260513_124716
+2026-05-13 12:47:16 [INFO] Config: {'feature_root': '/home/adodas/dataset', 'manifest_dir': '/home/adodas/dataset/manifests_internal/split_1_school_class', 'output_dir': '/home/adodas/AdoDAS2026-split/outputs_internal/split1/a1_baseline_official', 'mask_policy': 'and_core', 'core_audio': ['mel_mfcc', 'ssl_embed'], 'core_video': ['vision_ssl_embed', 'qc_stats'], 'd_adapter': 64, 'd_model': 256, 'tcn_layers': 6, 'tcn_kernel_size': 3, 'asp_alpha': 0.5, 'asp_beta': 0.5, 'dropout': 0.2, 'd_shared': 256, 'aggregator': 'mlp', 'batch_size': 32, 'lr': 0.0005, 'weight_decay': 0.01, 'warmup_epochs': 1, 'epochs': 30, 'seed': 42, 'num_workers': 8, 'amp': True, 'preload': False, 'grad_clip': 1.0, 'use_pos_weight': True, 'patience': 8, 'session_loss_weight': 0.2, 'session_type_loss_weight': 0.15, 'submission_level': 'participant', 'decode_method': 'auto', 'label_smoothing': 0.0, 'feature_noise_std': 0.0, 'session_drop_prob': 0.0, 'early_stop_metric': 'primary', 'pre_tcn_processing': {'enabled': False}, 'val_sequence_path_split': 'train', 'audio_features': ['mel_mfcc', 'ssl_embed'], 'video_features': ['headpose_geom', 'face_behavior', 'qc_stats', 'vad_agg', 'vision_ssl_embed'], 'audio_ssl_model_tag': 'wav2vec2-chinese-xlsr', 'video_ssl_model_tag': 'dinov2-large', 'task': 'a1'}
+2026-05-13 12:47:16 [INFO] Mask policy: and_core
+2026-05-13 12:47:17 [INFO] GroupedParticipantDataset logical split='val' -> loading sequences from 'train'/ (manifest val.csv)
+2026-05-13 12:47:18 [INFO] [PreTCN] pre_tcn_processing.enabled=False
+2026-05-13 12:47:18 [INFO] Train: 2277 participants, Val: 1139 participants
+2026-05-13 12:47:18 [INFO] batch_size=32, num_workers=8
+2026-05-13 12:47:19 [INFO] Model params: 5,483,243
+2026-05-13 12:47:19 [INFO] AMP enabled (BF16)
+2026-05-13 12:47:19 [INFO] pos_weight [D/A/S]: 1.96 / 1.59 / 2.70
+2026-05-13 12:47:20 [INFO] Scheduler: warmup=1 -> cosine, total=30
+2026-05-13 12:47:20 [INFO] Grad clip: 1.0
+2026-05-13 12:47:21 [INFO] Session loss weight: 0.2
+2026-05-13 12:47:21 [INFO] Session type loss weight: 0.15
+2026-05-13 12:47:21 [INFO] EarlyStopping: patience=8, metric=primary, mode=max
+2026-05-13 12:47:21 [INFO] Label smoothing: 0.0
+2026-05-13 12:47:21 [INFO] Feature noise std: 0.0
+2026-05-13 12:47:21 [INFO] Session drop prob: 0.0
+2026-05-13 12:47:21 [INFO] ==========================================================================================
+2026-05-13 12:47:21 [INFO]   Epoch  |    LR     | Train Loss | Val Loss | F1 raw | F1 sel |  AUROC | F1[D/A/S]       | Time
+2026-05-13 12:47:21 [INFO] ==========================================================================================
+2026-05-13 12:50:22 [INFO]     D: gt_pos=0.199 pred_pos=0.000 p_mean=0.345 P=0.000 R=0.000 F1=0.000
+2026-05-13 12:50:22 [INFO]     A: gt_pos=0.249 pred_pos=0.000 p_mean=0.382 P=0.000 R=0.000 F1=0.000
+2026-05-13 12:50:22 [INFO]     S: gt_pos=0.124 pred_pos=0.000 p_mean=0.259 P=0.000 R=0.000 F1=0.000
+2026-05-13 12:50:22 [INFO]     Session-level variance (collapse metric): 0.000397
+2026-05-13 12:50:22 [INFO]     calibrated F1=0.3243 via biases D=+0.80 A=+0.50 S=+1.10 (selected=calibrated)
+2026-05-13 12:50:22 [INFO]     1/ 30 | 5.00e-04 |   1.1317   |  0.7335  | 0.0000 | 0.3243 | 0.5729 | 0.000/0.000/0.000 | 3m 01s ETA 1h 27m 33s VRAM 13.4G *
+2026-05-13 12:50:22 [INFO]   >>> New best F1=0.3243 saved at epoch 1.
+2026-05-13 12:50:22 [INFO]   >>> New best_raw_f1=0.0000 -> best_raw_f1.pt
+2026-05-13 12:50:23 [INFO]   >>> New best_auroc=0.5729 -> best_auroc.pt
+2026-05-13 12:50:23 [INFO]   >>> New best_calibrated_f1=0.3243 -> best_calibrated_f1.pt
+2026-05-13 12:50:24 [INFO]   >>> New best_robust=0.1065 -> best_robust.pt
+2026-05-13 12:52:56 [INFO]     D: gt_pos=0.199 pred_pos=0.412 p_mean=0.440 P=0.303 R=0.626 F1=0.408
+2026-05-13 12:52:56 [INFO]     A: gt_pos=0.249 pred_pos=0.491 p_mean=0.506 P=0.354 R=0.697 F1=0.470
+2026-05-13 12:52:57 [INFO]     S: gt_pos=0.124 pred_pos=0.312 p_mean=0.358 P=0.197 R=0.496 F1=0.282
+2026-05-13 12:52:57 [INFO]     Session-level variance (collapse metric): 0.002560
+2026-05-13 12:52:57 [INFO]     calibrated F1=0.4005 via biases D=+0.50 A=+0.10 S=+1.00 (selected=calibrated)
+2026-05-13 12:52:57 [INFO]     2/ 30 | 4.99e-04 |   1.0706   |  0.7340  | 0.3867 | 0.4005 | 0.6799 | 0.408/0.470/0.282 | 2m 33s ETA 1h 18m 28s VRAM 13.4G *
+2026-05-13 12:52:58 [INFO]   >>> New best F1=0.4005 saved at epoch 2.
+2026-05-13 12:52:59 [INFO]   >>> New best_raw_f1=0.3867 -> best_raw_f1.pt
+2026-05-13 12:53:01 [INFO]   >>> New best_auroc=0.6799 -> best_auroc.pt
+2026-05-13 12:53:02 [INFO]   >>> New best_calibrated_f1=0.4005 -> best_calibrated_f1.pt
+2026-05-13 12:53:03 [INFO]   >>> New best_robust=0.4860 -> best_robust.pt
+2026-05-13 12:55:17 [INFO]     D: gt_pos=0.199 pred_pos=0.071 p_mean=0.298 P=0.395 R=0.141 F1=0.208
+2026-05-13 12:55:18 [INFO]     A: gt_pos=0.249 pred_pos=0.144 p_mean=0.366 P=0.457 R=0.264 F1=0.335
+2026-05-13 12:55:18 [INFO]     S: gt_pos=0.124 pred_pos=0.118 p_mean=0.248 P=0.254 R=0.241 F1=0.247
+2026-05-13 12:55:18 [INFO]     Session-level variance (collapse metric): 0.001693
+2026-05-13 12:55:18 [INFO]     calibrated F1=0.3960 via biases D=+1.00 A=+0.50 S=+0.60 (selected=calibrated)
+2026-05-13 12:55:18 [INFO]     3/ 30 | 4.94e-04 |   0.9872   |  0.6944  | 0.2633 | 0.3960 | 0.6759 | 0.208/0.335/0.247 | 2m 13s ETA 1h 11m 32s VRAM 13.4G
+2026-05-13 12:57:39 [INFO]     D: gt_pos=0.199 pred_pos=0.318 p_mean=0.421 P=0.326 R=0.520 F1=0.401
+2026-05-13 12:57:39 [INFO]     A: gt_pos=0.249 pred_pos=0.352 p_mean=0.441 P=0.384 R=0.542 F1=0.450
+2026-05-13 12:57:39 [INFO]     S: gt_pos=0.124 pred_pos=0.061 p_mean=0.284 P=0.286 R=0.142 F1=0.190
+2026-05-13 12:57:39 [INFO]     Session-level variance (collapse metric): 0.005994
+2026-05-13 12:57:39 [INFO]     calibrated F1=0.3963 via biases D=+0.50 A=+0.30 S=+0.70 (selected=calibrated)
+2026-05-13 12:57:39 [INFO]     4/ 30 | 4.87e-04 |   0.9656   |  0.7069  | 0.3466 | 0.3963 | 0.6766 | 0.401/0.450/0.190 | 2m 20s ETA 1h 06m 57s VRAM 13.4G
+2026-05-13 12:59:58 [INFO]     D: gt_pos=0.199 pred_pos=0.011 p_mean=0.269 P=0.538 R=0.031 F1=0.058
+2026-05-13 12:59:58 [INFO]     A: gt_pos=0.249 pred_pos=0.283 p_mean=0.383 P=0.398 R=0.451 F1=0.422
+2026-05-13 12:59:58 [INFO]     S: gt_pos=0.124 pred_pos=0.000 p_mean=0.227 P=0.000 R=0.000 F1=0.000
+2026-05-13 12:59:58 [INFO]     Session-level variance (collapse metric): 0.002196
+2026-05-13 12:59:58 [INFO]     calibrated F1=0.4104 via biases D=+1.00 A=+0.70 S=+0.90 (selected=calibrated)
+2026-05-13 12:59:58 [INFO]     5/ 30 | 4.77e-04 |   0.9238   |  0.6872  | 0.1603 | 0.4104 | 0.6848 | 0.058/0.422/0.000 | 2m 18s ETA 1h 03m 08s VRAM 13.4G *
+2026-05-13 12:59:59 [INFO]   >>> New best F1=0.4104 saved at epoch 5.
+2026-05-13 13:00:00 [INFO]   >>> New best_auroc=0.6848 -> best_auroc.pt
+2026-05-13 13:00:01 [INFO]   >>> New best_calibrated_f1=0.4104 -> best_calibrated_f1.pt

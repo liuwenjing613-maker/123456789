@@ -1,0 +1,117 @@
+{
+  "run_name": "a1__grouped__mtcn__a-base-mel_mfcc__a-ssl-wav2vec2-chinese-xlsr__v-base-headpose+facebeh+qc+vadagg__v-ssl-dinov2-large__mask-andcore__pw_biascalib__seed42__20260512_005411",
+  "task": "a1",
+  "start_time": "2026-05-12T00:54:12.239175",
+  "end_time": "2026-05-12T01:54:00.559433",
+  "git_commit": "2f0289871cb11ffb5041618a4756fbca8995d5f8",
+  "command_line": "train.py --task a1 --config /home/adodas/AdoDAS2026_5/configs_pretcn/a1_baseline_official.yaml",
+  "full_config": {
+    "feature_root": "/home/adodas/dataset",
+    "manifest_dir": "/home/adodas/dataset/manifests",
+    "output_dir": "/home/adodas/AdoDAS2026_5/outputs/a1/baseline_official",
+    "mask_policy": "and_core",
+    "core_audio": [
+      "mel_mfcc",
+      "ssl_embed"
+    ],
+    "core_video": [
+      "vision_ssl_embed",
+      "qc_stats"
+    ],
+    "d_adapter": 64,
+    "d_model": 256,
+    "tcn_layers": 6,
+    "tcn_kernel_size": 3,
+    "asp_alpha": 0.5,
+    "asp_beta": 0.5,
+    "dropout": 0.2,
+    "d_shared": 256,
+    "aggregator": "mlp",
+    "batch_size": 32,
+    "lr": 0.0005,
+    "weight_decay": 0.01,
+    "warmup_epochs": 1,
+    "epochs": 30,
+    "seed": 42,
+    "num_workers": 8,
+    "amp": true,
+    "preload": false,
+    "grad_clip": 1.0,
+    "use_pos_weight": true,
+    "patience": 8,
+    "session_loss_weight": 0.2,
+    "session_type_loss_weight": 0.15,
+    "submission_level": "participant",
+    "decode_method": "auto",
+    "label_smoothing": 0.0,
+    "feature_noise_std": 0.0,
+    "session_drop_prob": 0.0,
+    "early_stop_metric": "primary",
+    "pre_tcn_processing": {
+      "enabled": false
+    },
+    "audio_features": [
+      "mel_mfcc",
+      "ssl_embed"
+    ],
+    "video_features": [
+      "headpose_geom",
+      "face_behavior",
+      "qc_stats",
+      "vad_agg",
+      "vision_ssl_embed"
+    ],
+    "audio_ssl_model_tag": "wav2vec2-chinese-xlsr",
+    "video_ssl_model_tag": "dinov2-large",
+    "task": "a1"
+  },
+  "audio_ssl_tag": "wav2vec2-chinese-xlsr",
+  "video_ssl_tag": "dinov2-large",
+  "feature_combination": {
+    "audio_features": [
+      "mel_mfcc",
+      "ssl_embed"
+    ],
+    "video_features": [
+      "headpose_geom",
+      "face_behavior",
+      "qc_stats",
+      "vad_agg",
+      "vision_ssl_embed"
+    ],
+    "audio_ssl_model_tag": "wav2vec2-chinese-xlsr",
+    "video_ssl_model_tag": "dinov2-large"
+  },
+  "best_epoch": 13,
+  "best_metrics": {
+    "loss": 0.685511199267287,
+    "mean_f1": 0.38692087146139403,
+    "auroc": 0.7200974521910357,
+    "pcf1": [
+      0.4122137404580153,
+      0.4745762711864407,
+      0.273972602739726
+    ],
+    "mean_f1_calibrated": 0.4575678553654847,
+    "pcf1_calibrated": [
+      0.4753623188405797,
+      0.5387755102040817,
+      0.35856573705179284
+    ],
+    "calibration_biases": [
+      0.6000000000000032,
+      0.8000000000000034,
+      0.8000000000000034
+    ],
+    "primary_metric": 0.4575678553654847,
+    "selection_source": "calibrated"
+  },
+  "status": "completed",
+  "final_selected_strategy": "bias_calibrated",
+  "final_selected_metrics": {
+    "mean_f1": 0.44466349915435205,
+    "mean_f1_raw": 0.38692087146139403,
+    "mean_f1_calibrated": 0.44466349915435205,
+    "auroc": 0.7200974521910357
+  }
+}

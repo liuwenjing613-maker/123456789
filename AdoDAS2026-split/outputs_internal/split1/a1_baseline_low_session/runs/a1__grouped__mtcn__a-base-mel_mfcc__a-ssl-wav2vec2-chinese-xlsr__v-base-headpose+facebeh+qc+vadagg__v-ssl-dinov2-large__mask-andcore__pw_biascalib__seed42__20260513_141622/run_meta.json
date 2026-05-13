@@ -1,0 +1,142 @@
+{
+  "run_name": "a1__grouped__mtcn__a-base-mel_mfcc__a-ssl-wav2vec2-chinese-xlsr__v-base-headpose+facebeh+qc+vadagg__v-ssl-dinov2-large__mask-andcore__pw_biascalib__seed42__20260513_141622",
+  "task": "a1",
+  "start_time": "2026-05-13T14:16:22.481759",
+  "end_time": "2026-05-13T15:00:09.288904",
+  "git_commit": "7757c8697419d3e5b037b06c7ed6226ba639f8c4",
+  "command_line": "train.py --task a1 --config configs_internal/a1_baseline_only_low_session_split1.yaml",
+  "full_config": {
+    "feature_root": "/home/adodas/dataset",
+    "manifest_dir": "/home/adodas/dataset/manifests_internal/split_1_school_class",
+    "output_dir": "/home/adodas/AdoDAS2026-split/outputs_internal/split1/a1_baseline_low_session",
+    "mask_policy": "and_core",
+    "core_audio": [
+      "mel_mfcc",
+      "ssl_embed"
+    ],
+    "core_video": [
+      "vision_ssl_embed",
+      "qc_stats"
+    ],
+    "d_adapter": 64,
+    "d_model": 256,
+    "tcn_layers": 6,
+    "tcn_kernel_size": 3,
+    "asp_alpha": 0.5,
+    "asp_beta": 0.5,
+    "dropout": 0.2,
+    "d_shared": 256,
+    "aggregator": "mlp",
+    "batch_size": 32,
+    "lr": 0.0005,
+    "weight_decay": 0.01,
+    "warmup_epochs": 1,
+    "epochs": 30,
+    "seed": 42,
+    "num_workers": 8,
+    "amp": true,
+    "preload": false,
+    "grad_clip": 1.0,
+    "use_pos_weight": true,
+    "patience": 8,
+    "session_loss_weight": 0.05,
+    "session_type_loss_weight": 0.05,
+    "submission_level": "participant",
+    "decode_method": "auto",
+    "label_smoothing": 0.0,
+    "feature_noise_std": 0.0,
+    "session_drop_prob": 0.0,
+    "early_stop_metric": "primary",
+    "pre_tcn_processing": {
+      "enabled": false
+    },
+    "val_sequence_path_split": "train",
+    "audio_features": [
+      "mel_mfcc",
+      "ssl_embed"
+    ],
+    "video_features": [
+      "headpose_geom",
+      "face_behavior",
+      "qc_stats",
+      "vad_agg",
+      "vision_ssl_embed"
+    ],
+    "audio_ssl_model_tag": "wav2vec2-chinese-xlsr",
+    "video_ssl_model_tag": "dinov2-large",
+    "task": "a1"
+  },
+  "audio_ssl_tag": "wav2vec2-chinese-xlsr",
+  "video_ssl_tag": "dinov2-large",
+  "feature_combination": {
+    "audio_features": [
+      "mel_mfcc",
+      "ssl_embed"
+    ],
+    "video_features": [
+      "headpose_geom",
+      "face_behavior",
+      "qc_stats",
+      "vad_agg",
+      "vision_ssl_embed"
+    ],
+    "audio_ssl_model_tag": "wav2vec2-chinese-xlsr",
+    "video_ssl_model_tag": "dinov2-large"
+  },
+  "best_epoch": 9,
+  "best_metrics": {
+    "loss": 0.7079292001823584,
+    "mean_f1": 0.40120934866372043,
+    "auroc": 0.690458052391644,
+    "pcf1": [
+      0.42504118616144976,
+      0.45891472868217054,
+      0.319672131147541
+    ],
+    "mean_f1_calibrated": 0.4148839038697227,
+    "pcf1_calibrated": [
+      0.43478260869565216,
+      0.48326359832635984,
+      0.326605504587156
+    ],
+    "calibration_biases": [
+      0.8000000000000034,
+      1.2000000000000037,
+      0.30000000000000293
+    ],
+    "primary_metric": 0.4148839038697227,
+    "selection_source": "calibrated",
+    "val_metrics_raw": {
+      "mean_f1": 0.40120934866372043,
+      "macro_auroc": 0.690458052391644,
+      "D_f1": 0.42504118616144976,
+      "A_f1": 0.45891472868217054,
+      "S_f1": 0.319672131147541
+    },
+    "val_metrics_calibrated": {
+      "mean_f1": 0.4148839038697227,
+      "macro_auroc": 0.690458052391644,
+      "D_f1": 0.43478260869565216,
+      "A_f1": 0.48326359832635984,
+      "S_f1": 0.326605504587156
+    },
+    "pred_pos_raw": {
+      "D": 0.33362598770851626,
+      "A": 0.3169446883230904,
+      "S": 0.30465320456540823
+    },
+    "pred_pos_calibrated": {
+      "D": 0.4872695346795435,
+      "A": 0.5899912203687445,
+      "S": 0.3546971027216857
+    }
+  },
+  "status": "completed",
+  "final_selected_strategy": "bias_calibrated",
+  "final_selected_metrics": {
+    "mean_f1": 0.414140847009554,
+    "mean_f1_raw": 0.40120934866372043,
+    "mean_f1_calibrated": 0.414140847009554,
+    "auroc": 0.690458052391644
+  }
+}
