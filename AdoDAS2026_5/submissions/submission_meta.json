@@ -1,0 +1,11 @@
+{
+  "task": "a1",
+  "checkpoint": "/home/adodas/AdoDAS2026-split/outputs/a1/baseline_official/runs/a1__grouped__mtcn__a-base-mel_mfcc__a-ssl-wav2vec2-chinese-xlsr__v-base-headpose+facebeh+qc+vadagg__v-ssl-dinov2-large__mask-andcore__pw_biascalib__seed42__20260512_150655/checkpoints/best_raw_f1.pt",
+  "output_csv": "result.csv",
+  "a1_bias_mode": "none",
+  "a1_bias_file": null,
+  "a1_bias_shrink": 1.0,
+  "a1_bias_vector": null,
+  "bias_epoch": null,
+  "selection_reason": null
+}
