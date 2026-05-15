@@ -1,0 +1,145 @@
+{
+  "run_name": "a1__grouped__mtcn__a-base-mel_mfcc+vad+egemaps__a-ssl-wav2vec2-chinese-xlsr__v-base-headpose+facebeh+qc+vadagg__v-ssl-dinov2-large__mask-andcore__pw_biascalib__seed42__20260515_194626",
+  "task": "a1",
+  "start_time": "2026-05-15T19:46:26.540009",
+  "end_time": null,
+  "git_commit": "ed2521365a5356417beb12a314be3b5495c5fb5f",
+  "command_line": "/home/adodas/AdoDAS2026_folder_pth/train.py --task a1 --config outputs_folder_pth/a1/kfold3_baseline/configs/fold_0.yaml --epochs 30 --batch_size 32 --num_workers 8",
+  "full_config": {
+    "feature_root": "/home/adodas/dataset",
+    "manifest_dir": "outputs_folder_pth/a1/kfold3_baseline/manifests/kfold_3/fold_0",
+    "output_dir": "outputs_folder_pth/a1/kfold3_baseline/fold_0/outputs/a1",
+    "mask_policy": "and_core",
+    "core_audio": [
+      "mel_mfcc",
+      "ssl_embed"
+    ],
+    "core_video": [
+      "vision_ssl_embed",
+      "qc_stats"
+    ],
+    "d_adapter": 64,
+    "d_model": 256,
+    "tcn_layers": 6,
+    "tcn_kernel_size": 3,
+    "asp_alpha": 0.5,
+    "asp_beta": 0.5,
+    "dropout": 0.2,
+    "d_shared": 256,
+    "aggregator": "mlp",
+    "batch_size": 32,
+    "lr": 0.0005,
+    "weight_decay": 0.01,
+    "warmup_epochs": 1,
+    "epochs": 30,
+    "seed": 42,
+    "num_workers": 8,
+    "amp": true,
+    "preload": false,
+    "grad_clip": 1.0,
+    "use_pos_weight": true,
+    "patience": 6,
+    "session_loss_weight": 0.2,
+    "session_type_loss_weight": 0.15,
+    "submission_level": "participant",
+    "decode_method": "auto",
+    "label_smoothing": 0.0,
+    "feature_noise_std": 0.0,
+    "session_drop_prob": 0.0,
+    "early_stop_metric": "safe_submit_f1",
+    "save_last_checkpoint": 0,
+    "checkpoint_selection": {
+      "mode": "safe_submit",
+      "save_last": false
+    },
+    "audio_features": [
+      "mel_mfcc",
+      "vad",
+      "egemaps",
+      "ssl_embed"
+    ],
+    "video_features": [
+      "headpose_geom",
+      "face_behavior",
+      "qc_stats",
+      "vad_agg",
+      "vision_ssl_embed"
+    ],
+    "audio_ssl_model_tag": "wav2vec2-chinese-xlsr",
+    "video_ssl_model_tag": "dinov2-large",
+    "train_sequence_path_split": "train",
+    "val_sequence_path_split": "train",
+    "task": "a1"
+  },
+  "audio_ssl_tag": "wav2vec2-chinese-xlsr",
+  "video_ssl_tag": "dinov2-large",
+  "feature_combination": {
+    "audio_features": [
+      "mel_mfcc",
+      "vad",
+      "egemaps",
+      "ssl_embed"
+    ],
+    "video_features": [
+      "headpose_geom",
+      "face_behavior",
+      "qc_stats",
+      "vad_agg",
+      "vision_ssl_embed"
+    ],
+    "audio_ssl_model_tag": "wav2vec2-chinese-xlsr",
+    "video_ssl_model_tag": "dinov2-large"
+  },
+  "best_epoch": 9,
+  "best_metrics": {
+    "loss": 0.8439343658586343,
+    "mean_f1": 0.4018427887270124,
+    "auroc": 0.681977588962772,
+    "pcf1": [
+      0.42638398115429915,
+      0.47914438502673795,
+      0.3
+    ],
+    "mean_f1_calibrated": 0.4160662114961067,
+    "pcf1_calibrated": [
+      0.43717277486910994,
+      0.48366013071895425,
+      0.3273657289002558
+    ],
+    "calibration_biases": [
+      -0.5999999999999979,
+      -0.09999999999999742,
+      -0.799999999999998
+    ],
+    "shrink0.3_f1": 0.4021491543439537,
+    "shrink0.5_f1": 0.40455717435999894,
+    "safe_submit_f1": 0.40455717435999894,
+    "primary_metric": 0.4018427887270124,
+    "selection_source": "calibrated",
+    "val_metrics_raw": {
+      "mean_f1": 0.4018427887270124,
+      "macro_auroc": 0.681977588962772,
+      "D_f1": 0.42638398115429915,
+      "A_f1": 0.47914438502673795,
+      "S_f1": 0.3
+    },
+    "val_metrics_calibrated": {
+      "mean_f1": 0.4160662114961067,
+      "macro_auroc": 0.681977588962772,
+      "D_f1": 0.43717277486910994,
+      "A_f1": 0.48366013071895425,
+      "S_f1": 0.3273657289002558
+    },
+    "pred_pos_raw": {
+      "D": 0.5296684118673648,
+      "A": 0.5418848167539267,
+      "S": 0.45287958115183247
+    },
+    "pred_pos_calibrated": {
+      "D": 0.45549738219895286,
+      "A": 0.5270506108202443,
+      "S": 0.2181500872600349
+    }
+  },
+  "status": "running"
+}

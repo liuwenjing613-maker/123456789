@@ -1,0 +1,3 @@
+checkpoint_name,epoch,raw_mean_f1,macro_auroc,full_calibrated_mean_f1,reference_f1_raw,recommended_default_submission
+best_raw_f1.pt,9,0.4018427887270124,0.681977588962772,0.4160662114961067,0.4018427887270124,False
+best_auc.pt,9,0.4018427887270124,0.681977588962772,0.4160662114961067,0.4018427887270124,False

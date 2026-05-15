@@ -1,0 +1,164 @@
+2026-05-15 19:50:26 [INFO] Logging to /home/adodas/AdoDAS2026_folder_pth/outputs/a1/runs/a1__grouped__mtcn__a-base-mel_mfcc+vad+egemaps__a-ssl-wav2vec2-chinese-xlsr__v-base-headpose+facebeh+qc+vadagg__v-ssl-dinov2-large__mask-andcore__pw_biascalib__seed42__20260515_195026/logs/train_grouped_a1_20260515_195026.log
+2026-05-15 19:50:26 [INFO] Device: cuda
+2026-05-15 19:50:26 [INFO] Task: a1
+2026-05-15 19:50:26 [INFO] Run name: a1__grouped__mtcn__a-base-mel_mfcc+vad+egemaps__a-ssl-wav2vec2-chinese-xlsr__v-base-headpose+facebeh+qc+vadagg__v-ssl-dinov2-large__mask-andcore__pw_biascalib__seed42__20260515_195026
+2026-05-15 19:50:26 [INFO] Config: {'feature_root': '/home/adodas/dataset', 'manifest_dir': '/home/adodas/dataset/manifests', 'output_dir': '/home/adodas/AdoDAS2026_folder_pth/outputs/a1', 'mask_policy': 'and_core', 'core_audio': ['mel_mfcc', 'ssl_embed'], 'core_video': ['vision_ssl_embed', 'qc_stats'], 'd_adapter': 64, 'd_model': 256, 'tcn_layers': 6, 'tcn_kernel_size': 3, 'asp_alpha': 0.5, 'asp_beta': 0.5, 'dropout': 0.2, 'd_shared': 256, 'aggregator': 'mlp', 'batch_size': 32, 'lr': 0.0005, 'weight_decay': 0.01, 'warmup_epochs': 1, 'epochs': 30, 'seed': 42, 'num_workers': 8, 'amp': True, 'preload': False, 'grad_clip': 1.0, 'use_pos_weight': True, 'patience': 6, 'session_loss_weight': 0.2, 'session_type_loss_weight': 0.15, 'submission_level': 'participant', 'decode_method': 'auto', 'label_smoothing': 0.0, 'feature_noise_std': 0.0, 'session_drop_prob': 0.0, 'early_stop_metric': 'safe_submit_f1', 'save_last_checkpoint': 0, 'checkpoint_selection': {'mode': 'safe_submit', 'save_last': False}, 'audio_features': ['mel_mfcc', 'vad', 'egemaps', 'ssl_embed'], 'video_features': ['headpose_geom', 'face_behavior', 'qc_stats', 'vad_agg', 'vision_ssl_embed'], 'audio_ssl_model_tag': 'wav2vec2-chinese-xlsr', 'video_ssl_model_tag': 'dinov2-large', 'task': 'a1'}
+2026-05-15 19:50:26 [INFO] Mask policy: and_core
+2026-05-15 19:50:29 [WARNING] GroupedDataset split=train: dropped 784/4200 participants with no loadable sessions. Examples: SCH_008/CLS_0090/P000439, SCH_008/CLS_0090/P000802, SCH_008/CLS_0090/P001091, SCH_008/CLS_0090/P001990, SCH_008/CLS_0090/P002557, SCH_008/CLS_0090/P003463, SCH_008/CLS_0090/P004359, SCH_008/CLS_0090/P004640, SCH_008/CLS_0090/P004806, SCH_008/CLS_0090/P005071 ... (+774 more)
+2026-05-15 19:50:30 [INFO] Train: 3416 participants, Val: 600 participants
+2026-05-15 19:50:30 [INFO] batch_size=32, num_workers=8
+2026-05-15 19:50:31 [INFO] Model params: 5,522,013
+2026-05-15 19:50:31 [INFO] AMP enabled (BF16)
+2026-05-15 19:50:31 [INFO] pos_weight [D/A/S]: 1.91 / 1.59 / 2.60
+2026-05-15 19:50:32 [INFO] Scheduler: warmup=1 -> cosine, total=30
+2026-05-15 19:50:32 [INFO] Grad clip: 1.0
+2026-05-15 19:50:32 [INFO] Session loss weight: 0.2
+2026-05-15 19:50:32 [INFO] Session type loss weight: 0.15
+2026-05-15 19:50:32 [INFO] EarlyStopping: patience=6, metric=safe_submit_f1, mode=max
+2026-05-15 19:50:33 [INFO] A1 checkpoint_selection mode=safe_submit
+2026-05-15 19:50:33 [INFO] Label smoothing: 0.0
+2026-05-15 19:50:33 [INFO] Feature noise std: 0.0
+2026-05-15 19:50:33 [INFO] Session drop prob: 0.0
+2026-05-15 19:50:33 [INFO] ==========================================================================================
+2026-05-15 19:50:33 [INFO]   Epoch  |    LR     | Train Loss | Val Loss | F1 raw | safe_sub |  AUROC | F1[D/A/S]       | Time
+2026-05-15 19:50:33 [INFO] ==========================================================================================
+2026-05-15 20:05:24 [INFO]     D: gt_pos=0.215 pred_pos=0.000 p_mean=0.333 P=0.000 R=0.000 F1=0.000
+2026-05-15 20:05:25 [INFO]     A: gt_pos=0.283 pred_pos=0.000 p_mean=0.337 P=0.000 R=0.000 F1=0.000
+2026-05-15 20:05:25 [INFO]     S: gt_pos=0.130 pred_pos=0.000 p_mean=0.216 P=0.000 R=0.000 F1=0.000
+2026-05-15 20:05:25 [INFO]     Session-level variance (collapse metric): 0.000662
+2026-05-15 20:05:26 [INFO]     calibrated F1=0.3810 via biases D=+0.70 A=+0.70 S=+1.30 (selected=calibrated)
+2026-05-15 20:05:26 [INFO]     shrink0.3 F1=0.0000 shrink0.5 F1=0.0000 safe_submit_f1=0.0000
+2026-05-15 20:05:26 [INFO]     1/ 30 | 5.00e-04 |   1.1077   |  0.7532  | 0.0000 | 0.0000 | 0.6283 | 0.000/0.000/0.000 | 14m 53s ETA 7h 11m 49s VRAM 13.4G *
+2026-05-15 20:05:27 [INFO]   >>> New best_raw_f1=0.0000 -> best_raw_f1.pt
+2026-05-15 20:05:28 [INFO]   >>> New best_auc=0.6283 -> best_auc.pt
+2026-05-15 20:05:28 [INFO]   >>> New best_safe_submit=0.0000 mode=raw shrink=0.0 -> best_safe_submit.pt
+2026-05-15 20:17:56 [INFO]     D: gt_pos=0.215 pred_pos=0.088 p_mean=0.300 P=0.377 R=0.155 F1=0.220
+2026-05-15 20:17:56 [INFO]     A: gt_pos=0.283 pred_pos=0.022 p_mean=0.323 P=0.385 R=0.029 F1=0.055
+2026-05-15 20:17:56 [INFO]     S: gt_pos=0.130 pred_pos=0.000 p_mean=0.206 P=0.000 R=0.000 F1=0.000
+2026-05-15 20:17:56 [INFO]     Session-level variance (collapse metric): 0.001254
+2026-05-15 20:17:56 [INFO]     calibrated F1=0.4025 via biases D=+0.70 A=+1.20 S=+1.20 (selected=calibrated)
+2026-05-15 20:17:57 [INFO]     shrink0.3 F1=0.2563 shrink0.5 F1=0.2675 safe_submit_f1=0.2675
+2026-05-15 20:17:57 [INFO]     2/ 30 | 4.99e-04 |   0.9862   |  0.7296  | 0.0915 | 0.2675 | 0.6490 | 0.220/0.055/0.000 | 12m 28s ETA 6h 23m 35s VRAM 13.4G *
+2026-05-15 20:17:58 [INFO]   >>> New best_raw_f1=0.0915 -> best_raw_f1.pt
+2026-05-15 20:17:58 [INFO]   >>> New best_auc=0.6490 -> best_auc.pt
+2026-05-15 20:17:59 [INFO]   >>> New best_safe_submit=0.2675 mode=shrink0.5 shrink=0.5 -> best_safe_submit.pt
+2026-05-15 20:30:17 [INFO]     D: gt_pos=0.215 pred_pos=0.338 p_mean=0.356 P=0.345 R=0.543 F1=0.422
+2026-05-15 20:30:17 [INFO]     A: gt_pos=0.283 pred_pos=0.337 p_mean=0.392 P=0.411 R=0.488 F1=0.446
+2026-05-15 20:30:17 [INFO]     S: gt_pos=0.130 pred_pos=0.157 p_mean=0.329 P=0.213 R=0.256 F1=0.233
+2026-05-15 20:30:17 [INFO]     Session-level variance (collapse metric): 0.003947
+2026-05-15 20:30:17 [INFO]     calibrated F1=0.4221 via biases D=+0.60 A=+0.60 S=+0.30 (selected=calibrated)
+2026-05-15 20:30:17 [INFO]     shrink0.3 F1=0.3938 shrink0.5 F1=0.4015 safe_submit_f1=0.4015
+2026-05-15 20:30:17 [INFO]     3/ 30 | 4.94e-04 |   0.9515   |  0.7074  | 0.3668 | 0.4015 | 0.6794 | 0.422/0.446/0.233 | 12m 18s ETA 5h 57m 42s VRAM 13.4G *
+2026-05-15 20:30:18 [INFO]   >>> New best_raw_f1=0.3668 -> best_raw_f1.pt
+2026-05-15 20:30:19 [INFO]   >>> New best_auc=0.6794 -> best_auc.pt
+2026-05-15 20:30:20 [INFO]   >>> New best_safe_submit=0.4015 mode=shrink0.5 shrink=0.5 -> best_safe_submit.pt
+2026-05-15 20:42:40 [INFO]     D: gt_pos=0.215 pred_pos=0.192 p_mean=0.339 P=0.391 R=0.349 F1=0.369
+2026-05-15 20:42:40 [INFO]     A: gt_pos=0.283 pred_pos=0.398 p_mean=0.404 P=0.381 R=0.535 F1=0.445
+2026-05-15 20:42:40 [INFO]     S: gt_pos=0.130 pred_pos=0.055 p_mean=0.277 P=0.333 R=0.141 F1=0.198
+2026-05-15 20:42:40 [INFO]     Session-level variance (collapse metric): 0.003287
+2026-05-15 20:42:40 [INFO]     calibrated F1=0.4195 via biases D=+0.20 A=+1.20 S=+0.50 (selected=calibrated)
+2026-05-15 20:42:40 [INFO]     shrink0.3 F1=0.3721 shrink0.5 F1=0.3899 safe_submit_f1=0.3899
+2026-05-15 20:42:40 [INFO]     4/ 30 | 4.87e-04 |   0.9295   |  0.7023  | 0.3373 | 0.3899 | 0.6806 | 0.369/0.445/0.198 | 12m 20s ETA 5h 38m 49s VRAM 13.4G
+2026-05-15 20:42:41 [INFO]   >>> New best_auc=0.6806 -> best_auc.pt
+2026-05-15 20:55:02 [INFO]     D: gt_pos=0.215 pred_pos=0.063 p_mean=0.289 P=0.474 R=0.140 F1=0.216
+2026-05-15 20:55:02 [INFO]     A: gt_pos=0.283 pred_pos=0.273 p_mean=0.368 P=0.421 R=0.406 F1=0.413
+2026-05-15 20:55:02 [INFO]     S: gt_pos=0.130 pred_pos=0.000 p_mean=0.206 P=0.000 R=0.000 F1=0.000
+2026-05-15 20:55:02 [INFO]     Session-level variance (collapse metric): 0.001647
+2026-05-15 20:55:02 [INFO]     calibrated F1=0.4208 via biases D=+1.30 A=+0.80 S=+1.40 (selected=calibrated)
+2026-05-15 20:55:02 [INFO]     shrink0.3 F1=0.2956 shrink0.5 F1=0.3007 safe_submit_f1=0.3007
+2026-05-15 20:55:02 [INFO]     5/ 30 | 4.77e-04 |   0.8999   |  0.7085  | 0.2096 | 0.3007 | 0.6835 | 0.216/0.413/0.000 | 12m 21s ETA 5h 22m 27s VRAM 13.4G
+2026-05-15 20:55:03 [INFO]   >>> New best_auc=0.6835 -> best_auc.pt
+2026-05-15 21:07:29 [INFO]     D: gt_pos=0.215 pred_pos=0.202 p_mean=0.262 P=0.380 R=0.357 F1=0.368
+2026-05-15 21:07:29 [INFO]     A: gt_pos=0.283 pred_pos=0.282 p_mean=0.323 P=0.414 R=0.412 F1=0.413
+2026-05-15 21:07:29 [INFO]     S: gt_pos=0.130 pred_pos=0.093 p_mean=0.207 P=0.196 R=0.141 F1=0.164
+2026-05-15 21:07:29 [INFO]     Session-level variance (collapse metric): 0.004122
+2026-05-15 21:07:29 [INFO]     calibrated F1=0.4338 via biases D=+1.20 A=+1.80 S=+1.50 (selected=calibrated)
+2026-05-15 21:07:29 [INFO]     shrink0.3 F1=0.3826 shrink0.5 F1=0.4047 safe_submit_f1=0.4047
+2026-05-15 21:07:29 [INFO]     6/ 30 | 4.64e-04 |   0.8703   |  0.7457  | 0.3151 | 0.4047 | 0.6829 | 0.368/0.413/0.164 | 12m 25s ETA 5h 07m 45s VRAM 13.4G
+2026-05-15 21:07:30 [INFO]   >>> New best_safe_submit=0.4047 mode=shrink0.5 shrink=0.5 -> best_safe_submit.pt
+2026-05-15 21:19:52 [INFO]     D: gt_pos=0.215 pred_pos=0.427 p_mean=0.419 P=0.332 R=0.659 F1=0.442
+2026-05-15 21:19:52 [INFO]     A: gt_pos=0.283 pred_pos=0.458 p_mean=0.428 P=0.382 R=0.618 F1=0.472
+2026-05-15 21:19:52 [INFO]     S: gt_pos=0.130 pred_pos=0.157 p_mean=0.305 P=0.255 R=0.308 F1=0.279
+2026-05-15 21:19:52 [INFO]     Session-level variance (collapse metric): 0.003263
+2026-05-15 21:19:52 [INFO]     calibrated F1=0.4325 via biases D=-0.30 A=+1.20 S=+0.10 (selected=calibrated)
+2026-05-15 21:19:52 [INFO]     shrink0.3 F1=0.4114 shrink0.5 F1=0.4109 safe_submit_f1=0.4114
+2026-05-15 21:19:52 [INFO]     7/ 30 | 4.49e-04 |   0.8400   |  0.7108  | 0.3975 | 0.4114 | 0.6923 | 0.442/0.472/0.279 | 12m 22s ETA 4h 53m 30s VRAM 13.4G *
+2026-05-15 21:19:53 [INFO]   >>> New best_raw_f1=0.3975 -> best_raw_f1.pt
+2026-05-15 21:19:54 [INFO]   >>> New best_auc=0.6923 -> best_auc.pt
+2026-05-15 21:19:55 [INFO]   >>> New best_safe_submit=0.4114 mode=shrink0.3 shrink=0.3 -> best_safe_submit.pt
+2026-05-15 21:32:14 [INFO]     D: gt_pos=0.215 pred_pos=0.510 p_mean=0.462 P=0.297 R=0.705 F1=0.418
+2026-05-15 21:32:14 [INFO]     A: gt_pos=0.283 pred_pos=0.578 p_mean=0.535 P=0.363 R=0.741 F1=0.487
+2026-05-15 21:32:14 [INFO]     S: gt_pos=0.130 pred_pos=0.450 p_mean=0.407 P=0.204 R=0.705 F1=0.316
+2026-05-15 21:32:14 [INFO]     Session-level variance (collapse metric): 0.005474
+2026-05-15 21:32:14 [INFO]     calibrated F1=0.4353 via biases D=-0.50 A=+0.90 S=-0.50 (selected=calibrated)
+2026-05-15 21:32:14 [INFO]     shrink0.3 F1=0.4158 shrink0.5 F1=0.4194 safe_submit_f1=0.4194
+2026-05-15 21:32:15 [INFO]     8/ 30 | 4.32e-04 |   0.8120   |  0.8000  | 0.4073 | 0.4194 | 0.6870 | 0.418/0.487/0.316 | 12m 19s ETA 4h 39m 40s VRAM 13.4G *
+2026-05-15 21:32:16 [INFO]   >>> New best_raw_f1=0.4073 -> best_raw_f1.pt
+2026-05-15 21:32:16 [INFO]   >>> New best_safe_submit=0.4194 mode=shrink0.5 shrink=0.5 -> best_safe_submit.pt
+2026-05-15 21:44:49 [INFO]     D: gt_pos=0.215 pred_pos=0.230 p_mean=0.409 P=0.391 R=0.419 F1=0.404
+2026-05-15 21:44:49 [INFO]     A: gt_pos=0.283 pred_pos=0.445 p_mean=0.481 P=0.401 R=0.629 F1=0.490
+2026-05-15 21:44:49 [INFO]     S: gt_pos=0.130 pred_pos=0.135 p_mean=0.364 P=0.235 R=0.244 F1=0.239
+2026-05-15 21:44:49 [INFO]     Session-level variance (collapse metric): 0.002546
+2026-05-15 21:44:49 [INFO]     calibrated F1=0.4327 via biases D=+0.20 A=+0.20 S=+0.30 (selected=calibrated)
+2026-05-15 21:44:49 [INFO]     shrink0.3 F1=0.3881 shrink0.5 F1=0.4037 safe_submit_f1=0.4037
+2026-05-15 21:44:50 [INFO]     9/ 30 | 4.12e-04 |   0.8060   |  0.7232  | 0.3777 | 0.4037 | 0.6911 | 0.404/0.490/0.239 | 12m 33s ETA 4h 26m 39s VRAM 13.4G
+2026-05-15 21:57:07 [INFO]     D: gt_pos=0.215 pred_pos=0.285 p_mean=0.311 P=0.392 R=0.519 F1=0.447
+2026-05-15 21:57:07 [INFO]     A: gt_pos=0.283 pred_pos=0.362 p_mean=0.360 P=0.415 R=0.529 F1=0.465
+2026-05-15 21:57:08 [INFO]     S: gt_pos=0.130 pred_pos=0.128 p_mean=0.256 P=0.260 R=0.256 F1=0.258
+2026-05-15 21:57:08 [INFO]     Session-level variance (collapse metric): 0.004070
+2026-05-15 21:57:08 [INFO]     calibrated F1=0.4437 via biases D=+0.10 A=+1.50 S=+0.50 (selected=calibrated)
+2026-05-15 21:57:09 [INFO]     shrink0.3 F1=0.4156 shrink0.5 F1=0.4275 safe_submit_f1=0.4275
+2026-05-15 21:57:09 [INFO]    10/ 30 | 3.91e-04 |   0.7867   |  0.7177  | 0.3899 | 0.4275 | 0.6968 | 0.447/0.465/0.258 | 12m 19s ETA 4h 13m 13s VRAM 13.4G
+2026-05-15 21:57:11 [INFO]   >>> New best_auc=0.6968 -> best_auc.pt
+2026-05-15 21:57:12 [INFO]   >>> New best_safe_submit=0.4275 mode=shrink0.5 shrink=0.5 -> best_safe_submit.pt
+2026-05-15 22:09:39 [INFO]     D: gt_pos=0.215 pred_pos=0.275 p_mean=0.289 P=0.376 R=0.481 F1=0.422
+2026-05-15 22:09:40 [INFO]     A: gt_pos=0.283 pred_pos=0.345 p_mean=0.354 P=0.411 R=0.500 F1=0.451
+2026-05-15 22:09:40 [INFO]     S: gt_pos=0.130 pred_pos=0.198 p_mean=0.245 P=0.244 R=0.372 F1=0.294
+2026-05-15 22:09:41 [INFO]     Session-level variance (collapse metric): 0.004943
+2026-05-15 22:09:41 [INFO]     calibrated F1=0.4303 via biases D=+1.00 A=+1.80 S=+0.80 (selected=calibrated)
+2026-05-15 22:09:42 [INFO]     shrink0.3 F1=0.3961 shrink0.5 F1=0.4080 safe_submit_f1=0.4080
+2026-05-15 22:09:42 [INFO]    11/ 30 | 3.67e-04 |   0.7776   |  0.7421  | 0.3890 | 0.4080 | 0.6922 | 0.422/0.451/0.294 | 12m 29s ETA 4h 00m 21s VRAM 13.4G
+2026-05-15 22:22:03 [INFO]     D: gt_pos=0.215 pred_pos=0.293 p_mean=0.352 P=0.369 R=0.504 F1=0.426
+2026-05-15 22:22:03 [INFO]     A: gt_pos=0.283 pred_pos=0.198 p_mean=0.353 P=0.412 R=0.288 F1=0.339
+2026-05-15 22:22:04 [INFO]     S: gt_pos=0.130 pred_pos=0.095 p_mean=0.250 P=0.316 R=0.231 F1=0.267
+2026-05-15 22:22:04 [INFO]     Session-level variance (collapse metric): 0.003362
+2026-05-15 22:22:04 [INFO]     calibrated F1=0.4352 via biases D=+0.20 A=+0.90 S=+0.30 (selected=calibrated)
+2026-05-15 22:22:04 [INFO]     shrink0.3 F1=0.3934 shrink0.5 F1=0.4045 safe_submit_f1=0.4045
+2026-05-15 22:22:04 [INFO]    12/ 30 | 3.43e-04 |   0.7902   |  0.6961  | 0.3440 | 0.4045 | 0.6932 | 0.426/0.339/0.267 | 12m 21s ETA 3h 47m 16s VRAM 13.4G
+2026-05-15 22:34:14 [INFO]     D: gt_pos=0.215 pred_pos=0.507 p_mean=0.458 P=0.319 R=0.752 F1=0.448
+2026-05-15 22:34:14 [INFO]     A: gt_pos=0.283 pred_pos=0.512 p_mean=0.463 P=0.391 R=0.706 F1=0.503
+2026-05-15 22:34:14 [INFO]     S: gt_pos=0.130 pred_pos=0.318 p_mean=0.345 P=0.241 R=0.590 F1=0.342
+2026-05-15 22:34:14 [INFO]     Session-level variance (collapse metric): 0.007280
+2026-05-15 22:34:14 [INFO]     calibrated F1=0.4382 via biases D=-0.80 A=+0.30 S=-0.20 (selected=calibrated)
+2026-05-15 22:34:14 [INFO]     shrink0.3 F1=0.4272 shrink0.5 F1=0.4278 safe_submit_f1=0.4311
+2026-05-15 22:34:14 [INFO]    13/ 30 | 3.17e-04 |   0.7577   |  0.7616  | 0.4311 | 0.4311 | 0.6937 | 0.448/0.503/0.342 | 12m 10s ETA 3h 34m 03s VRAM 13.4G *
+2026-05-15 22:34:15 [INFO]   >>> New best_raw_f1=0.4311 -> best_raw_f1.pt
+2026-05-15 22:34:15 [INFO]   >>> New best_safe_submit=0.4311 mode=raw shrink=0.0 -> best_safe_submit.pt
+2026-05-15 22:46:24 [INFO]     D: gt_pos=0.215 pred_pos=0.235 p_mean=0.350 P=0.426 R=0.465 F1=0.444
+2026-05-15 22:46:24 [INFO]     A: gt_pos=0.283 pred_pos=0.392 p_mean=0.414 P=0.379 R=0.524 F1=0.440
+2026-05-15 22:46:24 [INFO]     S: gt_pos=0.130 pred_pos=0.193 p_mean=0.304 P=0.259 R=0.385 F1=0.309
+2026-05-15 22:46:24 [INFO]     Session-level variance (collapse metric): 0.005918
+2026-05-15 22:46:24 [INFO]     calibrated F1=0.4237 via biases D=+0.20 A=+0.90 S=+0.40 (selected=calibrated)
+2026-05-15 22:46:24 [INFO]     shrink0.3 F1=0.4019 shrink0.5 F1=0.4079 safe_submit_f1=0.4079
+2026-05-15 22:46:24 [INFO]    14/ 30 | 2.91e-04 |   0.7419   |  0.7027  | 0.3977 | 0.4079 | 0.6865 | 0.444/0.440/0.309 | 12m 08s ETA 3h 20m 58s VRAM 13.4G
+2026-05-15 22:58:39 [INFO]     D: gt_pos=0.215 pred_pos=0.477 p_mean=0.434 P=0.304 R=0.674 F1=0.419
+2026-05-15 22:58:39 [INFO]     A: gt_pos=0.283 pred_pos=0.553 p_mean=0.478 P=0.352 R=0.688 F1=0.466
+2026-05-15 22:58:39 [INFO]     S: gt_pos=0.130 pred_pos=0.167 p_mean=0.313 P=0.260 R=0.333 F1=0.292
+2026-05-15 22:58:39 [INFO]     Session-level variance (collapse metric): 0.004382
+2026-05-15 22:58:39 [INFO]     calibrated F1=0.4238 via biases D=-0.30 A=+0.70 S=+0.40 (selected=calibrated)
+2026-05-15 22:58:39 [INFO]     shrink0.3 F1=0.4043 shrink0.5 F1=0.4075 safe_submit_f1=0.4075
+2026-05-15 22:58:39 [INFO]    15/ 30 | 2.64e-04 |   0.7301   |  0.7386  | 0.3925 | 0.4075 | 0.6806 | 0.419/0.466/0.292 | 12m 15s ETA 3h 08m 06s VRAM 13.4G
+2026-05-15 23:10:53 [INFO]     D: gt_pos=0.215 pred_pos=0.147 p_mean=0.244 P=0.386 R=0.264 F1=0.313
+2026-05-15 23:10:53 [INFO]     A: gt_pos=0.283 pred_pos=0.190 p_mean=0.281 P=0.395 R=0.265 F1=0.317
+2026-05-15 23:10:53 [INFO]     S: gt_pos=0.130 pred_pos=0.070 p_mean=0.206 P=0.333 R=0.179 F1=0.233
+2026-05-15 23:10:53 [INFO]     Session-level variance (collapse metric): 0.004874
+2026-05-15 23:10:54 [INFO]     calibrated F1=0.4230 via biases D=+0.80 A=+2.30 S=+1.00 (selected=calibrated)
+2026-05-15 23:10:54 [INFO]     shrink0.3 F1=0.3767 shrink0.5 F1=0.3949 safe_submit_f1=0.3949
+2026-05-15 23:10:54 [INFO]    16/ 30 | 2.37e-04 |   0.7282   |  0.7746  | 0.2879 | 0.3949 | 0.6771 | 0.313/0.317/0.233 | 12m 14s ETA 2h 55m 18s VRAM 13.4G
+2026-05-15 23:23:09 [INFO]     D: gt_pos=0.215 pred_pos=0.247 p_mean=0.325 P=0.345 R=0.395 F1=0.368
+2026-05-15 23:23:09 [INFO]     A: gt_pos=0.283 pred_pos=0.378 p_mean=0.394 P=0.374 R=0.500 F1=0.428
+2026-05-15 23:23:09 [INFO]     S: gt_pos=0.130 pred_pos=0.247 p_mean=0.294 P=0.223 R=0.423 F1=0.292
+2026-05-15 23:23:09 [INFO]     Session-level variance (collapse metric): 0.007442
+2026-05-15 23:23:10 [INFO]     calibrated F1=0.4213 via biases D=+0.70 A=+1.10 S=-0.20 (selected=calibrated)
+2026-05-15 23:23:10 [INFO]     shrink0.3 F1=0.4024 shrink0.5 F1=0.4062 safe_submit_f1=0.4062
+2026-05-15 23:23:10 [INFO]    17/ 30 | 2.10e-04 |   0.6981   |  0.7379  | 0.3628 | 0.4062 | 0.6751 | 0.368/0.428/0.292 | 12m 15s ETA 2h 42m 35s VRAM 13.4G

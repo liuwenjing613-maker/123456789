@@ -1,0 +1,37 @@
+{
+  "rows": [
+    {
+      "checkpoint_name": "best_raw_f1.pt",
+      "epoch": 9,
+      "raw_mean_f1": 0.4018427887270124,
+      "macro_auroc": 0.681977588962772,
+      "full_calibrated_mean_f1": 0.4160662114961067,
+      "reference_f1_raw": 0.4018427887270124,
+      "recommended_default_submission": false
+    },
+    {
+      "checkpoint_name": "best_auc.pt",
+      "epoch": 9,
+      "raw_mean_f1": 0.4018427887270124,
+      "macro_auroc": 0.681977588962772,
+      "full_calibrated_mean_f1": 0.4160662114961067,
+      "reference_f1_raw": 0.4018427887270124,
+      "recommended_default_submission": false
+    },
+    {
+      "checkpoint_name": "best_safe_submit.pt",
+      "epoch": 9,
+      "raw_mean_f1": 0.4018427887270124,
+      "macro_auroc": 0.681977588962772,
+      "safe_submit_f1": 0.40455717435999894,
+      "safe_submit_mode": "shrink0.5",
+      "safe_submit_shrink": 0.5,
+      "full_calibrated_mean_f1": 0.4160662114961067,
+      "reference_f1_raw": 0.4018427887270124,
+      "recommended_default_submission": true
+    }
+  ],
+  "recommended_default_submission": "best_safe_submit.pt + --a1_bias_mode none",
+  "secondary_submission": "best_safe_submit.pt + --a1_bias_mode auto --a1_use_sidecar_shrink",
+  "optional_submission": "best_raw_f1.pt + --a1_bias_mode none"
+}

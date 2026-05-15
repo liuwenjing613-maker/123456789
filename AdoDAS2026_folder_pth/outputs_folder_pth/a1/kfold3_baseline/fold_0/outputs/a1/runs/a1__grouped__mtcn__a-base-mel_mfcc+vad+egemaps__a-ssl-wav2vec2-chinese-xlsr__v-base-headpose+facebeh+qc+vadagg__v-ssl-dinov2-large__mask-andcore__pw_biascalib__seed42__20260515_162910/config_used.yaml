@@ -1,0 +1,59 @@
+feature_root: /home/adodas/dataset
+manifest_dir: outputs_folder_pth/a1/kfold3_baseline/manifests/kfold_3/fold_0
+output_dir: outputs_folder_pth/a1/kfold3_baseline/fold_0/outputs/a1
+mask_policy: and_core
+core_audio:
+- mel_mfcc
+- ssl_embed
+core_video:
+- vision_ssl_embed
+- qc_stats
+d_adapter: 64
+d_model: 256
+tcn_layers: 6
+tcn_kernel_size: 3
+asp_alpha: 0.5
+asp_beta: 0.5
+dropout: 0.2
+d_shared: 256
+aggregator: mlp
+batch_size: 32
+lr: 0.0005
+weight_decay: 0.01
+warmup_epochs: 1
+epochs: 30
+seed: 42
+num_workers: 8
+amp: true
+preload: false
+grad_clip: 1.0
+use_pos_weight: true
+patience: 6
+session_loss_weight: 0.2
+session_type_loss_weight: 0.15
+submission_level: participant
+decode_method: auto
+label_smoothing: 0.0
+feature_noise_std: 0.0
+session_drop_prob: 0.0
+early_stop_metric: safe_submit_f1
+save_last_checkpoint: 0
+checkpoint_selection:
+  mode: safe_submit
+  save_last: false
+audio_features:
+- mel_mfcc
+- vad
+- egemaps
+- ssl_embed
+video_features:
+- headpose_geom
+- face_behavior
+- qc_stats
+- vad_agg
+- vision_ssl_embed
+audio_ssl_model_tag: wav2vec2-chinese-xlsr
+video_ssl_model_tag: dinov2-large
+train_sequence_path_split: train
+val_sequence_path_split: train
+task: a1

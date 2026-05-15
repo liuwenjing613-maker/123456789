@@ -2,11 +2,16 @@
 # Everything else in /home/adodas stays local by default.
 *
 !.gitignore
+!push-adodas.sh
 !AdoDAS2026*/
 !AdoDAS2026*/**
 
 # Local backups after converting nested repos to monorepo (do not push)
 **/.git.nested_backup_*/
+
+# Local editor/backup copies
+**/*.bak
+**/*.bak_*
 
 # Python/cache/build artifacts
 **/__pycache__/
