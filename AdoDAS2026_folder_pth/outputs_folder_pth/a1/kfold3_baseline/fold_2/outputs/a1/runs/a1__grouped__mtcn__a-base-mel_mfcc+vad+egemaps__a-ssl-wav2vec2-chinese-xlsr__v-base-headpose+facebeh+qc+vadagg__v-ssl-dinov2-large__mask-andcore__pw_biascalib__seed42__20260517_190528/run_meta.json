@@ -1,0 +1,152 @@
+{
+  "run_name": "a1__grouped__mtcn__a-base-mel_mfcc+vad+egemaps__a-ssl-wav2vec2-chinese-xlsr__v-base-headpose+facebeh+qc+vadagg__v-ssl-dinov2-large__mask-andcore__pw_biascalib__seed42__20260517_190528",
+  "task": "a1",
+  "start_time": "2026-05-17T19:05:28.895316",
+  "end_time": "2026-05-17T21:46:11.104736",
+  "git_commit": "922b0831904b6ddc46bcfe5839188083d364e800",
+  "command_line": "/home/adodas/AdoDAS2026_folder_pth/train.py --task a1 --config outputs_folder_pth/a1/kfold3_baseline/configs/fold_2.yaml --epochs 30 --batch_size 32 --num_workers 8",
+  "full_config": {
+    "feature_root": "/home/adodas/dataset",
+    "manifest_dir": "outputs_folder_pth/a1/kfold3_baseline/manifests/kfold_3/fold_2",
+    "output_dir": "outputs_folder_pth/a1/kfold3_baseline/fold_2/outputs/a1",
+    "mask_policy": "and_core",
+    "core_audio": [
+      "mel_mfcc",
+      "ssl_embed"
+    ],
+    "core_video": [
+      "vision_ssl_embed",
+      "qc_stats"
+    ],
+    "d_adapter": 64,
+    "d_model": 256,
+    "tcn_layers": 6,
+    "tcn_kernel_size": 3,
+    "asp_alpha": 0.5,
+    "asp_beta": 0.5,
+    "dropout": 0.2,
+    "d_shared": 256,
+    "aggregator": "mlp",
+    "batch_size": 32,
+    "lr": 0.0005,
+    "weight_decay": 0.01,
+    "warmup_epochs": 1,
+    "epochs": 30,
+    "seed": 42,
+    "num_workers": 8,
+    "amp": true,
+    "preload": false,
+    "grad_clip": 1.0,
+    "use_pos_weight": true,
+    "patience": 6,
+    "session_loss_weight": 0.2,
+    "session_type_loss_weight": 0.15,
+    "submission_level": "participant",
+    "decode_method": "auto",
+    "label_smoothing": 0.0,
+    "feature_noise_std": 0.0,
+    "session_drop_prob": 0.0,
+    "early_stop_metric": "safe_submit_f1",
+    "save_last_checkpoint": 0,
+    "checkpoint_selection": {
+      "mode": "safe_submit",
+      "save_last": false
+    },
+    "audio_features": [
+      "mel_mfcc",
+      "vad",
+      "egemaps",
+      "ssl_embed"
+    ],
+    "video_features": [
+      "headpose_geom",
+      "face_behavior",
+      "qc_stats",
+      "vad_agg",
+      "vision_ssl_embed"
+    ],
+    "audio_ssl_model_tag": "wav2vec2-chinese-xlsr",
+    "video_ssl_model_tag": "dinov2-large",
+    "train_sequence_path_split": "train",
+    "val_sequence_path_split": "train",
+    "task": "a1"
+  },
+  "audio_ssl_tag": "wav2vec2-chinese-xlsr",
+  "video_ssl_tag": "dinov2-large",
+  "feature_combination": {
+    "audio_features": [
+      "mel_mfcc",
+      "vad",
+      "egemaps",
+      "ssl_embed"
+    ],
+    "video_features": [
+      "headpose_geom",
+      "face_behavior",
+      "qc_stats",
+      "vad_agg",
+      "vision_ssl_embed"
+    ],
+    "audio_ssl_model_tag": "wav2vec2-chinese-xlsr",
+    "video_ssl_model_tag": "dinov2-large"
+  },
+  "best_epoch": 14,
+  "best_metrics": {
+    "loss": 0.8481272405220402,
+    "mean_f1": 0.4268892798631035,
+    "auroc": 0.7003134335261972,
+    "pcf1": [
+      0.45143638850889195,
+      0.5206812652068127,
+      0.30855018587360594
+    ],
+    "mean_f1_calibrated": 0.43297404289002256,
+    "pcf1_calibrated": [
+      0.45901639344262296,
+      0.5216346153846154,
+      0.3182711198428291
+    ],
+    "calibration_biases": [
+      -0.3999999999999977,
+      0.10000000000000275,
+      -0.1999999999999975
+    ],
+    "shrink0.3_f1": 0.4277959864297625,
+    "shrink0.5_f1": 0.42924960400121126,
+    "safe_submit_f1": 0.42924960400121126,
+    "primary_metric": 0.4268892798631035,
+    "selection_source": "calibrated",
+    "val_metrics_raw": {
+      "mean_f1": 0.4268892798631035,
+      "macro_auroc": 0.7003134335261972,
+      "D_f1": 0.45143638850889195,
+      "A_f1": 0.5206812652068127,
+      "S_f1": 0.30855018587360594
+    },
+    "val_metrics_calibrated": {
+      "mean_f1": 0.43297404289002256,
+      "macro_auroc": 0.7003134335261972,
+      "D_f1": 0.45901639344262296,
+      "A_f1": 0.5216346153846154,
+      "S_f1": 0.3182711198428291
+    },
+    "pred_pos_raw": {
+      "D": 0.4471111111111111,
+      "A": 0.464,
+      "S": 0.3582222222222222
+    },
+    "pred_pos_calibrated": {
+      "D": 0.3937777777777778,
+      "A": 0.4728888888888889,
+      "S": 0.33244444444444443
+    }
+  },
+  "status": "completed",
+  "final_selected_strategy": "raw_for_submission",
+  "final_selected_metrics": {
+    "mean_f1_raw": 0.4268892798631035,
+    "mean_f1_calibrated": 0.44502766401787924,
+    "auroc": 0.7003134335261972,
+    "note": "full_calibrated_f1 is analysis-only; default submission uses raw + matched sidecar"
+  }
+}

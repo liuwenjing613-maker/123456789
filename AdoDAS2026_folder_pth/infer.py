@@ -39,6 +39,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--config", default=None)
     parser.add_argument("--split", default="test_hidden")
     parser.add_argument("--manifest", default=None)
+    parser.add_argument(
+        "--path_split",
+        default=None,
+        help="Override feature_root subdir for sequences (e.g. val for official val.csv)",
+    )
     parser.add_argument("--output", default=None)
     parser.add_argument(
         "--a1_bias_mode",
@@ -215,11 +220,15 @@ def main() -> None:
         core_video=cfg.get("core_video", defaults.core_video),
     )
 
+    if args.path_split:
+        resolved_path_split = str(args.path_split).strip()
+    else:
+        resolved_path_split = path_split_for_yaml(cfg, args.split)
     ds = GroupedParticipantDataset(
         manifest_path,
         feat_cfg,
         split=args.split,
-        path_split=path_split_for_yaml(cfg, args.split),
+        path_split=resolved_path_split,
     )
     preload = bool(cfg.get("preload", True))
     num_workers = int(cfg.get("num_workers", 8))

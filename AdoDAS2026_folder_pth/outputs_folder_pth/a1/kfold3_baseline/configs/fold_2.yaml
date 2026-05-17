@@ -1,6 +1,6 @@
 feature_root: /home/adodas/dataset
-manifest_dir: /home/adodas/AdoDAS2026_folder_pth/outputs_folder_pth/a1/kfold3_baseline/manifests/kfold_3/fold_2
-output_dir: /home/adodas/AdoDAS2026_folder_pth/outputs_folder_pth/a1/kfold3_baseline/fold_2/outputs/a1
+manifest_dir: outputs_folder_pth/a1/kfold3_baseline/manifests/kfold_3/fold_2
+output_dir: outputs_folder_pth/a1/kfold3_baseline/fold_2/outputs/a1
 mask_policy: and_core
 core_audio:
 - mel_mfcc

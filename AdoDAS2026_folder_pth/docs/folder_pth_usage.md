@@ -78,6 +78,73 @@ python tools/run_a1_kfold.py --config tasks/a1/default.yaml --kfold 5 \
   --checkpoint_name best_safe_submit.pt
 ```
 
+## K-fold 断点续跑
+
+`run_a1_kfold.py` 支持按折跳过已完成步骤（默认 `--skip_completed`），以及分阶段执行：
+
+| `--phase` | 作用 |
+|-----------|------|
+| `all`（默认） | train+OOF → 合并 OOF → official val/test → ensemble |
+| `train_oof` | 仅各折训练 + fold 内 val OOF |
+| `merge_oof` | 从 `oof/fold_*_val_pred.csv` 写出 `oof/oof_predictions.csv` |
+| `ensemble` | official val + test_hidden 推理 + 概率平均 ensemble |
+
+常用参数：
+
+- `--start_fold N`：只**新训练** `fold_N` 及之后；`fold_0..N-1` 须已有 checkpoint+OOF，否则报错。
+- `--no-skip_completed`：强制重训/重推理（慎用，会覆盖 fold 输出）。
+- `--remake_manifests`：强制重新生成 kfold manifest。
+- 进度文件：`work_dir/kfold_progress.json`（默认 `--write_progress`）。
+
+### 示例：fold_0/1 已完成，从 fold_2 续跑并跑完 ensemble
+
+```bash
+cd /home/adodas/AdoDAS2026_folder_pth
+CUDA_VISIBLE_DEVICES=6 python tools/run_a1_kfold.py \
+  --kfold 3 \
+  --work_dir outputs_folder_pth/a1/kfold3_baseline \
+  --config tasks/a1/default.yaml \
+  --manifest_dir /home/adodas/dataset/manifests \
+  --checkpoint_name best_safe_submit.pt \
+  --start_fold 2 \
+  --phase all \
+  --skip_completed
+```
+
+日志中应出现 `SKIP fold_0 train_oof`、`SKIP fold_1 train_oof`，仅训练 `fold_2`。
+
+### 示例：三折均已训完，只补 ensemble
+
+```bash
+python tools/run_a1_kfold.py --kfold 3 \
+  --work_dir outputs_folder_pth/a1/kfold3_baseline \
+  --manifest_dir /home/adodas/dataset/manifests \
+  --phase merge_oof --skip_completed
+
+python tools/run_a1_kfold.py --kfold 3 \
+  --work_dir outputs_folder_pth/a1/kfold3_baseline \
+  --manifest_dir /home/adodas/dataset/manifests \
+  --phase ensemble --skip_completed
+```
+
+最终提交：`outputs_folder_pth/a1/kfold3_baseline/ensemble/test_ensemble_raw.csv`
+
+ensemble 阶段对**官方** `val.csv` / `test_hidden.csv` 推理时会显式 `--path_split val` / `test_hidden`（折内配置里的 `val_sequence_path_split=train` 仅用于 K-fold 内部 val）。
+
+ensemble 结束后默认对 official val 计算 **mean F1 / macro AUROC**（与训练 val 相同指标），输出：
+
+- 每折：`ensemble/fold_i_official_val.csv.metrics.json`
+- 集成：`ensemble/official_val_ensemble_raw.csv.metrics.json`
+- 汇总：`ensemble/official_val_metrics_summary.json`，并写入 `final_report.md`
+
+单独评估任意预测 CSV：
+
+```bash
+python tools/evaluate_a1_official_val.py \
+  --pred_csv outputs_folder_pth/a1/kfold3_baseline/ensemble/official_val_ensemble_raw.csv \
+  --manifest /home/adodas/dataset/manifests/val.csv
+```
+
 ## pred_stats 检查
 
 ```bash
