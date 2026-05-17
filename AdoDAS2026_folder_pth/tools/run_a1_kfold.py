@@ -141,6 +141,7 @@ def kfold_n(args: argparse.Namespace) -> None:
         _run([
             sys.executable, str(ROOT / "infer.py"),
             "--task", "a1", "--checkpoint", str(ckpt), "--config", str(fold_cfg),
+            "--manifest", str(official_manifest / "test_hidden.csv"),
             "--split", "test_hidden",
             "--output", str(tp), "--a1_bias_mode", "none",
         ])

@@ -220,6 +220,29 @@ def write_checkpoint_meta(
     return out
 
 
+_SELECTION_SUMMARY_FIELDS = (
+    "checkpoint_name",
+    "epoch",
+    "raw_mean_f1",
+    "macro_auroc",
+    "safe_submit_f1",
+    "safe_submit_mode",
+    "safe_submit_shrink",
+    "full_calibrated_mean_f1",
+    "reference_f1_raw",
+    "recommended_default_submission",
+)
+
+
+def _selection_summary_fieldnames(rows: list[dict[str, Any]]) -> list[str]:
+    all_keys: set[str] = set()
+    for row in rows:
+        all_keys.update(row.keys())
+    ordered = [k for k in _SELECTION_SUMMARY_FIELDS if k in all_keys]
+    ordered.extend(sorted(all_keys - set(ordered)))
+    return ordered
+
+
 def write_selection_summary(run_dir: Path, rows: list[dict[str, Any]]) -> tuple[Path, Path]:
     json_path = run_dir / "selection_summary.json"
     csv_path = run_dir / "selection_summary.csv"
@@ -232,8 +255,9 @@ def write_selection_summary(run_dir: Path, rows: list[dict[str, Any]]) -> tuple[
     with open(json_path, "w", encoding="utf-8") as f:
         json.dump(payload, f, indent=2, ensure_ascii=False)
     if rows:
+        fieldnames = _selection_summary_fieldnames(rows)
         with open(csv_path, "w", encoding="utf-8", newline="") as f:
-            w = csv.DictWriter(f, fieldnames=list(rows[0].keys()))
+            w = csv.DictWriter(f, fieldnames=fieldnames, extrasaction="ignore")
             w.writeheader()
             w.writerows(rows)
     return json_path, csv_path

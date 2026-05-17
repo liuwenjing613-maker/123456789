@@ -56,3 +56,4 @@ audio_ssl_model_tag: wav2vec2-chinese-xlsr
 video_ssl_model_tag: dinov2-large
 train_sequence_path_split: train
 val_sequence_path_split: train
+task: a1

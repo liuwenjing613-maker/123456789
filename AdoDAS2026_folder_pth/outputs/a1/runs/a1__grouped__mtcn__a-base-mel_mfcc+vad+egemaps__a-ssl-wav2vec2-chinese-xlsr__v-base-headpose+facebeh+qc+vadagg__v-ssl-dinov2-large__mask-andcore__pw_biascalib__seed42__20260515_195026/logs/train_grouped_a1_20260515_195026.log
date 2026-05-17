@@ -162,3 +162,20 @@
 2026-05-15 23:23:10 [INFO]     calibrated F1=0.4213 via biases D=+0.70 A=+1.10 S=-0.20 (selected=calibrated)
 2026-05-15 23:23:10 [INFO]     shrink0.3 F1=0.4024 shrink0.5 F1=0.4062 safe_submit_f1=0.4062
 2026-05-15 23:23:10 [INFO]    17/ 30 | 2.10e-04 |   0.6981   |  0.7379  | 0.3628 | 0.4062 | 0.6751 | 0.368/0.428/0.292 | 12m 15s ETA 2h 42m 35s VRAM 13.4G
+2026-05-15 23:35:23 [INFO]     D: gt_pos=0.215 pred_pos=0.292 p_mean=0.307 P=0.371 R=0.504 F1=0.428
+2026-05-15 23:35:23 [INFO]     A: gt_pos=0.283 pred_pos=0.323 p_mean=0.363 P=0.397 R=0.453 F1=0.423
+2026-05-15 23:35:23 [INFO]     S: gt_pos=0.130 pred_pos=0.235 p_mean=0.251 P=0.234 R=0.423 F1=0.301
+2026-05-15 23:35:24 [INFO]     Session-level variance (collapse metric): 0.008853
+2026-05-15 23:35:24 [INFO]     calibrated F1=0.4227 via biases D=+1.00 A=+1.50 S=+1.30 (selected=calibrated)
+2026-05-15 23:35:24 [INFO]     shrink0.3 F1=0.3930 shrink0.5 F1=0.3927 safe_submit_f1=0.3930
+2026-05-15 23:35:24 [INFO]    18/ 30 | 1.84e-04 |   0.6816   |  0.7931  | 0.3840 | 0.3930 | 0.6771 | 0.428/0.423/0.301 | 12m 13s ETA 2h 29m 54s VRAM 13.4G
+2026-05-15 23:47:39 [INFO]     D: gt_pos=0.215 pred_pos=0.205 p_mean=0.254 P=0.390 R=0.372 F1=0.381
+2026-05-15 23:47:39 [INFO]     A: gt_pos=0.283 pred_pos=0.277 p_mean=0.308 P=0.410 R=0.400 F1=0.405
+2026-05-15 23:47:39 [INFO]     S: gt_pos=0.130 pred_pos=0.095 p_mean=0.179 P=0.351 R=0.256 F1=0.296
+2026-05-15 23:47:40 [INFO]     Session-level variance (collapse metric): 0.009618
+2026-05-15 23:47:40 [INFO]     calibrated F1=0.4378 via biases D=+0.70 A=+1.90 S=+1.20 (selected=calibrated)
+2026-05-15 23:47:40 [INFO]     shrink0.3 F1=0.3990 shrink0.5 F1=0.4033 safe_submit_f1=0.4033
+2026-05-15 23:47:40 [INFO]    19/ 30 | 1.58e-04 |   0.6542   |  0.8066  | 0.3607 | 0.4033 | 0.6946 | 0.381/0.405/0.296 | 12m 16s ETA 2h 17m 16s VRAM 13.4G
+2026-05-15 23:47:40 [INFO]   EarlyStopping triggered at epoch 19 (patience=6, metric=safe_submit_f1)
+2026-05-15 23:47:40 [INFO] ==========================================================================================
+2026-05-15 23:47:40 [INFO] Training complete. Best F1=0.4311, time=3h 57m 07s

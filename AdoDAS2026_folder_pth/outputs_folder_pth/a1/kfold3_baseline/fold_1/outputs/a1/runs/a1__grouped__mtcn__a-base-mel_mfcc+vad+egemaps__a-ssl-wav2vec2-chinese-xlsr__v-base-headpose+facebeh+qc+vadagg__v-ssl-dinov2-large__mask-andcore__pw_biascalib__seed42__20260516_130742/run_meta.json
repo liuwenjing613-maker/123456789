@@ -1,0 +1,152 @@
+{
+  "run_name": "a1__grouped__mtcn__a-base-mel_mfcc+vad+egemaps__a-ssl-wav2vec2-chinese-xlsr__v-base-headpose+facebeh+qc+vadagg__v-ssl-dinov2-large__mask-andcore__pw_biascalib__seed42__20260516_130742",
+  "task": "a1",
+  "start_time": "2026-05-16T13:07:43.059087",
+  "end_time": "2026-05-16T15:16:09.166587",
+  "git_commit": "d39ef2d3b0b05cd891b913634d224504d7745f48",
+  "command_line": "/home/adodas/AdoDAS2026_folder_pth/train.py --task a1 --config /home/adodas/AdoDAS2026_folder_pth/outputs_folder_pth/a1/kfold3_baseline/configs/fold_1.yaml --epochs 30 --batch_size 32 --num_workers 8",
+  "full_config": {
+    "feature_root": "/home/adodas/dataset",
+    "manifest_dir": "/home/adodas/AdoDAS2026_folder_pth/outputs_folder_pth/a1/kfold3_baseline/manifests/kfold_3/fold_1",
+    "output_dir": "/home/adodas/AdoDAS2026_folder_pth/outputs_folder_pth/a1/kfold3_baseline/fold_1/outputs/a1",
+    "mask_policy": "and_core",
+    "core_audio": [
+      "mel_mfcc",
+      "ssl_embed"
+    ],
+    "core_video": [
+      "vision_ssl_embed",
+      "qc_stats"
+    ],
+    "d_adapter": 64,
+    "d_model": 256,
+    "tcn_layers": 6,
+    "tcn_kernel_size": 3,
+    "asp_alpha": 0.5,
+    "asp_beta": 0.5,
+    "dropout": 0.2,
+    "d_shared": 256,
+    "aggregator": "mlp",
+    "batch_size": 32,
+    "lr": 0.0005,
+    "weight_decay": 0.01,
+    "warmup_epochs": 1,
+    "epochs": 30,
+    "seed": 42,
+    "num_workers": 8,
+    "amp": true,
+    "preload": false,
+    "grad_clip": 1.0,
+    "use_pos_weight": true,
+    "patience": 6,
+    "session_loss_weight": 0.2,
+    "session_type_loss_weight": 0.15,
+    "submission_level": "participant",
+    "decode_method": "auto",
+    "label_smoothing": 0.0,
+    "feature_noise_std": 0.0,
+    "session_drop_prob": 0.0,
+    "early_stop_metric": "safe_submit_f1",
+    "save_last_checkpoint": 0,
+    "checkpoint_selection": {
+      "mode": "safe_submit",
+      "save_last": false
+    },
+    "audio_features": [
+      "mel_mfcc",
+      "vad",
+      "egemaps",
+      "ssl_embed"
+    ],
+    "video_features": [
+      "headpose_geom",
+      "face_behavior",
+      "qc_stats",
+      "vad_agg",
+      "vision_ssl_embed"
+    ],
+    "audio_ssl_model_tag": "wav2vec2-chinese-xlsr",
+    "video_ssl_model_tag": "dinov2-large",
+    "train_sequence_path_split": "train",
+    "val_sequence_path_split": "train",
+    "task": "a1"
+  },
+  "audio_ssl_tag": "wav2vec2-chinese-xlsr",
+  "video_ssl_tag": "dinov2-large",
+  "feature_combination": {
+    "audio_features": [
+      "mel_mfcc",
+      "vad",
+      "egemaps",
+      "ssl_embed"
+    ],
+    "video_features": [
+      "headpose_geom",
+      "face_behavior",
+      "qc_stats",
+      "vad_agg",
+      "vision_ssl_embed"
+    ],
+    "audio_ssl_model_tag": "wav2vec2-chinese-xlsr",
+    "video_ssl_model_tag": "dinov2-large"
+  },
+  "best_epoch": 11,
+  "best_metrics": {
+    "loss": 0.7667344841692183,
+    "mean_f1": 0.36728102472783325,
+    "auroc": 0.6610484524907929,
+    "pcf1": [
+      0.38290598290598293,
+      0.4696969696969697,
+      0.24924012158054712
+    ],
+    "mean_f1_calibrated": 0.39369641631828184,
+    "pcf1_calibrated": [
+      0.4040114613180516,
+      0.4811594202898551,
+      0.29591836734693877
+    ],
+    "calibration_biases": [
+      0.400000000000003,
+      0.9000000000000035,
+      0.30000000000000293
+    ],
+    "shrink0.3_f1": 0.3774426009720127,
+    "shrink0.5_f1": 0.38110268867333014,
+    "safe_submit_f1": 0.38110268867333014,
+    "primary_metric": 0.36728102472783325,
+    "selection_source": "calibrated",
+    "val_metrics_raw": {
+      "mean_f1": 0.36728102472783325,
+      "macro_auroc": 0.6610484524907929,
+      "D_f1": 0.38290598290598293,
+      "A_f1": 0.4696969696969697,
+      "S_f1": 0.24924012158054712
+    },
+    "val_metrics_calibrated": {
+      "mean_f1": 0.39369641631828184,
+      "macro_auroc": 0.6610484524907929,
+      "D_f1": 0.4040114613180516,
+      "A_f1": 0.4811594202898551,
+      "S_f1": 0.29591836734693877
+    },
+    "pred_pos_raw": {
+      "D": 0.31179039301310046,
+      "A": 0.4183406113537118,
+      "S": 0.16506550218340613
+    },
+    "pred_pos_calibrated": {
+      "D": 0.4104803493449782,
+      "A": 0.6305676855895197,
+      "S": 0.2200873362445415
+    }
+  },
+  "status": "completed",
+  "final_selected_strategy": "raw_for_submission",
+  "final_selected_metrics": {
+    "mean_f1_raw": 0.36728102472783325,
+    "mean_f1_calibrated": 0.4090965480278295,
+    "auroc": 0.6610484524907929,
+    "note": "full_calibrated_f1 is analysis-only; default submission uses raw + matched sidecar"
+  }
+}

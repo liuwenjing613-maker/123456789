@@ -1,0 +1,49 @@
++ /home/adodas/anaconda3/envs/adodas/bin/python /home/adodas/AdoDAS2026_folder_pth/tools/make_a1_kfold_manifests.py --manifest_dir /home/adodas/dataset/manifests --out_dir /home/adodas/AdoDAS2026_folder_pth/outputs_folder_pth/a1/kfold3_baseline/manifests/kfold_3 --kfold 3 --seed 42
+StratifiedKFold on label_combo (n=4200 participants)
+Wrote 3 folds to /home/adodas/AdoDAS2026_folder_pth/outputs_folder_pth/a1/kfold3_baseline/manifests/kfold_3
++ /home/adodas/anaconda3/envs/adodas/bin/python /home/adodas/AdoDAS2026_folder_pth/train.py --task a1 --config /home/adodas/AdoDAS2026_folder_pth/outputs_folder_pth/a1/kfold3_baseline/configs/fold_0.yaml --epochs 30 --batch_size 32 --num_workers 8
+2026-05-17 17:29:17 [INFO] Logging to /home/adodas/AdoDAS2026_folder_pth/outputs_folder_pth/a1/kfold3_baseline/fold_0/outputs/a1/runs/a1__grouped__mtcn__a-base-mel_mfcc+vad+egemaps__a-ssl-wav2vec2-chinese-xlsr__v-base-headpose+facebeh+qc+vadagg__v-ssl-dinov2-large__mask-andcore__pw_biascalib__seed42__20260517_172917/logs/train_grouped_a1_20260517_172917.log
+2026-05-17 17:29:17 [INFO] Device: cuda
+2026-05-17 17:29:17 [INFO] Task: a1
+2026-05-17 17:29:17 [INFO] Run name: a1__grouped__mtcn__a-base-mel_mfcc+vad+egemaps__a-ssl-wav2vec2-chinese-xlsr__v-base-headpose+facebeh+qc+vadagg__v-ssl-dinov2-large__mask-andcore__pw_biascalib__seed42__20260517_172917
+2026-05-17 17:29:17 [INFO] Config: {'feature_root': '/home/adodas/dataset', 'manifest_dir': '/home/adodas/AdoDAS2026_folder_pth/outputs_folder_pth/a1/kfold3_baseline/manifests/kfold_3/fold_0', 'output_dir': '/home/adodas/AdoDAS2026_folder_pth/outputs_folder_pth/a1/kfold3_baseline/fold_0/outputs/a1', 'mask_policy': 'and_core', 'core_audio': ['mel_mfcc', 'ssl_embed'], 'core_video': ['vision_ssl_embed', 'qc_stats'], 'd_adapter': 64, 'd_model': 256, 'tcn_layers': 6, 'tcn_kernel_size': 3, 'asp_alpha': 0.5, 'asp_beta': 0.5, 'dropout': 0.2, 'd_shared': 256, 'aggregator': 'mlp', 'batch_size': 32, 'lr': 0.0005, 'weight_decay': 0.01, 'warmup_epochs': 1, 'epochs': 30, 'seed': 42, 'num_workers': 8, 'amp': True, 'preload': False, 'grad_clip': 1.0, 'use_pos_weight': True, 'patience': 6, 'session_loss_weight': 0.2, 'session_type_loss_weight': 0.15, 'submission_level': 'participant', 'decode_method': 'auto', 'label_smoothing': 0.0, 'feature_noise_std': 0.0, 'session_drop_prob': 0.0, 'early_stop_metric': 'safe_submit_f1', 'save_last_checkpoint': 0, 'checkpoint_selection': {'mode': 'safe_submit', 'save_last': False}, 'audio_features': ['mel_mfcc', 'vad', 'egemaps', 'ssl_embed'], 'video_features': ['headpose_geom', 'face_behavior', 'qc_stats', 'vad_agg', 'vision_ssl_embed'], 'audio_ssl_model_tag': 'wav2vec2-chinese-xlsr', 'video_ssl_model_tag': 'dinov2-large', 'train_sequence_path_split': 'train', 'val_sequence_path_split': 'train', 'task': 'a1'}
+2026-05-17 17:29:17 [INFO] Mask policy: and_core
+2026-05-17 17:29:20 [WARNING] GroupedDataset split=train: dropped 530/2800 participants with no loadable sessions. Examples: SCH_008/CLS_0090/P000802, SCH_008/CLS_0090/P001091, SCH_008/CLS_0090/P001990, SCH_008/CLS_0090/P002557, SCH_008/CLS_0090/P003463, SCH_008/CLS_0090/P004359, SCH_008/CLS_0090/P004640, SCH_008/CLS_0090/P005343, SCH_009/CLS_0029/P000100, SCH_009/CLS_0029/P000376 ... (+520 more)
+2026-05-17 17:29:20 [INFO] GroupedDataset logical split=val uses feature_root/train for sequences
+2026-05-17 17:29:21 [WARNING] GroupedDataset split=val: dropped 254/1400 participants with no loadable sessions. Examples: SCH_008/CLS_0090/P000439, SCH_008/CLS_0090/P004806, SCH_008/CLS_0090/P005071, SCH_008/CLS_0090/P007228, SCH_009/CLS_0029/P002481, SCH_009/CLS_0029/P003545, SCH_009/CLS_0029/P003670, SCH_009/CLS_0029/P004328, SCH_009/CLS_0029/P004943, SCH_009/CLS_0029/P005461 ... (+244 more)
+2026-05-17 17:29:21 [INFO] Train: 2270 participants, Val: 1146 participants
+2026-05-17 17:29:21 [INFO] batch_size=32, num_workers=8
+Traceback (most recent call last):
+  File "/home/adodas/AdoDAS2026_folder_pth/train.py", line 7, in <module>
+    main()
+  File "/home/adodas/AdoDAS2026_folder_pth/common/runner.py", line 956, in main
+    ).to(device)
+  File "/home/adodas/anaconda3/envs/adodas/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1384, in to
+    return self._apply(convert)
+  File "/home/adodas/anaconda3/envs/adodas/lib/python3.10/site-packages/torch/nn/modules/module.py", line 934, in _apply
+    module._apply(fn)
+  File "/home/adodas/anaconda3/envs/adodas/lib/python3.10/site-packages/torch/nn/modules/module.py", line 934, in _apply
+    module._apply(fn)
+  File "/home/adodas/anaconda3/envs/adodas/lib/python3.10/site-packages/torch/nn/modules/module.py", line 934, in _apply
+    module._apply(fn)
+  [Previous line repeated 1 more time]
+  File "/home/adodas/anaconda3/envs/adodas/lib/python3.10/site-packages/torch/nn/modules/module.py", line 965, in _apply
+    param_applied = fn(param)
+  File "/home/adodas/anaconda3/envs/adodas/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1370, in convert
+    return t.to(
+torch.AcceleratorError: CUDA error: out of memory
+Search for `cudaErrorMemoryAllocation' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
+Traceback (most recent call last):
+  File "/home/adodas/AdoDAS2026_folder_pth/tools/run_a1_kfold.py", line 196, in <module>
+    kfold_n(args)
+  File "/home/adodas/AdoDAS2026_folder_pth/tools/run_a1_kfold.py", line 92, in kfold_n
+    _run([
+  File "/home/adodas/AdoDAS2026_folder_pth/tools/run_a1_kfold.py", line 19, in _run
+    subprocess.run(cmd, cwd=cwd or ROOT, check=True)
+  File "/home/adodas/anaconda3/envs/adodas/lib/python3.10/subprocess.py", line 526, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['/home/adodas/anaconda3/envs/adodas/bin/python', '/home/adodas/AdoDAS2026_folder_pth/train.py', '--task', 'a1', '--config', '/home/adodas/AdoDAS2026_folder_pth/outputs_folder_pth/a1/kfold3_baseline/configs/fold_0.yaml', '--epochs', '30', '--batch_size', '32', '--num_workers', '8']' returned non-zero exit status 1.

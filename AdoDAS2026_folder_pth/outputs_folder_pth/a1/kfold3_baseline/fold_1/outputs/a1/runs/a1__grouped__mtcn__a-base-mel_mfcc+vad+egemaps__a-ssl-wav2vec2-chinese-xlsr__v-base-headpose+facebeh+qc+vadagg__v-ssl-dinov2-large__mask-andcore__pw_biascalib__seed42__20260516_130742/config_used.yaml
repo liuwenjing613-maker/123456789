@@ -1,6 +1,6 @@
 feature_root: /home/adodas/dataset
-manifest_dir: /home/adodas/AdoDAS2026_folder_pth/outputs_folder_pth/a1/kfold3_baseline/manifests/kfold_3/fold_0
-output_dir: /home/adodas/AdoDAS2026_folder_pth/outputs_folder_pth/a1/kfold3_baseline/fold_0/outputs/a1
+manifest_dir: /home/adodas/AdoDAS2026_folder_pth/outputs_folder_pth/a1/kfold3_baseline/manifests/kfold_3/fold_1
+output_dir: /home/adodas/AdoDAS2026_folder_pth/outputs_folder_pth/a1/kfold3_baseline/fold_1/outputs/a1
 mask_policy: and_core
 core_audio:
 - mel_mfcc
@@ -56,3 +56,4 @@ audio_ssl_model_tag: wav2vec2-chinese-xlsr
 video_ssl_model_tag: dinov2-large
 train_sequence_path_split: train
 val_sequence_path_split: train
+task: a1
