@@ -1,0 +1,44 @@
+{
+  "n_label_rows": 600,
+  "n_pred_rows": 600,
+  "n_matched_rows": 600,
+  "n_missing_label_file_ids": 0,
+  "n_missing_pred_file_ids": 0,
+  "raw": {
+    "name": "raw",
+    "threshold": 0.5,
+    "mean_f1": 0.4261111111111111,
+    "macro_auroc": 0.7034904428678391,
+    "D_f1": 0.435,
+    "A_f1": 0.49333333333333335,
+    "S_f1": 0.35
+  },
+  "best_biases": {
+    "D": -0.4999999999999978,
+    "A": 0.6000000000000032,
+    "S": -0.09999999999999742
+  },
+  "best_shrink_by_val_mean_f1": {
+    "name": "bias_shrink_1.0",
+    "threshold": 0.5,
+    "mean_f1": 0.448518097816017,
+    "macro_auroc": 0.7034904428678391,
+    "D_f1": 0.4658385093167702,
+    "A_f1": 0.5217391304347826,
+    "S_f1": 0.35797665369649806,
+    "shrink": 1.0,
+    "bias_D": -0.4999999999999978,
+    "bias_A": 0.6000000000000032,
+    "bias_S": -0.09999999999999742
+  },
+  "outputs": {
+    "merged": "outputs_folder_pth/a1/kfold3_baseline/ensemble/calib_official_val_raw/merged_val_predictions.csv",
+    "raw_metrics": "outputs_folder_pth/a1/kfold3_baseline/ensemble/calib_official_val_raw/metrics_raw_per_class.csv",
+    "bias_shrink_summary": "outputs_folder_pth/a1/kfold3_baseline/ensemble/calib_official_val_raw/metrics_bias_shrink_summary.csv",
+    "threshold_scan": "outputs_folder_pth/a1/kfold3_baseline/ensemble/calib_official_val_raw/threshold_scan.csv",
+    "best_thresholds": "outputs_folder_pth/a1/kfold3_baseline/ensemble/calib_official_val_raw/best_thresholds.csv",
+    "best_biases": "outputs_folder_pth/a1/kfold3_baseline/ensemble/calib_official_val_raw/best_biases.csv",
+    "prob_summary": "outputs_folder_pth/a1/kfold3_baseline/ensemble/calib_official_val_raw/prob_summary.csv",
+    "any_positive_analysis": "outputs_folder_pth/a1/kfold3_baseline/ensemble/calib_official_val_raw/any_positive_analysis.csv"
+  }
+}

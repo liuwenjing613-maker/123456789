@@ -74,13 +74,13 @@ def main() -> None:
     p.add_argument(
         "--hidden",
         type=Path,
-        default=Path(__file__).resolve().parent / "test_ensemble_raw.csv",
+        default=Path(__file__).resolve().parent / "test_ensemble_officialval_bias_shrink1.0.csv",
         help="Source CSV with file_id and probabilities",
     )
     p.add_argument(
         "--baseline",
         type=Path,
-        default=Path(__file__).resolve().parent / "result_3folder_ensemble_raw.csv",
+        default=Path(__file__).resolve().parent / "result_3folder_ensemble_shrink1.csv",
         help="Baseline CSV to update (anon_school, anon_class, anon_pid, ...)",
     )
     p.add_argument(
